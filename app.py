@@ -293,6 +293,26 @@ def get_feature_requests():
         print(f"❌ Error getting feature requests: {e}")
         return jsonify({'success': False, 'error': str(e)}), 500
 
+
+# --- HTML Template ---
+# This would be in 'templates/index.html'
+""""""
+
+# --- Static CSS File ---
+# This would be in 'static/style.css'
+"""
+body {
+    transition: background-color 0.5s ease-in-out, color 0.5s ease-in-out;
+}
+#message-box {
+    transition: opacity 0.5s ease-in-out, transform 0.5s ease-in-out;
+}
+"""
+
+# --- Static JavaScript File ---
+# This would be in 'static/script.js'
+""""""
+
 if __name__ == '__main__':
     # This block allows the script to be run directly.
     # debug=True allows for auto-reloading when you save changes.
