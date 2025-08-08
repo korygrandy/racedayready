@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en" class="dark">
 <head>
@@ -32,16 +31,16 @@
                     <div id="features-helmet-display" class="w-12 h-12"></div>
                     <span id="features-username" class="text-lg font-semibold text-white"></span>
                 </div>
-                <h1 class="text-4xl md:text-5xl font-bold mb-8 text-white">Raceday Ready Features</h1>
+                <h1 id="features-heading" class="text-4xl md:text-5xl font-bold mb-8 text-white">Raceday Ready Features</h1>
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                     <!-- Cards -->
-                    <div class="bg-gray-800 p-6 rounded-lg shadow-lg hover:bg-gray-700 cursor-pointer"><h2 class="text-xl font-bold text-white mb-2">Race Day Preparation & Logistics</h2></div>
-                    <div class="bg-gray-800 p-6 rounded-lg shadow-lg hover:bg-gray-700 cursor-pointer"><h2 class="text-xl font-bold text-white mb-2">Vehicle Management</h2></div>
-                    <div class="bg-gray-800 p-6 rounded-lg shadow-lg hover:bg-gray-700 cursor-pointer"><h2 class="text-xl font-bold text-white mb-2">Data Analysis & History</h2></div>
-                    <div class="bg-gray-800 p-6 rounded-lg shadow-lg hover:bg-gray-700 cursor-pointer"><h2 class="text-xl font-bold text-white mb-2">Social & Community Features</h2></div>
-                    <div class="bg-gray-800 p-6 rounded-lg shadow-lg hover:bg-gray-700 cursor-pointer"><h2 class="text-xl font-bold text-white mb-2">Engagement & Motivation</h2></div>
-                    <div class="bg-gray-800 p-6 rounded-lg shadow-lg hover:bg-gray-700 cursor-pointer"><h2 class="text-xl font-bold text-white mb-2">Garage Management</h2></div>
-                    <div class="bg-gray-800 p-6 rounded-lg shadow-lg hover:bg-gray-700 cursor-pointer"><h2 class="text-xl font-bold text-white mb-2">Upcoming Features</h2></div>
+                    <div id="feature-card-1" class="bg-gray-800 p-6 rounded-lg shadow-lg hover:bg-gray-700 cursor-pointer"><h2 class="text-xl font-bold text-white mb-2">Race Day Preparation & Logistics</h2></div>
+                    <div id="feature-card-2" class="bg-gray-800 p-6 rounded-lg shadow-lg hover:bg-gray-700 cursor-pointer"><h2 class="text-xl font-bold text-white mb-2">Vehicle Management</h2></div>
+                    <div id="feature-card-3" class="bg-gray-800 p-6 rounded-lg shadow-lg hover:bg-gray-700 cursor-pointer"><h2 class="text-xl font-bold text-white mb-2">Data Analysis & History</h2></div>
+                    <div id="feature-card-4" class="bg-gray-800 p-6 rounded-lg shadow-lg hover:bg-gray-700 cursor-pointer"><h2 class="text-xl font-bold text-white mb-2">Social & Community Features</h2></div>
+                    <div id="feature-card-5" class="bg-gray-800 p-6 rounded-lg shadow-lg hover:bg-gray-700 cursor-pointer"><h2 class="text-xl font-bold text-white mb-2">Engagement & Motivation</h2></div>
+                    <div id="feature-card-6" class="bg-gray-800 p-6 rounded-lg shadow-lg hover:bg-gray-700 cursor-pointer"><h2 class="text-xl font-bold text-white mb-2">Garage Management</h2></div>
+                    <div id="feature-card-7" class="bg-gray-800 p-6 rounded-lg shadow-lg hover:bg-gray-700 cursor-pointer"><h2 class="text-xl font-bold text-white mb-2">Upcoming Features</h2></div>
                 </div>
             </div>
 
@@ -63,16 +62,15 @@
                     <h3 id="changelog-heading" class="text-2xl font-semibold mb-3 text-gray-100">Changelog</h3>
                     <div class="space-y-4">
                         <div id="changelog-entry-1" class="bg-gray-900 p-4 rounded-lg shadow">
-                            <h4 class="font-bold text-lg text-gray-100">August 8, 2025: Implemented PIN Editing</h4>
+                            <h4 class="font-bold text-lg text-gray-100">August 8, 2025: Disabled PIN Autofill</h4>
                             <ul class="list-disc list-inside mt-2 text-gray-300 space-y-1">
-                                <li>Added a lock icon to the profile selection list to open a new PIN management modal.</li>
-                                <li>Users can now enable, disable, or change the PIN for any existing profile.</li>
+                                <li>Added `autocomplete="new-password"` to PIN input fields to prevent browsers from auto-filling previously entered PINs.</li>
                             </ul>
                         </div>
                         <div id="changelog-entry-2" class="bg-gray-900 p-4 rounded-lg shadow">
-                            <h4 class="font-bold text-lg text-gray-100">August 7, 2025: Implemented Profile PIN Feature</h4>
+                            <h4 class="font-bold text-lg text-gray-100">August 8, 2025: Added PIN Verification for Deletion</h4>
                             <ul class="list-disc list-inside mt-2 text-gray-300 space-y-1">
-                                <li>Users can now add an optional 4-digit PIN to their driver profiles for security.</li>
+                                <li>Added a security check to require PIN entry before deleting a profile that has a PIN enabled.</li>
                             </ul>
                         </div>
                     </div>
@@ -82,9 +80,12 @@
                 <div id="defect-resolutions-section" class="mb-8">
                     <h3 id="defect-resolutions-heading" class="text-2xl font-semibold mb-3 text-gray-100">Defect Resolutions</h3>
                      <div id="defect-entry-1" class="bg-gray-900 p-4 rounded-lg shadow">
-                        <h4 class="font-bold text-lg text-gray-100">Profile Editing Became Unintuitive (Fixed: Aug 7, 2025)</h4>
+                        <h4 class="font-bold text-lg text-gray-100">PIN Input Autofilled (Fixed: Aug 8, 2025)</h4>
                         <p class="mt-2 text-gray-300">
-                            <strong>Resolution:</strong> The profile list items were refactored to have distinct, separate clickable areas for the username and the helmet color. Hover effects, tooltips, and icons were added to make the edit functionality for both elements clear and intuitive again.
+                            <strong>Description:</strong> When creating a new profile after recently creating one with a PIN, the browser would automatically fill the PIN field with the previous value.
+                        </p>
+                        <p class="mt-2 text-gray-300">
+                            <strong>Resolution:</strong> The `autocomplete="new-password"` attribute was added to the PIN input fields in the "Create Profile" and "Edit PIN" modals. This standard attribute signals to browsers that this is a field for a new credential and should not be autofilled, resolving the issue.
                         </p>
                     </div>
                 </div>
@@ -117,7 +118,7 @@
                         </div>
                         <div>
                             <label for="pin-input" class="block text-sm font-medium text-gray-300">4-Digit PIN</label>
-                            <input type="password" id="pin-input" maxlength="4" pattern="[0-9]{4}" class="mt-1 block w-full bg-gray-700 border border-gray-600 rounded-md shadow-sm py-2 px-3 text-white focus:outline-none focus:ring-blue-500 focus:border-blue-500 disabled:opacity-50" disabled>
+                            <input type="password" id="pin-input" maxlength="4" pattern="[0-9]{4}" autocomplete="new-password" class="mt-1 block w-full bg-gray-700 border border-gray-600 rounded-md shadow-sm py-2 px-3 text-white focus:outline-none focus:ring-blue-500 focus:border-blue-500 disabled:opacity-50" disabled>
                         </div>
                     </div>
                     <div class="mt-6 flex justify-end space-x-4">
@@ -155,7 +156,7 @@
                 <h2 class="text-2xl font-bold text-white mb-4">Enter PIN</h2>
                 <p class="text-gray-400 mb-6" id="pin-entry-text"></p>
                 <form id="pin-entry-form">
-                    <input type="password" id="pin-entry-input" maxlength="4" class="block w-full text-center text-2xl tracking-[1em] bg-gray-700 border border-gray-600 rounded-md shadow-sm py-2 px-3 text-white focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                    <input type="password" id="pin-entry-input" maxlength="4" autocomplete="off" class="block w-full text-center text-2xl tracking-[1em] bg-gray-700 border border-gray-600 rounded-md shadow-sm py-2 px-3 text-white focus:outline-none focus:ring-blue-500 focus:border-blue-500">
                     <div class="mt-6 flex justify-end space-x-4">
                         <button id="cancel-pin-entry-btn" type="button" class="px-4 py-2 bg-gray-600 text-white font-semibold rounded-lg hover:bg-gray-500">Cancel</button>
                         <button id="submit-pin-btn" type="submit" class="px-4 py-2 bg-blue-500 text-white font-semibold rounded-lg shadow-md hover:bg-blue-600">Submit</button>
@@ -164,7 +165,7 @@
             </div>
         </div>
 
-        <!-- NEW: PIN Settings Modal -->
+        <!-- PIN Settings Modal -->
         <div id="pin-settings-modal" class="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center hidden z-40">
             <div class="bg-gray-800 p-8 rounded-lg shadow-2xl w-full max-w-md">
                 <h2 class="text-2xl font-bold text-white mb-4" id="pin-settings-heading"></h2>
@@ -176,7 +177,7 @@
                         </div>
                         <div>
                             <label for="edit-pin-input" class="block text-sm font-medium text-gray-300">New 4-Digit PIN</label>
-                            <input type="password" id="edit-pin-input" maxlength="4" pattern="[0-9]{4}" class="mt-1 block w-full bg-gray-700 border border-gray-600 rounded-md shadow-sm py-2 px-3 text-white focus:outline-none focus:ring-blue-500 focus:border-blue-500 disabled:opacity-50" disabled>
+                            <input type="password" id="edit-pin-input" maxlength="4" pattern="[0-9]{4}" autocomplete="new-password" class="mt-1 block w-full bg-gray-700 border border-gray-600 rounded-md shadow-sm py-2 px-3 text-white focus:outline-none focus:ring-blue-500 focus:border-blue-500 disabled:opacity-50" disabled>
                         </div>
                     </div>
                     <div class="mt-6 flex justify-end space-x-4">
@@ -190,9 +191,12 @@
         <!-- Footer Area -->
         <div id="footer-container" class="w-full text-center p-4">
             <button id="dev-mode-btn" class="text-sm text-blue-500 hover:underline mb-2">Developer Mode</button>
-            <footer class="text-sm text-gray-400 flex justify-between w-full max-w-4xl mx-auto">
+            <footer class="text-sm text-gray-400 flex flex-col items-center space-y-1 w-full max-w-4xl mx-auto">
                 <span id="footer-text">Built with Python (Flask), Tailwind CSS, and Gemini</span>
-                <span id="footer-version">Version {{ app_version }}</span>
+                <div class="flex space-x-4">
+                    <span id="footer-updated">Last Updated: {{ last_updated }}</span>
+                    <span id="footer-version">Version {{ app_version }}</span>
+                </div>
             </footer>
         </div>
     </div>

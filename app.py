@@ -34,7 +34,7 @@ print("✅ Firebase Initialized Successfully.")
 # --- App Configuration Loading ---
 # This function fetches the version from Firestore, with a fallback.
 def get_app_version():
-    default_version = '1.3.8'
+    default_version = '1.4.3'
     try:
         config_ref = db.collection('config').document('app_info')
         config_doc = config_ref.get()
@@ -65,10 +65,11 @@ app = Flask(__name__)
 def index():
     """
     This function handles requests to the root URL ('/') and
-    renders the main HTML page, passing the app version to it.
+    renders the main HTML page, passing the app version and date to it.
     """
     app_version = get_app_version()
-    return render_template('index.html', app_version=app_version)
+    last_updated_date = datetime.datetime.now().strftime("%B %d, %Y")
+    return render_template('index.html', app_version=app_version, last_updated=last_updated_date)
 
 
 # --- Route to check for and retrieve driver profiles ---
@@ -237,22 +238,6 @@ def get_ready():
     except Exception as e:
         print(f"❌ Error writing to Firestore: {e}")
         return jsonify({'success': False, 'message': f'An error occurred: {e}'}), 500
-
-
-# --- HTML Template ---
-# This would be in 'templates/index.html'
-""""""
-
-# --- Static CSS File ---
-# This would be in 'static/style.css'
-"""
-body {
-    transition: background-color 0.5s ease-in-out, color 0.5s ease-in-out;
-}
-#message-box {
-    transition: opacity 0.5s ease-in-out, transform 0.5s ease-in-out;
-}
-"""
 
 # --- Static JavaScript File ---
 # This would be in 'static/script.js'

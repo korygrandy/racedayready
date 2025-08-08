@@ -1,4 +1,3 @@
-
 // --- Element Selection ---
 const readyButton = document.getElementById('ready-button');
 const messageBox = document.getElementById('message-box');
@@ -41,6 +40,7 @@ const pinSettingsForm = document.getElementById('pin-settings-form');
 const editEnablePinCheckbox = document.getElementById('edit-enable-pin-checkbox');
 const editPinInput = document.getElementById('edit-pin-input');
 const cancelPinSettingsBtn = document.getElementById('cancel-pin-settings-btn');
+const savePinSettingsBtn = document.getElementById('save-pin-settings-btn');
 
 
 // --- View Toggling Logic ---
@@ -279,7 +279,11 @@ const showSelectProfileModal = (profiles) => {
         deleteButton.className = 'ml-2 text-red-500 hover:text-red-400 font-bold text-2xl px-2';
         deleteButton.onclick = () => {
             console.log(`Click Event: Delete initiated for profile '${profile.username}'.`);
-            showDeleteConfirmModal(profile.id, profile.username);
+            if (profile.pinEnabled) {
+                showPinEntryForDelete(profile);
+            } else {
+                showDeleteConfirmModal(profile.id, profile.username);
+            }
         };
 
         leftSection.appendChild(helmetContainer);
@@ -376,6 +380,7 @@ const executeDelete = (profileId) => {
         showMessage(data.message, data.success);
         if (data.success) {
             hideDeleteConfirmModal();
+            hidePinEntryModal();
             checkProfiles();
         }
     })
@@ -386,8 +391,8 @@ const executeDelete = (profileId) => {
 };
 
 // --- PIN Entry Modal Logic ---
-const showPinEntryModal = (profile) => {
-    pinEntryText.textContent = `Enter PIN for ${profile.username}`;
+const showPinEntryModal = (profile, forDelete = false) => {
+    pinEntryText.textContent = forDelete ? `Enter PIN to delete ${profile.username}` : `Enter PIN for ${profile.username}`;
     pinEntryInput.value = '';
     pinEntryModal.classList.remove('hidden');
     pinEntryInput.focus();
@@ -403,12 +408,20 @@ const showPinEntryModal = (profile) => {
         .then(response => response.json())
         .then(data => {
             if (data.success) {
-                selectProfile(profile.username, profile.helmetColor);
+                if (forDelete) {
+                    executeDelete(profile.id);
+                } else {
+                    selectProfile(profile.username, profile.helmetColor);
+                }
             } else {
                 showMessage(data.message, false);
             }
         });
     };
+};
+
+const showPinEntryForDelete = (profile) => {
+    showPinEntryModal(profile, true);
 };
 
 const hidePinEntryModal = () => {
