@@ -58,17 +58,27 @@
                 </button>
             </div>
 
-            <!-- NEW: Upcoming Features View -->
+            <!-- Upcoming Features View -->
             <div id="upcoming-features-view" class="w-full max-w-4xl mx-auto hidden text-center">
                 <h1 class="text-4xl md:text-5xl font-bold mb-8 text-white">Upcoming Features & Requests</h1>
                 <div class="bg-gray-800 p-8 rounded-lg shadow-lg text-left">
                     <h2 class="text-2xl font-bold text-white mb-4">Submit a Feature Request</h2>
                     <p class="text-gray-400 mb-6">Have an idea for a new feature? Let us know!</p>
                     <form id="feature-request-form">
-                        <textarea id="feature-request-textarea" rows="4" class="w-full bg-gray-700 border border-gray-600 rounded-md p-2 text-white" placeholder="Describe your feature idea..."></textarea>
+                        <textarea id="feature-request-textarea" rows="4" maxlength="500" class="w-full bg-gray-700 border border-gray-600 rounded-md p-2 text-white" placeholder="Describe your feature idea..."></textarea>
+                        <div class="text-right text-sm text-gray-500 mt-1"><span id="char-counter">0 / 500</span></div>
                         <button id="submit-feature-request-btn" type="submit" class="mt-4 w-full bg-blue-500 text-white font-semibold py-2 px-4 rounded-lg shadow-md hover:bg-blue-600">Submit Request</button>
                     </form>
                 </div>
+
+                <!-- NEW: Existing Requests Section -->
+                <div id="existing-requests-section" class="mt-8 bg-gray-800 p-8 rounded-lg shadow-lg text-left">
+                    <h2 class="text-2xl font-bold text-white mb-4">Existing Requests</h2>
+                    <div id="feature-request-list" class="space-y-4">
+                        <!-- Requests will be loaded here -->
+                    </div>
+                </div>
+
                  <button id="back-to-features-from-upcoming-btn" class="mt-8 px-6 py-2 bg-gray-600 text-white font-semibold rounded-lg shadow-md hover:bg-gray-500">
                     Back to Features
                 </button>
@@ -92,17 +102,16 @@
                     <h3 id="changelog-heading" class="text-2xl font-semibold mb-3 text-gray-100">Changelog</h3>
                     <div class="space-y-4">
                         <div id="changelog-entry-1" class="bg-gray-900 p-4 rounded-lg shadow">
-                            <h4 class="font-bold text-lg text-gray-100">August 8, 2025: Implemented Feature Request Submission</h4>
+                            <h4 class="font-bold text-lg text-gray-100">August 8, 2025: Display Existing Feature Requests</h4>
                             <ul class="list-disc list-inside mt-2 text-gray-300 space-y-1">
-                                <li>Added a new screen for "Upcoming Features" accessible from the main features grid.</li>
-                                <li>Included a form on this new screen for users to submit feature requests.</li>
-                                <li>Created a new backend endpoint to save these requests to a `feature_requests` collection in Firestore.</li>
+                                <li>The "Upcoming Features" page now fetches and displays all previously submitted feature requests from Firestore.</li>
+                                <li>This prevents duplicate submissions and keeps users informed of existing ideas.</li>
                             </ul>
                         </div>
                         <div id="changelog-entry-2" class="bg-gray-900 p-4 rounded-lg shadow">
-                            <h4 class="font-bold text-lg text-gray-100">August 8, 2025: Added Race Day Prep Sub-menu</h4>
+                            <h4 class="font-bold text-lg text-gray-100">August 8, 2025: Implemented Input Validation</h4>
                             <ul class="list-disc list-inside mt-2 text-gray-300 space-y-1">
-                                <li>Created a new view for the "Race Day Preparation & Logistics" feature with three sub-feature cards.</li>
+                                <li>Added character limits to all user input fields and a real-time character counter to the feature request form.</li>
                             </ul>
                         </div>
                     </div>
@@ -135,7 +144,7 @@
                     <div class="space-y-4">
                         <div>
                             <label for="username-input" class="block text-sm font-medium text-gray-300">Username</label>
-                            <input type="text" id="username-input" class="mt-1 block w-full bg-gray-700 border border-gray-600 rounded-md shadow-sm py-2 px-3 text-white focus:outline-none focus:ring-blue-500 focus:border-blue-500" required>
+                            <input type="text" id="username-input" maxlength="12" class="mt-1 block w-full bg-gray-700 border border-gray-600 rounded-md shadow-sm py-2 px-3 text-white focus:outline-none focus:ring-blue-500 focus:border-blue-500" required>
                         </div>
                         <div>
                             <label for="helmet-color-input" class="block text-sm font-medium text-gray-300">Helmet Color</label>
