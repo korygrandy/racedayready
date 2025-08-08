@@ -96,6 +96,9 @@ const showMessage = (message, isSuccess) => {
 // --- Profile Modal Logic ---
 const showProfileModal = () => {
     hideSelectProfileModal();
+    // Reset form to default state
+    profileForm.reset();
+    pinInput.disabled = true;
     profileModal.classList.remove('hidden');
 };
 

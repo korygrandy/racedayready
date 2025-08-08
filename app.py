@@ -34,7 +34,7 @@ print("✅ Firebase Initialized Successfully.")
 # --- App Configuration Loading ---
 # This function fetches the version from Firestore, with a fallback.
 def get_app_version():
-    default_version = '1.4.3'
+    default_version = '1.4.4'
     try:
         config_ref = db.collection('config').document('app_info')
         config_doc = config_ref.get()
@@ -238,6 +238,7 @@ def get_ready():
     except Exception as e:
         print(f"❌ Error writing to Firestore: {e}")
         return jsonify({'success': False, 'message': f'An error occurred: {e}'}), 500
+
 
 # --- Static JavaScript File ---
 # This would be in 'static/script.js'
