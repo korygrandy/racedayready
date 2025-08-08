@@ -34,7 +34,7 @@ print("✅ Firebase Initialized Successfully.")
 # --- App Configuration Loading ---
 # This function fetches the version from Firestore, with a fallback.
 def get_app_version():
-    default_version = '1.4.4'
+    default_version = '1.4.8'
     try:
         config_ref = db.collection('config').document('app_info')
         config_doc = config_ref.get()
@@ -117,6 +117,8 @@ def create_profile():
 
         if not username:
             return jsonify({'success': False, 'message': 'Username is required.'}), 400
+        if len(username) > 12:
+            return jsonify({'success': False, 'message': 'Username cannot exceed 12 characters.'}), 400
 
         existing_profiles = db.collection('driver_profiles').where('username', '==', username).limit(1).get()
         if existing_profiles:
@@ -148,7 +150,10 @@ def update_profile(profile_id):
         data = request.get_json()
         updates = {}
         if 'username' in data:
-            updates['username'] = data['username']
+            new_username = data['username']
+            if len(new_username) > 12:
+                return jsonify({'success': False, 'message': 'Username cannot exceed 12 characters.'}), 400
+            updates['username'] = new_username
         if 'helmetColor' in data:
             updates['helmetColor'] = data['helmetColor']
         if 'pin' in data:
@@ -213,12 +218,11 @@ def delete_profile(profile_id):
         return jsonify({'success': False, 'message': f'An error occurred: {e}'}), 500
 
 
-# Define a new route to handle the button click and write to Firestore
+# --- Route to handle readiness check ---
 @app.route('/get-ready', methods=['POST'])
 def get_ready():
     """
-    This function is called when a driver profile is selected.
-    It adds a new document to the 'readiness_checks' collection in Firestore.
+    Logs a readiness check for a selected driver profile.
     """
     try:
         data = request.get_json()
@@ -240,8 +244,54 @@ def get_ready():
         return jsonify({'success': False, 'message': f'An error occurred: {e}'}), 500
 
 
-# --- Static JavaScript File ---
-# This would be in 'static/script.js'
+# --- Route to submit a feature request ---
+@app.route('/submit-feature-request', methods=['POST'])
+def submit_feature_request():
+    """
+    Saves a new feature request to Firestore.
+    """
+    try:
+        data = request.get_json()
+        username = data.get('username')
+        request_text = data.get('requestText')
+
+        if not username or not request_text:
+            return jsonify({'success': False, 'message': 'Username and request text are required.'}), 400
+        if len(request_text) > 500:
+            return jsonify({'success': False, 'message': 'Feature request cannot exceed 500 characters.'}), 400
+
+        doc_ref = db.collection('feature_requests').document()
+        doc_ref.set({
+            'username': username,
+            'requestText': request_text,
+            'submitted_at': datetime.datetime.now(datetime.timezone.utc)
+        })
+        print(f"✅ New feature request submitted by {username}")
+        return jsonify({'success': True, 'message': 'Your feature request has been submitted!'}), 201
+    except Exception as e:
+        print(f"❌ Error submitting feature request: {e}")
+        return jsonify({'success': False, 'message': f'An error occurred: {e}'}), 500
+
+
+# --- NEW: Route to get existing feature requests ---
+@app.route('/get-feature-requests', methods=['GET'])
+def get_feature_requests():
+    """
+    Retrieves all feature requests from Firestore.
+    """
+    try:
+        requests_ref = db.collection('feature_requests').stream()
+        requests = []
+        for doc in requests_ref:
+            request_data = doc.to_dict()
+            requests.append({
+                'username': request_data.get('username'),
+                'requestText': request_data.get('requestText')
+            })
+        return jsonify({'success': True, 'requests': requests}), 200
+    except Exception as e:
+        print(f"❌ Error getting feature requests: {e}")
+        return jsonify({'success': False, 'error': str(e)}), 500
 
 if __name__ == '__main__':
     # This block allows the script to be run directly.

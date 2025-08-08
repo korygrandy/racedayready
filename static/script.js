@@ -1,3 +1,7 @@
+
+// --- Global State ---
+let currentUser = null;
+
 // --- Element Selection ---
 const readyButton = document.getElementById('ready-button');
 const messageBox = document.getElementById('message-box');
@@ -9,6 +13,17 @@ const featuresView = document.getElementById('features-view');
 const featuresHelmetDisplay = document.getElementById('features-helmet-display');
 const featuresUsername = document.getElementById('features-username');
 const profileHeaderBtn = document.getElementById('profile-header-btn');
+const raceDayPrepView = document.getElementById('race-day-prep-view');
+const backToFeaturesBtn = document.getElementById('back-to-features-btn');
+const featureCard1 = document.getElementById('feature-card-1');
+const featureCard7 = document.getElementById('feature-card-7');
+const upcomingFeaturesView = document.getElementById('upcoming-features-view');
+const backToFeaturesFromUpcomingBtn = document.getElementById('back-to-features-from-upcoming-btn');
+const featureRequestForm = document.getElementById('feature-request-form');
+const featureRequestTextarea = document.getElementById('feature-request-textarea');
+const submitFeatureRequestBtn = document.getElementById('submit-feature-request-btn');
+const charCounter = document.getElementById('char-counter');
+const featureRequestList = document.getElementById('feature-request-list');
 
 const profileModal = document.getElementById('profile-modal');
 const profileForm = document.getElementById('profile-form');
@@ -48,6 +63,8 @@ const setView = (viewName) => {
     mainView.classList.add('hidden');
     developerView.classList.add('hidden');
     featuresView.classList.add('hidden');
+    raceDayPrepView.classList.add('hidden');
+    upcomingFeaturesView.classList.add('hidden');
 
     const isDevMode = viewName === 'developer';
     devModeBtn.classList.toggle('hidden', isDevMode);
@@ -56,6 +73,11 @@ const setView = (viewName) => {
         developerView.classList.remove('hidden');
     } else if (viewName === 'features') {
         featuresView.classList.remove('hidden');
+    } else if (viewName === 'raceDayPrep') {
+        raceDayPrepView.classList.remove('hidden');
+    } else if (viewName === 'upcomingFeatures') {
+        upcomingFeaturesView.classList.remove('hidden');
+        loadFeatureRequests(); // Load requests when view is shown
     } else {
         mainView.classList.remove('hidden');
     }
@@ -75,6 +97,26 @@ profileHeaderBtn.addEventListener('click', () => {
     console.log("Click Event: 'Profile Header' button clicked.");
     setView('main'); // Hide the features view
     checkProfiles(); // Show the profile selection modal
+});
+
+featureCard1.addEventListener('click', () => {
+    console.log("Click Event: 'Race Day Prep' card clicked.");
+    setView('raceDayPrep');
+});
+
+featureCard7.addEventListener('click', () => {
+    console.log("Click Event: 'Upcoming Features' card clicked.");
+    setView('upcomingFeatures');
+});
+
+backToFeaturesBtn.addEventListener('click', () => {
+    console.log("Click Event: 'Back to Features' button clicked.");
+    setView('features');
+});
+
+backToFeaturesFromUpcomingBtn.addEventListener('click', () => {
+    console.log("Click Event: 'Back to Features' button clicked.");
+    setView('features');
 });
 
 
@@ -225,6 +267,7 @@ const showSelectProfileModal = (profiles) => {
         const nameInput = document.createElement('input');
         nameInput.type = 'text';
         nameInput.value = profile.username;
+        nameInput.maxLength = 12;
         nameInput.className = 'hidden flex-grow bg-gray-600 text-white rounded px-2 py-1';
 
         nameSpan.onclick = () => {
@@ -307,6 +350,7 @@ const hideSelectProfileModal = () => {
 };
 
 const selectProfile = (username, helmetColor) => {
+    currentUser = { username, helmetColor }; // Store current user
     hideSelectProfileModal();
     hidePinEntryModal();
     fetch('/get-ready', {
@@ -518,5 +562,62 @@ readyButton.addEventListener('click', () => {
     .finally(() => {
         readyButton.disabled = false;
         readyButton.textContent = 'Click to get ready!';
+    });
+});
+
+// --- Feature Request Logic ---
+const loadFeatureRequests = () => {
+    fetch('/get-feature-requests')
+        .then(response => response.json())
+        .then(data => {
+            featureRequestList.innerHTML = ''; // Clear list
+            if (data.success && data.requests.length > 0) {
+                data.requests.forEach(req => {
+                    const reqElement = document.createElement('div');
+                    reqElement.className = 'bg-gray-700 p-4 rounded-lg';
+                    reqElement.innerHTML = `<p class="text-gray-300">${req.requestText}</p><p class="text-sm text-gray-500 mt-2">- ${req.username}</p>`;
+                    featureRequestList.appendChild(reqElement);
+                });
+            } else {
+                featureRequestList.innerHTML = '<p class="text-gray-500">No feature requests submitted yet.</p>';
+            }
+        });
+};
+
+featureRequestTextarea.addEventListener('input', () => {
+    const currentLength = featureRequestTextarea.value.length;
+    charCounter.textContent = `${currentLength} / 500`;
+});
+
+featureRequestForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+    console.log("Click Event: 'Submit Feature Request' button clicked.");
+    const requestText = featureRequestTextarea.value.trim();
+    if (!requestText || !currentUser) return;
+
+    submitFeatureRequestBtn.disabled = true;
+    submitFeatureRequestBtn.textContent = 'Submitting...';
+
+    fetch('/submit-feature-request', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ username: currentUser.username, requestText: requestText }),
+    })
+    .then(response => response.json())
+    .then(data => {
+        showMessage(data.message, data.success);
+        if (data.success) {
+            featureRequestTextarea.value = '';
+            charCounter.textContent = '0 / 500';
+            loadFeatureRequests(); // Refresh the list
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        showMessage('Failed to submit request.', false);
+    })
+    .finally(() => {
+        submitFeatureRequestBtn.disabled = false;
+        submitFeatureRequestBtn.textContent = 'Submit Request';
     });
 });
