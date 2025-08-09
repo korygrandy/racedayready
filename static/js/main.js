@@ -17,7 +17,7 @@ export const App = {
     loadAdminSettings: null,
     loadGarages: null,
     loadVehicles: null,
-    loadEvents: null, // NEW
+    loadEvents: null,
 };
 
 // --- View Toggling Logic ---
@@ -30,10 +30,20 @@ const setView = (viewName) => {
     elements.upcomingFeaturesView.classList.add('hidden');
     elements.garageManagementView.classList.add('hidden');
     elements.vehicleManagementView.classList.add('hidden');
-    elements.raceScheduleView.classList.add('hidden'); // NEW
+    elements.raceScheduleView.classList.add('hidden');
+    elements.profileHeaderBtn.classList.add('hidden'); // Hide by default
 
     const isDevMode = viewName === 'developer';
     elements.devModeBtn.classList.toggle('hidden', isDevMode);
+
+    // Show/hide global elements
+    if (viewName !== 'main' && App.currentUser) {
+        elements.profileHeaderBtn.classList.remove('hidden');
+        elements.racedayCountdownContainer.classList.remove('hidden');
+        updateRacedayCountdown();
+    } else {
+        elements.racedayCountdownContainer.classList.add('hidden');
+    }
 
     if (isDevMode) {
         elements.developerView.classList.remove('hidden');
@@ -41,7 +51,6 @@ const setView = (viewName) => {
     } else if (viewName === 'features') {
         elements.featuresView.classList.remove('hidden');
         checkProfileStatus();
-        updateRacedayCountdown(); // NEW
     } else if (viewName === 'raceDayPrep') {
         elements.raceDayPrepView.classList.remove('hidden');
     } else if (viewName === 'upcomingFeatures') {
@@ -53,7 +62,7 @@ const setView = (viewName) => {
     } else if (viewName === 'vehicleManagement') {
         elements.vehicleManagementView.classList.remove('hidden');
         if (App.loadVehicles) App.loadVehicles();
-    } else if (viewName === 'raceSchedule') { // NEW
+    } else if (viewName === 'raceSchedule') {
         elements.raceScheduleView.classList.remove('hidden');
         if (App.loadEvents) App.loadEvents();
     } else {
