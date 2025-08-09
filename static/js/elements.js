@@ -32,6 +32,7 @@ export const eventNameInput = document.getElementById('event-name-input');
 export const eventStartInput = document.getElementById('event-start-input');
 export const eventEndInput = document.getElementById('event-end-input');
 export const eventVehiclesSelect = document.getElementById('event-vehicles-select');
+export const isRacedayCheckbox = document.getElementById('is-raceday-checkbox');
 export const addEventBtn = document.getElementById('add-event-btn');
 export const eventList = document.getElementById('event-list');
 export const backToPrepFromScheduleBtn = document.getElementById('back-to-prep-from-schedule-btn');
@@ -43,8 +44,13 @@ export const editEventNameInput = document.getElementById('edit-event-name-input
 export const editEventStartInput = document.getElementById('edit-event-start-input');
 export const editEventEndInput = document.getElementById('edit-event-end-input');
 export const editEventVehiclesSelect = document.getElementById('edit-event-vehicles-select');
+export const editIsRacedayCheckbox = document.getElementById('edit-is-raceday-checkbox');
 export const cancelEditEventBtn = document.getElementById('cancel-edit-event-btn');
 export const saveEventBtn = document.getElementById('save-event-btn');
+
+// Raceday Countdown
+export const racedayCountdown = document.getElementById('raceday-countdown');
+export const racedayCountdownText = document.getElementById('raceday-countdown-text');
 
 // Garage Management Elements
 export const garageManagementView = document.getElementById('garage-management-view');

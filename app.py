@@ -35,7 +35,7 @@ print("✅ Firebase Initialized Successfully.")
 # This function fetches the version from Firestore, with a fallback.
 def get_app_version():
     # This version number will be incremented with each new set of changes.
-    default_version = '1.7.9'
+    default_version = '1.8.2'
     try:
         config_ref = db.collection('config').document('app_info')
         config_doc = config_ref.get()
@@ -264,15 +264,26 @@ def verify_pin(profile_id):
 @app.route('/delete-profile/<profile_id>', methods=['DELETE'])
 def delete_profile(profile_id):
     """
-    Deletes a driver profile document from Firestore.
+    Deletes a driver profile and all its subcollections.
     """
     try:
         if not profile_id:
             return jsonify({'success': False, 'message': 'Profile ID is required.'}), 400
 
-        db.collection('driver_profiles').document(profile_id).delete()
+        profile_ref = db.collection('driver_profiles').document(profile_id)
+
+        # Delete subcollections
+        for collection in ['garages', 'vehicles', 'events']:
+            docs = profile_ref.collection(collection).stream()
+            for doc in docs:
+                doc.reference.delete()
+            print(f"✅ Deleted {collection} for profile {profile_id}")
+
+        # Delete the main profile document
+        profile_ref.delete()
         print(f"✅ Driver profile deleted: {profile_id}")
-        return jsonify({'success': True, 'message': 'Profile deleted successfully!'}), 200
+
+        return jsonify({'success': True, 'message': 'Profile and all associated data deleted successfully!'}), 200
     except Exception as e:
         print(f"❌ Error deleting profile: {e}")
         return jsonify({'success': False, 'message': f'An error occurred: {e}'}), 500
@@ -726,6 +737,7 @@ def add_event(profile_id):
             'start_time': data.get('startTime'),
             'end_time': data.get('endTime'),
             'vehicles': data.get('vehicles', []),
+            'is_raceday': data.get('isRaceday', False),
             'created_at': datetime.datetime.now(datetime.timezone.utc)
         }
         if not event_data['name'] or not event_data['start_time']:
@@ -776,6 +788,7 @@ def update_event(profile_id, event_id):
             'start_time': data.get('startTime'),
             'end_time': data.get('endTime'),
             'vehicles': data.get('vehicles', []),
+            'is_raceday': data.get('isRaceday', False)
         }
         if not updates['name'] or not updates['start_time']:
             return jsonify({'success': False, 'message': 'Event name and start time are required.'}), 400
@@ -797,6 +810,28 @@ def delete_event(profile_id, event_id):
     except Exception as e:
         print(f"❌ Error deleting event: {e}")
         return jsonify({'success': False, 'message': f'An error occurred: {e}'}), 500
+
+
+@app.route('/get-next-raceday/<profile_id>', methods=['GET'])
+def get_next_raceday(profile_id):
+    try:
+        now = datetime.datetime.now(datetime.timezone.utc)
+        events_ref = db.collection('driver_profiles').document(profile_id).collection('events') \
+            .where('is_raceday', '==', True) \
+            .where('start_time', '>=', now.isoformat()) \
+            .order_by('start_time') \
+            .limit(1) \
+            .stream()
+
+        next_event = next(events_ref, None)
+
+        if next_event:
+            return jsonify({'success': True, 'event': next_event.to_dict()}), 200
+        else:
+            return jsonify({'success': True, 'event': None}), 200
+    except Exception as e:
+        print(f"❌ Error getting next raceday: {e}")
+        return jsonify({'success': False, 'error': str(e)}), 500
 
 
 if __name__ == '__main__':

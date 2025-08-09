@@ -144,7 +144,7 @@ const selectProfile = (profile) => {
     });
 };
 
-export const updateProfile = (profileId, updates) => {
+export const updateProfile = (profileId, updates, refreshList = true) => {
     fetch(`/update-profile/${profileId}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
@@ -153,7 +153,7 @@ export const updateProfile = (profileId, updates) => {
     .then(response => response.json())
     .then(data => {
         showMessage(data.message, data.success);
-        if (data.success) {
+        if (data.success && refreshList) {
             checkProfiles();
         }
     })
