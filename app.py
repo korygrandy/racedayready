@@ -35,7 +35,7 @@ print("✅ Firebase Initialized Successfully.")
 # This function fetches the version from Firestore, with a fallback.
 def get_app_version():
     # This version number will be incremented with each new set of changes.
-    default_version = '1.6.4'
+    default_version = '1.6.5'
     try:
         config_ref = db.collection('config').document('app_info')
         config_doc = config_ref.get()
@@ -528,7 +528,6 @@ def get_garages(profile_id):
         return jsonify({'success': False, 'error': str(e)}), 500
 
 
-# NEW: Route to update a garage
 @app.route('/update-garage/<profile_id>/<garage_id>', methods=['PUT'])
 def update_garage(profile_id, garage_id):
     """
@@ -553,7 +552,6 @@ def update_garage(profile_id, garage_id):
         return jsonify({'success': False, 'message': f'An error occurred: {e}'}), 500
 
 
-# NEW: Route to delete a garage
 @app.route('/delete-garage/<profile_id>/<garage_id>', methods=['DELETE'])
 def delete_garage(profile_id, garage_id):
     """

@@ -5,7 +5,7 @@ import {
     charCounter,
     featureRequestList
 } from './elements.js';
-import { showMessage } from './ui.js';
+import { showMessage, showConfirmationModal } from './ui.js';
 import { App } from './main.js';
 
 /**
@@ -13,26 +13,26 @@ import { App } from './main.js';
  * @param {string} requestId - The ID of the feature request to delete.
  */
 const deleteFeatureRequest = (requestId) => {
-    console.log(`Initiating deletion for feature request ID: ${requestId}`);
-    if (!confirm('Are you sure you want to permanently delete this feature request?')) {
-        console.log("Feature request deletion canceled by user.");
-        return;
-    }
-
-    fetch(`/delete-feature-request/${requestId}`, {
-        method: 'DELETE',
-    })
-    .then(response => response.json())
-    .then(data => {
-        showMessage(data.message, data.success);
-        if (data.success) {
-            loadFeatureRequests();
+    showConfirmationModal(
+        'Are you sure you want to permanently delete this feature request?',
+        () => {
+            console.log(`Confirmed deletion for feature request ID: ${requestId}`);
+            fetch(`/delete-feature-request/${requestId}`, {
+                method: 'DELETE',
+            })
+            .then(response => response.json())
+            .then(data => {
+                showMessage(data.message, data.success);
+                if (data.success) {
+                    loadFeatureRequests();
+                }
+            })
+            .catch(error => {
+                console.error('Error deleting feature request:', error);
+                showMessage('Failed to delete request.', false);
+            });
         }
-    })
-    .catch(error => {
-        console.error('Error deleting feature request:', error);
-        showMessage('Failed to delete request.', false);
-    });
+    );
 };
 
 /**

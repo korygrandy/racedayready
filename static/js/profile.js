@@ -1,5 +1,5 @@
 import * as elements from './elements.js';
-import { showMessage, createHelmetIcon } from './ui.js';
+import { showMessage, createHelmetIcon, showConfirmationModal } from './ui.js';
 import { applyTheme } from './theme.js';
 import { App } from './main.js';
 
@@ -28,11 +28,6 @@ const hidePinEntryModal = () => {
     elements.pinEntryModal.classList.add('hidden');
 };
 
-const hideDeleteConfirmModal = () => {
-    console.log("Hiding delete confirmation modal.");
-    elements.deleteConfirmModal.classList.add('hidden');
-};
-
 const hidePinSettingsModal = () => {
     console.log("Hiding PIN settings modal.");
     elements.pinSettingsModal.classList.add('hidden');
@@ -46,7 +41,6 @@ const executeDelete = (profileId) => {
     .then(data => {
         showMessage(data.message, data.success);
         if (data.success) {
-            hideDeleteConfirmModal();
             hidePinEntryModal();
             checkProfiles();
         }
@@ -55,17 +49,6 @@ const executeDelete = (profileId) => {
         console.error('Error deleting profile:', error);
         showMessage('Failed to delete profile.', false);
     });
-};
-
-const showDeleteConfirmModal = (profileId, username) => {
-    console.log(`Showing delete confirmation for profile: ${username}`);
-    elements.deleteConfirmText.textContent = `Are you sure you want to delete the profile for "${username}"? This action cannot be undone.`;
-    elements.deleteConfirmModal.classList.remove('hidden');
-
-    elements.confirmDeleteBtn.onclick = () => {
-        console.log(`Click Event: Confirmed deletion for profile '${username}'.`);
-        executeDelete(profileId);
-    };
 };
 
 const showPinEntryModal = (profile, forDelete = false) => {
@@ -244,7 +227,10 @@ const showSelectProfileModal = (profiles, limitReached) => {
             if (profile.pinEnabled) {
                 showPinEntryForDelete(profile);
             } else {
-                showDeleteConfirmModal(profile.id, profile.username);
+                showConfirmationModal(
+                    `Are you sure you want to delete the profile for "${profile.username}"? This action cannot be undone.`,
+                    () => executeDelete(profile.id)
+                );
             }
         };
         leftSection.appendChild(helmetContainer);
@@ -350,11 +336,6 @@ export const initProfiles = () => {
     elements.addNewProfileBtn.addEventListener('click', () => {
         console.log("Click Event: 'Add New Profile' button clicked.");
         showProfileModal();
-    });
-
-    elements.cancelDeleteBtn.addEventListener('click', () => {
-        console.log("Click Event: Canceled profile deletion.");
-        hideDeleteConfirmModal();
     });
 
     elements.cancelPinEntryBtn.addEventListener('click', () => {

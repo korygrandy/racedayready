@@ -1,5 +1,5 @@
 import * as elements from './elements.js';
-import { showMessage } from './ui.js';
+import { showMessage, showConfirmationModal } from './ui.js';
 import { App } from './main.js';
 
 const updateGarage = (garageId, newName) => {
@@ -18,19 +18,22 @@ const updateGarage = (garageId, newName) => {
 };
 
 const deleteGarage = (garageId, garageName) => {
-    if (!confirm(`Are you sure you want to delete the garage "${garageName}"?`)) {
-        return;
-    }
-    fetch(`/delete-garage/${App.currentUser.id}/${garageId}`, {
-        method: 'DELETE',
-    })
-    .then(response => response.json())
-    .then(data => {
-        showMessage(data.message, data.success);
-        if (data.success) {
-            loadGarages();
+    showConfirmationModal(
+        `Are you sure you want to permanently delete the garage "${garageName}"?`,
+        () => {
+            console.log(`Confirmed deletion for garage ID: ${garageId}`);
+            fetch(`/delete-garage/${App.currentUser.id}/${garageId}`, {
+                method: 'DELETE',
+            })
+            .then(response => response.json())
+            .then(data => {
+                showMessage(data.message, data.success);
+                if (data.success) {
+                    loadGarages();
+                }
+            });
         }
-    });
+    );
 };
 
 const loadGarages = () => {
