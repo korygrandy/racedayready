@@ -1,4 +1,4 @@
-/* --- NEW: CSS Variables for Theming --- */
+/* --- CSS Variables for Theming --- */
 :root {
     --color-bg-body: #000000;
     --color-text-primary: #D1D5DB; /* gray-300 */
@@ -51,4 +51,12 @@ body {
 }
 .inactive-card:hover {
     background-color: var(--color-card-darker);
+}
+
+/* Drag handle for sortable lists */
+.drag-handle {
+    cursor: grab;
+}
+.drag-handle:active {
+    cursor: grabbing;
 }

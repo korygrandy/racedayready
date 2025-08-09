@@ -7,7 +7,7 @@ let eventToEdit = null;
 
 export const updateRacedayCountdown = () => {
     if (!App.currentUser) {
-        elements.racedayCountdown.classList.add('hidden');
+        elements.racedayCountdownContainer.classList.add('hidden');
         return;
     }
 
@@ -20,11 +20,16 @@ export const updateRacedayCountdown = () => {
                 const diffTime = eventDate - now;
                 const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
 
-                elements.racedayCountdownText.textContent = `${diffDays} Days`;
-                elements.racedayCountdown.classList.remove('hidden');
+                elements.racedayCountdownDays.textContent = diffDays;
+                elements.racedayCountdownCircle.classList.remove('hidden');
+                elements.racedayCountdownLabel.classList.remove('hidden');
+                elements.noRacedayIcon.classList.add('hidden');
+                elements.racedayCountdownContainer.classList.remove('hidden');
             } else {
-                elements.racedayCountdownText.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 mx-auto" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>`;
-                elements.racedayCountdown.classList.remove('hidden');
+                elements.racedayCountdownCircle.classList.add('hidden');
+                elements.racedayCountdownLabel.classList.add('hidden');
+                elements.noRacedayIcon.classList.remove('hidden');
+                elements.racedayCountdownContainer.classList.remove('hidden');
             }
         });
 };
@@ -142,6 +147,7 @@ export const initSchedule = () => {
             if (data.success) {
                 elements.addEventForm.reset();
                 loadEvents();
+                updateRacedayCountdown();
             }
         });
     });
@@ -168,6 +174,7 @@ export const initSchedule = () => {
             if (data.success) {
                 elements.editEventModal.classList.add('hidden');
                 loadEvents();
+                updateRacedayCountdown();
             }
         });
     });
@@ -186,6 +193,7 @@ export const initSchedule = () => {
                     .then(data => {
                         showMessage(data.message, data.success);
                         loadEvents();
+                        updateRacedayCountdown();
                     });
             });
         } else if (button.classList.contains('edit-event-btn')) {
@@ -199,6 +207,11 @@ export const initSchedule = () => {
 
     elements.backToPrepFromScheduleBtn.addEventListener('click', () => {
         App.setView('raceDayPrep');
+    });
+
+    elements.racedayCountdownContainer.addEventListener('click', () => {
+        console.log("Raceday countdown clicked, navigating to schedule.");
+        App.setView('raceSchedule');
     });
 
     App.loadEvents = loadEvents;

@@ -152,7 +152,7 @@ export const updateProfile = (profileId, updates, refreshList = true) => {
     })
     .then(response => response.json())
     .then(data => {
-        showMessage(data.message, data.success);
+        if (refreshList) showMessage(data.message, data.success);
         if (data.success && refreshList) {
             checkProfiles();
         }

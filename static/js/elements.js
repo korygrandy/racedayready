@@ -49,8 +49,11 @@ export const cancelEditEventBtn = document.getElementById('cancel-edit-event-btn
 export const saveEventBtn = document.getElementById('save-event-btn');
 
 // Raceday Countdown
-export const racedayCountdown = document.getElementById('raceday-countdown');
-export const racedayCountdownText = document.getElementById('raceday-countdown-text');
+export const racedayCountdownContainer = document.getElementById('raceday-countdown-container');
+export const racedayCountdownCircle = document.getElementById('raceday-countdown-circle');
+export const racedayCountdownDays = document.getElementById('raceday-countdown-days');
+export const noRacedayIcon = document.getElementById('no-raceday-icon');
+export const racedayCountdownLabel = document.getElementById('raceday-countdown-label');
 
 // Garage Management Elements
 export const garageManagementView = document.getElementById('garage-management-view');

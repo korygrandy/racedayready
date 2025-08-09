@@ -12,7 +12,30 @@
 <body class="bg-body text-text-primary transition-colors duration-300">
 
     <div id="app-container" class="h-screen flex flex-col font-sans">
-
+        <div id="global-header" class="w-full p-4 flex justify-between items-center">
+            <div id="profile-section" class="flex items-center space-x-4">
+                <div id="profile-header-btn" class="hidden items-center space-x-4 cursor-pointer p-2 rounded-lg hover:bg-interactive-hover" title="Change Profile">
+                    <div id="features-helmet-display" class="w-12 h-12"></div>
+                    <span id="features-username" class="text-lg font-semibold"></span>
+                </div>
+            </div>
+            <div id="raceday-countdown-container" class="hidden items-center">
+                <span id="raceday-countdown-label" class="text-lg font-bold mr-2">Days Until Next Race:</span>
+                <div id="raceday-countdown-circle" class="w-16 h-16 bg-orange-500 rounded-full flex items-center justify-center text-white shadow-lg">
+                    <span id="raceday-countdown-days" class="text-3xl font-bold"></span>
+                </div>
+                <div id="no-raceday-icon" class="hidden">
+                     <svg class="w-16 h-16 text-red-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3.5 3.5l17 17" />
+                    </svg>
+                </div>
+            </div>
+            <div id="theme-switcher-container">
+                 <button id="theme-switcher-btn" class="p-2 rounded-full hover:bg-interactive-hover" title="Toggle Theme">
+                    </button>
+            </div>
+        </div>
         <main class="flex-grow w-full p-4 overflow-y-auto">
             <div class="w-full max-w-6xl mx-auto">
                 <div id="main-view" class="w-full text-center py-16">
@@ -24,18 +47,6 @@
                 </div>
 
                 <div id="features-view" class="w-full max-w-6xl mx-auto hidden text-center py-16">
-                    <div class="absolute top-4 left-4 flex items-center space-x-4">
-                        <div id="profile-header-btn" class="flex items-center space-x-4 cursor-pointer p-2 rounded-lg hover:bg-interactive-hover" title="Change Profile">
-                            <div id="features-helmet-display" class="w-12 h-12"></div>
-                            <span id="features-username" class="text-lg font-semibold"></span>
-                        </div>
-                        <button id="theme-switcher-btn" class="p-2 rounded-full hover:bg-interactive-hover" title="Toggle Theme">
-                            </button>
-                    </div>
-                    <div id="raceday-countdown" class="hidden text-center mb-8">
-                        <h2 class="text-2xl font-bold">Countdown to Raceday</h2>
-                        <p id="raceday-countdown-text" class="text-5xl font-bold text-blue-500"></p>
-                    </div>
                     <h1 id="features-heading" class="text-4xl md:text-5xl font-bold mb-8">Raceday Ready Features</h1>
                     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                         <div id="feature-card-1" class="bg-card p-6 rounded-lg shadow-lg hover:bg-interactive-hover cursor-pointer"><h2 class="text-xl font-bold mb-2">Race Day Preparation & Logistics</h2></div>
@@ -282,16 +293,18 @@
                     <div id="changelog-section" class="mb-8">
                         <h3 id="changelog-heading" class="text-2xl font-semibold mb-3">Changelog</h3>
                         <div class="space-y-4">
+                            <div class="bg-card-darker p-4 rounded-lg shadow">
+                                <h4 class="font-bold text-lg">Version 1.8.3 (August 9, 2025)</h4>
+                                <ul class="list-disc list-inside mt-2 text-text-secondary space-y-1">
+                                    <li>Added a prominent, global countdown timer for the next "Raceday" event.</li>
+                                    <li>Fixed a defect where the Race Event edit modal was not appearing.</li>
+                                    <li>Made the countdown timer a clickable element that navigates to the Race Schedule.</li>
+                                </ul>
+                            </div>
                              <div class="bg-card-darker p-4 rounded-lg shadow">
                                 <h4 class="font-bold text-lg">Version 1.8.2 (August 9, 2025)</h4>
                                 <ul class="list-disc list-inside mt-2 text-text-secondary space-y-1">
                                     <li>Fixed a defect where updating the theme would incorrectly trigger the profile selection modal.</li>
-                                </ul>
-                            </div>
-                             <div class="bg-card-darker p-4 rounded-lg shadow">
-                                <h4 class="font-bold text-lg">Version 1.8.1 (August 9, 2025)</h4>
-                                <ul class="list-disc list-inside mt-2 text-text-secondary space-y-1">
-                                    <li>Fixed a defect where deleting a user profile did not remove their associated sub-collections (garages, vehicles, events).</li>
                                 </ul>
                             </div>
                         </div>
@@ -300,10 +313,10 @@
                     <div id="defect-resolutions-section" class="mb-8">
                         <h3 id="defect-resolutions-heading" class="text-2xl font-semibold mb-3">Defect Resolutions</h3>
                         <div class="space-y-4">
-                             <div id="defect-entry-theme-switcher" class="bg-card-darker p-4 rounded-lg shadow">
-                                <h4 class="font-bold text-lg">Theme Switcher Bug (Fixed: Aug 9, 2025) - v1.8.2</h4>
+                             <div id="defect-entry-countdown" class="bg-card-darker p-4 rounded-lg shadow">
+                                <h4 class="font-bold text-lg">Raceday Countdown Not Displaying (Fixed: Aug 9, 2025) - v1.8.3</h4>
                                 <p class="mt-2 text-text-secondary">
-                                    <strong>Resolution:</strong> The `updateProfile` function was refactored to include an optional parameter that prevents the profile list from being re-rendered after a theme-only update. This ensures that changing the theme is a seamless experience for the user.
+                                    <strong>Resolution:</strong> The countdown UI element was moved to a new global header in the HTML structure to ensure it is always visible after profile selection. The associated JavaScript was updated to correctly show the countdown or the "no event" icon based on whether a future Raceday is scheduled.
                                 </p>
                             </div>
                         </div>
