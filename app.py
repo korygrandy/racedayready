@@ -35,7 +35,7 @@ print("✅ Firebase Initialized Successfully.")
 # This function fetches the version from Firestore, with a fallback.
 def get_app_version():
     # This version number will be incremented with each new set of changes.
-    default_version = '1.7.4'
+    default_version = '1.7.8'
     try:
         config_ref = db.collection('config').document('app_info')
         config_doc = config_ref.get()
@@ -501,11 +501,18 @@ def add_garage():
             return jsonify({'success': False, 'message': 'Garage name cannot exceed 25 characters.'}), 400
 
         garage_limit = get_limit('admin_settings', 'garages', 10)
-        current_garages = list(db.collection('driver_profiles').document(profile_id).collection('garages').stream())
+        garages_ref = db.collection('driver_profiles').document(profile_id).collection('garages')
+        current_garages = list(garages_ref.stream())
         if len(current_garages) >= garage_limit:
             return jsonify({'success': False, 'message': f'Garage limit of {garage_limit} reached.'}), 403
 
-        doc_ref = db.collection('driver_profiles').document(profile_id).collection('garages').document()
+        # Check for duplicate name
+        existing_garage = garages_ref.where('name', '==', garage_name).limit(1).get()
+        if existing_garage:
+            return jsonify(
+                {'success': False, 'message': f'A garage with the name "{garage_name}" already exists.'}), 409
+
+        doc_ref = garages_ref.document()
         doc_ref.set({
             'name': garage_name,
             'created_at': datetime.datetime.now(datetime.timezone.utc)
@@ -609,6 +616,7 @@ def add_vehicle(profile_id):
             'model': data.get('model'),
             'garageId': data.get('garageId'),
             'photo': data.get('photo'),  # Base64 string
+            'photoURL': data.get('photoURL'),  # URL string
             'created_at': datetime.datetime.now(datetime.timezone.utc),
             'order': len(current_vehicles)
         }
@@ -628,12 +636,16 @@ def add_vehicle(profile_id):
 @app.route('/get-vehicles/<profile_id>', methods=['GET'])
 def get_vehicles(profile_id):
     try:
+        garages_ref = db.collection('driver_profiles').document(profile_id).collection('garages').stream()
+        garage_map = {doc.id: doc.to_dict().get('name', 'Unknown') for doc in garages_ref}
+
         vehicles_ref = db.collection('driver_profiles').document(profile_id).collection('vehicles').order_by(
             'order').stream()
         vehicles = []
         for doc in vehicles_ref:
             vehicle = doc.to_dict()
             vehicle['id'] = doc.id
+            vehicle['garageName'] = garage_map.get(vehicle.get('garageId'))
             vehicles.append(vehicle)
 
         vehicle_limit = get_limit('admin_settings', 'vehicles', 25)
@@ -658,6 +670,10 @@ def update_vehicle(profile_id, vehicle_id):
         }
         if 'photo' in data:  # Only update photo if a new one is provided
             updates['photo'] = data.get('photo')
+            updates['photoURL'] = None  # Clear URL if photo is uploaded
+        elif 'photoURL' in data:
+            updates['photoURL'] = data.get('photoURL')
+            updates['photo'] = None  # Clear photo if URL is provided
 
         if not all([updates['year'], updates['make'], updates['model']]):
             return jsonify({'success': False, 'message': 'Year, Make, and Model are required.'}), 400
