@@ -1,11 +1,11 @@
 import * as elements from './elements.js';
 import { showMessage } from './ui.js';
 import { initTheme } from './theme.js';
-import { initProfiles, checkProfiles, updateProfile } from './profile.js';
+import { initProfiles, checkProfiles, updateProfile, checkProfileStatus } from './profile.js';
 import { initFeatures, loadFeatureRequests } from './features.js';
 import { initAdmin } from './admin.js';
 import { initGarage } from './garage.js';
-import { initVehicle } from './vehicle.js'; // NEW
+import { initVehicle } from './vehicle.js';
 
 // --- Global App Object ---
 export const App = {
@@ -15,7 +15,7 @@ export const App = {
     updateProfile: updateProfile,
     loadAdminSettings: null,
     loadGarages: null,
-    loadVehicles: null, // NEW
+    loadVehicles: null,
 };
 
 // --- View Toggling Logic ---
@@ -27,7 +27,7 @@ const setView = (viewName) => {
     elements.raceDayPrepView.classList.add('hidden');
     elements.upcomingFeaturesView.classList.add('hidden');
     elements.garageManagementView.classList.add('hidden');
-    elements.vehicleManagementView.classList.add('hidden'); // NEW
+    elements.vehicleManagementView.classList.add('hidden');
 
     const isDevMode = viewName === 'developer';
     elements.devModeBtn.classList.toggle('hidden', isDevMode);
@@ -37,6 +37,7 @@ const setView = (viewName) => {
         if (App.loadAdminSettings) App.loadAdminSettings();
     } else if (viewName === 'features') {
         elements.featuresView.classList.remove('hidden');
+        checkProfileStatus(); // Check for missing items every time
     } else if (viewName === 'raceDayPrep') {
         elements.raceDayPrepView.classList.remove('hidden');
     } else if (viewName === 'upcomingFeatures') {
@@ -45,7 +46,7 @@ const setView = (viewName) => {
     } else if (viewName === 'garageManagement') {
         elements.garageManagementView.classList.remove('hidden');
         if (App.loadGarages) App.loadGarages();
-    } else if (viewName === 'vehicleManagement') { // NEW
+    } else if (viewName === 'vehicleManagement') {
         elements.vehicleManagementView.classList.remove('hidden');
         if (App.loadVehicles) App.loadVehicles();
     } else {
@@ -137,7 +138,7 @@ const initEventListeners = () => {
         setView('raceDayPrep');
     });
 
-    elements.featureCard2.addEventListener('click', () => { // NEW
+    elements.featureCard2.addEventListener('click', () => {
         console.log("Click Event: 'Vehicle Management' card clicked.");
         setView('vehicleManagement');
     });
@@ -180,5 +181,5 @@ document.addEventListener('DOMContentLoaded', () => {
     initFeatures();
     initAdmin();
     initGarage();
-    initVehicle(); // NEW
+    initVehicle();
 });

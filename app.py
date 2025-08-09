@@ -35,7 +35,7 @@ print("✅ Firebase Initialized Successfully.")
 # This function fetches the version from Firestore, with a fallback.
 def get_app_version():
     # This version number will be incremented with each new set of changes.
-    default_version = '1.7.1'
+    default_version = '1.7.0'
     try:
         config_ref = db.collection('config').document('app_info')
         config_doc = config_ref.get()
@@ -527,7 +527,6 @@ def get_garages(profile_id):
         if not profile_id:
             return jsonify({'success': False, 'message': 'Profile ID is required.'}), 400
 
-        # Get all vehicles for the profile first
         vehicles_ref = db.collection('driver_profiles').document(profile_id).collection('vehicles').stream()
         all_vehicles = []
         for doc in vehicles_ref:
@@ -535,7 +534,6 @@ def get_garages(profile_id):
             vehicle['id'] = doc.id
             all_vehicles.append(vehicle)
 
-        # Get all garages and associate vehicles
         garages_ref = db.collection('driver_profiles').document(profile_id).collection('garages').stream()
         garages = []
         for doc in garages_ref:

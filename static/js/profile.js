@@ -5,6 +5,27 @@ import { App } from './main.js';
 
 let currentProfileForPinSettings = null;
 
+export const checkProfileStatus = () => {
+    if (!App.currentUser) return;
+
+    console.log("Checking profile status for garages and vehicles...");
+
+    fetch(`/get-garages/${App.currentUser.id}`)
+        .then(res => res.json())
+        .then(garageData => {
+            if (garageData.success && garageData.garages.length === 0) {
+                showMessage('Reminder: No garages found. Please add a garage.', false);
+            }
+            return fetch(`/get-vehicles/${App.currentUser.id}`);
+        })
+        .then(res => res.json())
+        .then(vehicleData => {
+            if (vehicleData.success && vehicleData.vehicles.length === 0) {
+                showMessage('Reminder: No vehicles found. Please add a vehicle.', false);
+            }
+        });
+};
+
 const hideProfileModal = () => {
     console.log("Hiding create profile modal.");
     elements.profileModal.classList.add('hidden');
