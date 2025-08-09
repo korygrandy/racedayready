@@ -4,21 +4,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Raceday Ready</title>
-    <!-- Tailwind CSS for styling -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Custom CSS -->
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body class="bg-black text-gray-300">
 
-    <!-- Main container -->
     <div id="app-container" class="h-screen flex flex-col font-sans">
 
-        <!-- Main Content Wrapper - This now handles scrolling to keep the footer visible -->
         <main class="flex-grow w-full p-4 overflow-y-auto">
-            <!-- This inner div helps manage the content alignment -->
             <div class="w-full max-w-6xl mx-auto">
-                <!-- View container for toggling between app and dev mode -->
                 <div id="main-view" class="w-full text-center py-16">
                     <h1 id="main-heading" class="text-4xl md:text-5xl font-bold mb-4 text-white">Hello World!</h1>
                     <p id="main-subheading" class="text-xl md:text-2xl mb-8 text-gray-300">Welcome to Raceday Ready!</p>
@@ -27,7 +21,6 @@
                     </button>
                 </div>
 
-                <!-- Features View -->
                 <div id="features-view" class="w-full max-w-6xl mx-auto hidden text-center py-16">
                     <div id="profile-header-btn" class="absolute top-4 left-4 flex items-center space-x-4 cursor-pointer p-2 rounded-lg hover:bg-gray-800" title="Change Profile">
                         <div id="features-helmet-display" class="w-12 h-12"></div>
@@ -35,7 +28,6 @@
                     </div>
                     <h1 id="features-heading" class="text-4xl md:text-5xl font-bold mb-8 text-white">Raceday Ready Features</h1>
                     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                        <!-- Cards -->
                         <div id="feature-card-1" class="bg-gray-800 p-6 rounded-lg shadow-lg hover:bg-gray-700 cursor-pointer"><h2 class="text-xl font-bold text-white mb-2">Race Day Preparation & Logistics</h2></div>
                         <div id="feature-card-2" class="bg-gray-800 p-6 rounded-lg shadow-lg hover:bg-gray-700 cursor-pointer"><h2 class="text-xl font-bold text-white mb-2">Vehicle Management</h2></div>
                         <div id="feature-card-3" class="bg-gray-800 p-6 rounded-lg shadow-lg hover:bg-gray-700 cursor-pointer"><h2 class="text-xl font-bold text-white mb-2">Data Analysis & History</h2></div>
@@ -46,7 +38,6 @@
                     </div>
                 </div>
 
-                <!-- Race Day Prep View -->
                 <div id="race-day-prep-view" class="w-full max-w-6xl mx-auto hidden text-center py-16">
                     <h1 class="text-4xl md:text-5xl font-bold mb-8 text-white">Race Day Preparation & Logistics</h1>
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -59,11 +50,9 @@
                     </button>
                 </div>
 
-                <!-- Upcoming Features View -->
                 <div id="upcoming-features-view" class="w-full max-w-4xl mx-auto hidden text-center py-16">
                     <h1 class="text-4xl md:text-5xl font-bold mb-8 text-white">Upcoming Features & Requests</h1>
 
-                    <!-- NEW: Critical Upcoming Features Section -->
                     <div id="critical-features-section" class="mb-8 bg-yellow-900/30 border border-yellow-700 p-6 rounded-lg shadow-lg text-left">
                         <h2 class="text-2xl font-bold text-yellow-300 mb-4">Critical Upcoming Features</h2>
                         <p class="text-yellow-400 mb-4">Based on our goals, here are the top three features we should prioritize:</p>
@@ -84,12 +73,10 @@
                         </form>
                     </div>
 
-                    <!-- Existing Requests Section -->
                     <div id="existing-requests-section" class="mt-8 bg-gray-800 p-8 rounded-lg shadow-lg text-left">
                         <h2 class="text-2xl font-bold text-white mb-4">Existing Requests</h2>
                         <div id="feature-request-list" class="space-y-4">
-                            <!-- Requests will be loaded here via JavaScript -->
-                        </div>
+                            </div>
                     </div>
 
                      <button id="back-to-features-from-upcoming-btn" class="mt-8 px-6 py-2 bg-gray-600 text-white font-semibold rounded-lg shadow-md hover:bg-gray-500">
@@ -100,7 +87,6 @@
                 <div id="developer-view" class="w-full max-w-4xl mx-auto hidden text-left p-4">
                     <h2 id="developer-view-heading" class="text-3xl font-bold mb-6 border-b pb-2 text-white border-gray-600">Developer Mode</h2>
 
-                    <!-- NEW: Administration Section -->
                     <div id="admin-section" class="mb-8">
                         <h3 class="text-2xl font-semibold mb-3 text-gray-100">Administration</h3>
                         <div class="bg-gray-900 p-4 rounded-lg shadow">
@@ -113,7 +99,6 @@
                         </div>
                     </div>
 
-                    <!-- Developer Readme Section -->
                     <div id="readme-section" class="mb-8">
                         <h3 id="readme-heading" class="text-2xl font-semibold mb-3 text-gray-100">Developer Readme</h3>
                         <div class="bg-gray-900 p-4 rounded-lg shadow">
@@ -123,13 +108,13 @@
                         </div>
                     </div>
 
-                    <!-- Changelog Section -->
                     <div id="changelog-section" class="mb-8">
                         <h3 id="changelog-heading" class="text-2xl font-semibold mb-3 text-gray-100">Changelog</h3>
                         <div class="space-y-4">
                             <div class="bg-gray-900 p-4 rounded-lg shadow">
-                                <h4 class="font-bold text-lg text-gray-100">August 8, 2025: Administration Panel</h4>
+                                <h4 class="font-bold text-lg text-gray-100">August 8, 2025: Security & Administration</h4>
                                 <ul class="list-disc list-inside mt-2 text-gray-300 space-y-1">
+                                    <li>Implemented a PIN prompt for accessing Developer Mode to enhance security.</li>
                                     <li>Added a new "Administration" section to Developer Mode.</li>
                                     <li>Implemented a configurable limit for user profile creation, manageable from the admin panel.</li>
                                     <li>The "Add New Profile" button is now disabled when the limit is reached.</li>
@@ -172,7 +157,6 @@
                         </div>
                     </div>
 
-                    <!-- Defect Resolutions Section -->
                     <div id="defect-resolutions-section" class="mb-8">
                         <h3 id="defect-resolutions-heading" class="text-2xl font-semibold mb-3 text-gray-100">Defect Resolutions</h3>
                         <div class="space-y-4">
@@ -202,10 +186,8 @@
             </div>
         </main>
 
-        <!-- Message Box for feedback -->
         <div id="message-box" class="fixed bottom-24 bg-green-500 text-white py-2 px-4 rounded-lg shadow-lg opacity-0 transform translate-y-10 z-50"></div>
 
-        <!-- Modals -->
         <div id="profile-modal" class="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center hidden z-40">
             <div class="bg-gray-800 p-8 rounded-lg shadow-2xl w-full max-w-md">
                 <h2 class="text-2xl font-bold text-white mb-4">Create Driver Profile</h2>
@@ -270,6 +252,20 @@
             </div>
         </div>
 
+        <div id="dev-pin-entry-modal" class="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center hidden z-40">
+            <div class="bg-gray-800 p-8 rounded-lg shadow-2xl w-full max-w-md">
+                <h2 class="text-2xl font-bold text-white mb-4">Developer Access</h2>
+                <p class="text-gray-400 mb-6">Please enter the PIN to access Developer Mode.</p>
+                <form id="dev-pin-entry-form">
+                    <input type="password" id="dev-pin-entry-input" maxlength="4" autocomplete="new-password" class="block w-full text-center text-2xl tracking-[1em] bg-gray-700 border border-gray-600 rounded-md shadow-sm py-2 px-3 text-white focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                    <div class="mt-6 flex justify-end space-x-4">
+                        <button id="cancel-dev-pin-btn" type="button" class="px-4 py-2 bg-gray-600 text-white font-semibold rounded-lg hover:bg-gray-500">Cancel</button>
+                        <button id="submit-dev-pin-btn" type="submit" class="px-4 py-2 bg-blue-500 text-white font-semibold rounded-lg shadow-md hover:bg-blue-600">Submit</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
         <div id="pin-settings-modal" class="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center hidden z-40">
             <div class="bg-gray-800 p-8 rounded-lg shadow-2xl w-full max-w-md">
                 <h2 class="text-2xl font-bold text-white mb-4" id="pin-settings-heading"></h2>
@@ -292,7 +288,6 @@
             </div>
         </div>
 
-        <!-- Footer Area -->
         <div id="footer-container" class="w-full text-center p-4">
             <button id="dev-mode-btn" class="text-sm text-blue-500 hover:underline mb-2">Developer Mode</button>
             <footer class="text-sm text-gray-400 flex flex-col items-center space-y-1 w-full max-w-4xl mx-auto">
@@ -305,7 +300,6 @@
         </div>
     </div>
 
-    <!-- Custom JavaScript -->
     <script src="{{ url_for('static', filename='script.js') }}"></script>
 
 </body>

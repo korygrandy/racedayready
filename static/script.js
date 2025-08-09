@@ -48,6 +48,13 @@ const pinEntryForm = document.getElementById('pin-entry-form');
 const pinEntryInput = document.getElementById('pin-entry-input');
 const cancelPinEntryBtn = document.getElementById('cancel-pin-entry-btn');
 
+// NEW: Dev PIN Modal Elements
+const devPinEntryModal = document.getElementById('dev-pin-entry-modal');
+const devPinEntryForm = document.getElementById('dev-pin-entry-form');
+const devPinEntryInput = document.getElementById('dev-pin-entry-input');
+const cancelDevPinBtn = document.getElementById('cancel-dev-pin-btn');
+const submitDevPinBtn = document.getElementById('submit-dev-pin-btn');
+
 const pinSettingsModal = document.getElementById('pin-settings-modal');
 const pinSettingsHeading = document.getElementById('pin-settings-heading');
 const pinSettingsForm = document.getElementById('pin-settings-form');
@@ -88,8 +95,9 @@ const setView = (viewName) => {
 };
 
 devModeBtn.addEventListener('click', () => {
-    console.log("Click Event: 'Developer Mode' button clicked.");
-    setView('developer');
+    console.log("Click Event: 'Developer Mode' button clicked. Showing PIN modal.");
+    devPinEntryModal.classList.remove('hidden');
+    devPinEntryInput.focus();
 });
 
 backToAppBtn.addEventListener('click', () => {
@@ -494,6 +502,33 @@ const hidePinEntryModal = () => {
 cancelPinEntryBtn.addEventListener('click', () => {
     hidePinEntryModal();
 });
+
+
+// --- Developer PIN Modal Logic ---
+devPinEntryForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const enteredPin = devPinEntryInput.value;
+    console.log(`Dev PIN submitted: ${enteredPin}`);
+
+    if (enteredPin === '3511') {
+        console.log("Dev PIN validation successful.");
+        showMessage('Access Granted.', true);
+        devPinEntryModal.classList.add('hidden');
+        devPinEntryInput.value = ''; // Clear input
+        setView('developer');
+    } else {
+        console.error("Dev PIN validation failed.");
+        showMessage('Incorrect PIN.', false);
+        devPinEntryInput.value = ''; // Clear input
+    }
+});
+
+cancelDevPinBtn.addEventListener('click', () => {
+    devPinEntryModal.classList.add('hidden');
+    devPinEntryInput.value = ''; // Clear input
+    console.log("Dev PIN entry canceled.");
+});
+
 
 // --- PIN Settings Modal Logic ---
 const showPinSettingsModal = (profile) => {
