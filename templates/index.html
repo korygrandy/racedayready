@@ -52,6 +52,17 @@
 
                 <div id="upcoming-features-view" class="w-full max-w-4xl mx-auto hidden text-center">
                     <h1 class="text-4xl md:text-5xl font-bold mb-8 text-white">Upcoming Features & Requests</h1>
+
+                    <div id="critical-features-section" class="mb-8 bg-yellow-900/30 border border-yellow-700 p-6 rounded-lg shadow-lg text-left">
+                        <h2 class="text-2xl font-bold text-yellow-300 mb-4">Critical Upcoming Features</h2>
+                        <p class="text-yellow-400 mb-4">Based on our goals, here are the top three features we should prioritize:</p>
+                        <ol class="list-decimal list-inside space-y-3 text-gray-300">
+                            <li><strong>Advanced Race Day Checklists:</strong> Create dynamic, template-based checklists for pre-race, mid-day, and post-race activities to ensure nothing is missed.</li>
+                            <li><strong>Tire Management Module:</strong> A dedicated section to track tire sets, heat cycles, pressures, and performance notes to optimize usage and on-track results.</li>
+                            <li><strong>Basic Telemetry Integration:</strong> Allow users to upload data from popular lap timers (e.g., AiM, VBOX) to view key metrics and link them to session notes.</li>
+                        </ol>
+                    </div>
+
                     <div class="bg-gray-800 p-8 rounded-lg shadow-lg text-left">
                         <h2 class="text-2xl font-bold text-white mb-4">Submit a Feature Request</h2>
                         <p class="text-gray-400 mb-6">Have an idea for a new feature? Let us know!</p>
@@ -88,6 +99,20 @@
                     <div id="changelog-section" class="mb-8">
                         <h3 id="changelog-heading" class="text-2xl font-semibold mb-3 text-gray-100">Changelog</h3>
                         <div class="space-y-4">
+                            <div class="bg-gray-900 p-4 rounded-lg shadow">
+                                <h4 class="font-bold text-lg text-gray-100">August 8, 2025: Developer Mode Enhancements</h4>
+                                <ul class="list-disc list-inside mt-2 text-gray-300 space-y-1">
+                                    <li>Added the application version number to each entry in the Defect Resolutions section for better tracking.</li>
+                                </ul>
+                            </div>
+                            <div id="changelog-entry-new-2" class="bg-gray-900 p-4 rounded-lg shadow">
+                                <h4 class="font-bold text-lg text-gray-100">August 8, 2025: Feature Request Management</h4>
+                                <ul class="list-disc list-inside mt-2 text-gray-300 space-y-1">
+                                    <li>Added a "Critical Upcoming Features" section to highlight development priorities.</li>
+                                    <li>Users can now delete feature requests directly from the list using a new 'X' button.</li>
+                                    <li>The backend now supports deleting individual requests from Firestore.</li>
+                                </ul>
+                            </div>
                              <div id="changelog-entry-new" class="bg-gray-900 p-4 rounded-lg shadow">
                                 <h4 class="font-bold text-lg text-gray-100">August 8, 2025: UI and Layout Bugfixes</h4>
                                 <ul class="list-disc list-inside mt-2 text-gray-300 space-y-1">
@@ -114,13 +139,13 @@
                         <h3 id="defect-resolutions-heading" class="text-2xl font-semibold mb-3 text-gray-100">Defect Resolutions</h3>
                         <div class="space-y-4">
                              <div id="defect-entry-new" class="bg-gray-900 p-4 rounded-lg shadow">
-                                <h4 class="font-bold text-lg text-gray-100">Developer Mode Link Unresponsive (Fixed: Aug 8, 2025)</h4>
+                                <h4 class="font-bold text-lg text-gray-100">Developer Mode Link Unresponsive (Fixed: Aug 8, 2025) - v{{ app_version }}</h4>
                                 <p class="mt-2 text-gray-300">
                                     <strong>Resolution:</strong> The main application container was restructured to ensure the footer containing the 'Developer Mode' link remains fixed and accessible at the bottom of the viewport, regardless of the content height in the main view. This resolves an issue where the link could be pushed off-screen and become unclickable on certain pages.
                                 </p>
                             </div>
                              <div id="defect-entry-1" class="bg-gray-900 p-4 rounded-lg shadow">
-                                <h4 class="font-bold text-lg text-gray-100">PIN Input Autofilled (Fixed: Aug 8, 2025)</h4>
+                                <h4 class="font-bold text-lg text-gray-100">PIN Input Autofilled (Fixed: Aug 8, 2025) - v{{ app_version }}</h4>
                                 <p class="mt-2 text-gray-300">
                                     <strong>Resolution:</strong> The `autocomplete="new-password"` attribute was added to the PIN input fields to prevent browsers from auto-filling previously entered PINs.
                                 </p>
