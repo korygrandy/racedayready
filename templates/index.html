@@ -1,141 +1,140 @@
-
 <!DOCTYPE html>
 <html lang="en" class="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Raceday Ready</title>
-    <!-- Tailwind CSS for styling -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Custom CSS -->
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body class="bg-black text-gray-300">
 
-    <!-- Main container -->
-    <div id="app-container" class="min-h-screen flex flex-col items-center font-sans">
+    <div id="app-container" class="h-screen flex flex-col font-sans">
 
-        <!-- Main Content Wrapper -->
-        <main class="w-full flex-grow flex items-center justify-center p-4">
-            <!-- View container for toggling between app and dev mode -->
-            <div id="main-view" class="w-full text-center">
-                <h1 id="main-heading" class="text-4xl md:text-5xl font-bold mb-4 text-white">Hello World!</h1>
-                <p id="main-subheading" class="text-xl md:text-2xl mb-8 text-gray-300">Welcome to Raceday Ready!</p>
-                <button id="ready-button" class="px-8 py-4 bg-blue-500 text-white font-semibold rounded-lg shadow-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-all duration-300 ease-in-out transform hover:-translate-y-1">
-                    Click to get ready!
-                </button>
-            </div>
-
-            <!-- Features View -->
-            <div id="features-view" class="w-full max-w-6xl mx-auto hidden text-center">
-                <div id="profile-header-btn" class="absolute top-4 left-4 flex items-center space-x-4 cursor-pointer p-2 rounded-lg hover:bg-gray-800" title="Change Profile">
-                    <div id="features-helmet-display" class="w-12 h-12"></div>
-                    <span id="features-username" class="text-lg font-semibold text-white"></span>
-                </div>
-                <h1 id="features-heading" class="text-4xl md:text-5xl font-bold mb-8 text-white">Raceday Ready Features</h1>
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                    <!-- Cards -->
-                    <div id="feature-card-1" class="bg-gray-800 p-6 rounded-lg shadow-lg hover:bg-gray-700 cursor-pointer"><h2 class="text-xl font-bold text-white mb-2">Race Day Preparation & Logistics</h2></div>
-                    <div id="feature-card-2" class="bg-gray-800 p-6 rounded-lg shadow-lg hover:bg-gray-700 cursor-pointer"><h2 class="text-xl font-bold text-white mb-2">Vehicle Management</h2></div>
-                    <div id="feature-card-3" class="bg-gray-800 p-6 rounded-lg shadow-lg hover:bg-gray-700 cursor-pointer"><h2 class="text-xl font-bold text-white mb-2">Data Analysis & History</h2></div>
-                    <div id="feature-card-4" class="bg-gray-800 p-6 rounded-lg shadow-lg hover:bg-gray-700 cursor-pointer"><h2 class="text-xl font-bold text-white mb-2">Social & Community Features</h2></div>
-                    <div id="feature-card-5" class="bg-gray-800 p-6 rounded-lg shadow-lg hover:bg-gray-700 cursor-pointer"><h2 class="text-xl font-bold text-white mb-2">Engagement & Motivation</h2></div>
-                    <div id="feature-card-6" class="bg-gray-800 p-6 rounded-lg shadow-lg hover:bg-gray-700 cursor-pointer"><h2 class="text-xl font-bold text-white mb-2">Garage Management</h2></div>
-                    <div id="feature-card-7" class="bg-gray-800 p-6 rounded-lg shadow-lg hover:bg-gray-700 cursor-pointer"><h2 class="text-xl font-bold text-white mb-2">Upcoming Features</h2></div>
-                </div>
-            </div>
-
-            <!-- Race Day Prep View -->
-            <div id="race-day-prep-view" class="w-full max-w-6xl mx-auto hidden text-center">
-                <h1 class="text-4xl md:text-5xl font-bold mb-8 text-white">Race Day Preparation & Logistics</h1>
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                    <div id="race-schedule-card" class="bg-gray-800 p-6 rounded-lg shadow-lg hover:bg-gray-700 cursor-pointer"><h2 class="text-xl font-bold text-white mb-2">Race Schedule</h2></div>
-                    <div id="automated-tasks-card" class="bg-gray-800 p-6 rounded-lg shadow-lg hover:bg-gray-700 cursor-pointer"><h2 class="text-xl font-bold text-white mb-2">Automated Tasks & Schedules</h2></div>
-                    <div id="track-info-card" class="bg-gray-800 p-6 rounded-lg shadow-lg hover:bg-gray-700 cursor-pointer"><h2 class="text-xl font-bold text-white mb-2">Track Information Management</h2></div>
-                </div>
-                <button id="back-to-features-btn" class="mt-8 px-6 py-2 bg-gray-600 text-white font-semibold rounded-lg shadow-md hover:bg-gray-500">
-                    Back to Features
-                </button>
-            </div>
-
-            <!-- Upcoming Features View -->
-            <div id="upcoming-features-view" class="w-full max-w-4xl mx-auto hidden text-center">
-                <h1 class="text-4xl md:text-5xl font-bold mb-8 text-white">Upcoming Features & Requests</h1>
-                <div class="bg-gray-800 p-8 rounded-lg shadow-lg text-left">
-                    <h2 class="text-2xl font-bold text-white mb-4">Submit a Feature Request</h2>
-                    <p class="text-gray-400 mb-6">Have an idea for a new feature? Let us know!</p>
-                    <form id="feature-request-form">
-                        <textarea id="feature-request-textarea" rows="4" maxlength="500" class="w-full bg-gray-700 border border-gray-600 rounded-md p-2 text-white" placeholder="Describe your feature idea..."></textarea>
-                        <div class="text-right text-sm text-gray-500 mt-1"><span id="char-counter">0 / 500</span></div>
-                        <button id="submit-feature-request-btn" type="submit" class="mt-4 w-full bg-blue-500 text-white font-semibold py-2 px-4 rounded-lg shadow-md hover:bg-blue-600">Submit Request</button>
-                    </form>
+        <main class="flex-grow w-full p-4 overflow-y-auto flex items-center justify-center">
+            <div class="w-full">
+                <div id="main-view" class="w-full text-center">
+                    <h1 id="main-heading" class="text-4xl md:text-5xl font-bold mb-4 text-white">Hello World!</h1>
+                    <p id="main-subheading" class="text-xl md:text-2xl mb-8 text-gray-300">Welcome to Raceday Ready!</p>
+                    <button id="ready-button" class="px-8 py-4 bg-blue-500 text-white font-semibold rounded-lg shadow-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-all duration-300 ease-in-out transform hover:-translate-y-1">
+                        Click to get ready!
+                    </button>
                 </div>
 
-                <!-- NEW: Existing Requests Section -->
-                <div id="existing-requests-section" class="mt-8 bg-gray-800 p-8 rounded-lg shadow-lg text-left">
-                    <h2 class="text-2xl font-bold text-white mb-4">Existing Requests</h2>
-                    <div id="feature-request-list" class="space-y-4">
-                        <!-- Requests will be loaded here -->
+                <div id="features-view" class="w-full max-w-6xl mx-auto hidden text-center">
+                    <div id="profile-header-btn" class="absolute top-4 left-4 flex items-center space-x-4 cursor-pointer p-2 rounded-lg hover:bg-gray-800" title="Change Profile">
+                        <div id="features-helmet-display" class="w-12 h-12"></div>
+                        <span id="features-username" class="text-lg font-semibold text-white"></span>
+                    </div>
+                    <h1 id="features-heading" class="text-4xl md:text-5xl font-bold mb-8 text-white">Raceday Ready Features</h1>
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                        <div id="feature-card-1" class="bg-gray-800 p-6 rounded-lg shadow-lg hover:bg-gray-700 cursor-pointer"><h2 class="text-xl font-bold text-white mb-2">Race Day Preparation & Logistics</h2></div>
+                        <div id="feature-card-2" class="bg-gray-800 p-6 rounded-lg shadow-lg hover:bg-gray-700 cursor-pointer"><h2 class="text-xl font-bold text-white mb-2">Vehicle Management</h2></div>
+                        <div id="feature-card-3" class="bg-gray-800 p-6 rounded-lg shadow-lg hover:bg-gray-700 cursor-pointer"><h2 class="text-xl font-bold text-white mb-2">Data Analysis & History</h2></div>
+                        <div id="feature-card-4" class="bg-gray-800 p-6 rounded-lg shadow-lg hover:bg-gray-700 cursor-pointer"><h2 class="text-xl font-bold text-white mb-2">Social & Community Features</h2></div>
+                        <div id="feature-card-5" class="bg-gray-800 p-6 rounded-lg shadow-lg hover:bg-gray-700 cursor-pointer"><h2 class="text-xl font-bold text-white mb-2">Engagement & Motivation</h2></div>
+                        <div id="feature-card-6" class="bg-gray-800 p-6 rounded-lg shadow-lg hover:bg-gray-700 cursor-pointer"><h2 class="text-xl font-bold text-white mb-2">Garage Management</h2></div>
+                        <div id="feature-card-7" class="bg-gray-800 p-6 rounded-lg shadow-lg hover:bg-gray-700 cursor-pointer"><h2 class="text-xl font-bold text-white mb-2">Upcoming Features</h2></div>
                     </div>
                 </div>
 
-                 <button id="back-to-features-from-upcoming-btn" class="mt-8 px-6 py-2 bg-gray-600 text-white font-semibold rounded-lg shadow-md hover:bg-gray-500">
-                    Back to Features
-                </button>
-            </div>
-
-            <div id="developer-view" class="w-full max-w-4xl mx-auto hidden text-left p-4">
-                <h2 id="developer-view-heading" class="text-3xl font-bold mb-6 border-b pb-2 text-white border-gray-600">Developer Mode</h2>
-
-                <!-- Developer Readme Section -->
-                <div id="readme-section" class="mb-8">
-                    <h3 id="readme-heading" class="text-2xl font-semibold mb-3 text-gray-100">Developer Readme</h3>
-                    <div class="bg-gray-900 p-4 rounded-lg shadow">
-                        <h4 id="readme-subheading" class="font-bold text-lg text-gray-100">How to Run the Application</h4>
-                        <p class="mt-2 text-gray-300">To run this Flask application locally, ensure you have Python and the required packages (`Flask`, `firebase-admin`) installed. Navigate to the project's root directory in your terminal and execute the following command:</p>
-                        <pre id="readme-code-block" class="bg-gray-800 p-2 rounded mt-2 text-gray-200"><code>py app.py</code></pre>
+                <div id="race-day-prep-view" class="w-full max-w-6xl mx-auto hidden text-center">
+                    <h1 class="text-4xl md:text-5xl font-bold mb-8 text-white">Race Day Preparation & Logistics</h1>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <div id="race-schedule-card" class="bg-gray-800 p-6 rounded-lg shadow-lg hover:bg-gray-700 cursor-pointer"><h2 class="text-xl font-bold text-white mb-2">Race Schedule</h2></div>
+                        <div id="automated-tasks-card" class="bg-gray-800 p-6 rounded-lg shadow-lg hover:bg-gray-700 cursor-pointer"><h2 class="text-xl font-bold text-white mb-2">Automated Tasks & Schedules</h2></div>
+                        <div id="track-info-card" class="bg-gray-800 p-6 rounded-lg shadow-lg hover:bg-gray-700 cursor-pointer"><h2 class="text-xl font-bold text-white mb-2">Track Information Management</h2></div>
                     </div>
+                    <button id="back-to-features-btn" class="mt-8 px-6 py-2 bg-gray-600 text-white font-semibold rounded-lg shadow-md hover:bg-gray-500">
+                        Back to Features
+                    </button>
                 </div>
 
-                <!-- Changelog Section -->
-                <div id="changelog-section" class="mb-8">
-                    <h3 id="changelog-heading" class="text-2xl font-semibold mb-3 text-gray-100">Changelog</h3>
-                    <div class="space-y-4">
-                        <div id="changelog-entry-1" class="bg-gray-900 p-4 rounded-lg shadow">
-                            <h4 class="font-bold text-lg text-gray-100">August 8, 2025: Display Existing Feature Requests</h4>
-                            <ul class="list-disc list-inside mt-2 text-gray-300 space-y-1">
-                                <li>The "Upcoming Features" page now fetches and displays all previously submitted feature requests from Firestore.</li>
-                                <li>This prevents duplicate submissions and keeps users informed of existing ideas.</li>
-                            </ul>
-                        </div>
-                        <div id="changelog-entry-2" class="bg-gray-900 p-4 rounded-lg shadow">
-                            <h4 class="font-bold text-lg text-gray-100">August 8, 2025: Implemented Input Validation</h4>
-                            <ul class="list-disc list-inside mt-2 text-gray-300 space-y-1">
-                                <li>Added character limits to all user input fields and a real-time character counter to the feature request form.</li>
-                            </ul>
+                <div id="upcoming-features-view" class="w-full max-w-4xl mx-auto hidden text-center">
+                    <h1 class="text-4xl md:text-5xl font-bold mb-8 text-white">Upcoming Features & Requests</h1>
+                    <div class="bg-gray-800 p-8 rounded-lg shadow-lg text-left">
+                        <h2 class="text-2xl font-bold text-white mb-4">Submit a Feature Request</h2>
+                        <p class="text-gray-400 mb-6">Have an idea for a new feature? Let us know!</p>
+                        <form id="feature-request-form">
+                            <textarea id="feature-request-textarea" rows="4" maxlength="500" class="w-full bg-gray-700 border border-gray-600 rounded-md p-2 text-white" placeholder="Describe your feature idea..."></textarea>
+                            <div class="text-right text-sm text-gray-500 mt-1"><span id="char-counter">0 / 500</span></div>
+                            <button id="submit-feature-request-btn" type="submit" class="mt-4 w-full bg-blue-500 text-white font-semibold py-2 px-4 rounded-lg shadow-md hover:bg-blue-600">Submit Request</button>
+                        </form>
+                    </div>
+
+                    <div id="existing-requests-section" class="mt-8 bg-gray-800 p-8 rounded-lg shadow-lg text-left">
+                        <h2 class="text-2xl font-bold text-white mb-4">Existing Requests</h2>
+                        <div id="feature-request-list" class="space-y-4">
+                            </div>
+                    </div>
+
+                     <button id="back-to-features-from-upcoming-btn" class="mt-8 px-6 py-2 bg-gray-600 text-white font-semibold rounded-lg shadow-md hover:bg-gray-500">
+                        Back to Features
+                    </button>
+                </div>
+
+                <div id="developer-view" class="w-full max-w-4xl mx-auto hidden text-left p-4">
+                    <h2 id="developer-view-heading" class="text-3xl font-bold mb-6 border-b pb-2 text-white border-gray-600">Developer Mode</h2>
+
+                    <div id="readme-section" class="mb-8">
+                        <h3 id="readme-heading" class="text-2xl font-semibold mb-3 text-gray-100">Developer Readme</h3>
+                        <div class="bg-gray-900 p-4 rounded-lg shadow">
+                            <h4 id="readme-subheading" class="font-bold text-lg text-gray-100">How to Run the Application</h4>
+                            <p class="mt-2 text-gray-300">To run this Flask application locally, ensure you have Python and the required packages (`Flask`, `firebase-admin`) installed. Navigate to the project's root directory in your terminal and execute the following command:</p>
+                            <pre id="readme-code-block" class="bg-gray-800 p-2 rounded mt-2 text-gray-200"><code>py app.py</code></pre>
                         </div>
                     </div>
-                </div>
 
-                <!-- Defect Resolutions Section -->
-                <div id="defect-resolutions-section" class="mb-8">
-                    <h3 id="defect-resolutions-heading" class="text-2xl font-semibold mb-3 text-gray-100">Defect Resolutions</h3>
-                     <div id="defect-entry-1" class="bg-gray-900 p-4 rounded-lg shadow">
-                        <h4 class="font-bold text-lg text-gray-100">PIN Input Autofilled (Fixed: Aug 8, 2025)</h4>
-                        <p class="mt-2 text-gray-300">
-                            <strong>Resolution:</strong> The `autocomplete="new-password"` attribute was added to the PIN input fields to prevent browsers from auto-filling previously entered PINs.
-                        </p>
+                    <div id="changelog-section" class="mb-8">
+                        <h3 id="changelog-heading" class="text-2xl font-semibold mb-3 text-gray-100">Changelog</h3>
+                        <div class="space-y-4">
+                             <div id="changelog-entry-new" class="bg-gray-900 p-4 rounded-lg shadow">
+                                <h4 class="font-bold text-lg text-gray-100">August 8, 2025: UI and Layout Bugfixes</h4>
+                                <ul class="list-disc list-inside mt-2 text-gray-300 space-y-1">
+                                    <li>Fixed a critical bug where the 'Developer Mode' link was not accessible on all application views by making the footer visible at all times.</li>
+                                </ul>
+                            </div>
+                            <div id="changelog-entry-1" class="bg-gray-900 p-4 rounded-lg shadow">
+                                <h4 class="font-bold text-lg text-gray-100">August 8, 2025: Display Existing Feature Requests</h4>
+                                <ul class="list-disc list-inside mt-2 text-gray-300 space-y-1">
+                                    <li>The "Upcoming Features" page now fetches and displays all previously submitted feature requests from Firestore.</li>
+                                    <li>This prevents duplicate submissions and keeps users informed of existing ideas.</li>
+                                </ul>
+                            </div>
+                            <div id="changelog-entry-2" class="bg-gray-900 p-4 rounded-lg shadow">
+                                <h4 class="font-bold text-lg text-gray-100">August 8, 2025: Implemented Input Validation</h4>
+                                <ul class="list-disc list-inside mt-2 text-gray-300 space-y-1">
+                                    <li>Added character limits to all user input fields and a real-time character counter to the feature request form.</li>
+                                </ul>
+                            </div>
+                        </div>
                     </div>
-                </div>
 
-                 <button id="back-to-app-btn" class="mt-8 px-6 py-2 bg-blue-600 text-white font-semibold rounded-lg shadow-md hover:bg-blue-700">Back to App</button>
+                    <div id="defect-resolutions-section" class="mb-8">
+                        <h3 id="defect-resolutions-heading" class="text-2xl font-semibold mb-3 text-gray-100">Defect Resolutions</h3>
+                        <div class="space-y-4">
+                             <div id="defect-entry-new" class="bg-gray-900 p-4 rounded-lg shadow">
+                                <h4 class="font-bold text-lg text-gray-100">Developer Mode Link Unresponsive (Fixed: Aug 8, 2025)</h4>
+                                <p class="mt-2 text-gray-300">
+                                    <strong>Resolution:</strong> The main application container was restructured to ensure the footer containing the 'Developer Mode' link remains fixed and accessible at the bottom of the viewport, regardless of the content height in the main view. This resolves an issue where the link could be pushed off-screen and become unclickable on certain pages.
+                                </p>
+                            </div>
+                             <div id="defect-entry-1" class="bg-gray-900 p-4 rounded-lg shadow">
+                                <h4 class="font-bold text-lg text-gray-100">PIN Input Autofilled (Fixed: Aug 8, 2025)</h4>
+                                <p class="mt-2 text-gray-300">
+                                    <strong>Resolution:</strong> The `autocomplete="new-password"` attribute was added to the PIN input fields to prevent browsers from auto-filling previously entered PINs.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                     <button id="back-to-app-btn" class="mt-8 px-6 py-2 bg-blue-600 text-white font-semibold rounded-lg shadow-md hover:bg-blue-700">Back to App</button>
+                </div>
             </div>
         </main>
 
-        <!-- Message Box for feedback -->
         <div id="message-box" class="fixed bottom-24 bg-green-500 text-white py-2 px-4 rounded-lg shadow-lg opacity-0 transform translate-y-10 z-50"></div>
 
-        <!-- Profile Creation Modal -->
         <div id="profile-modal" class="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center hidden z-40">
             <div class="bg-gray-800 p-8 rounded-lg shadow-2xl w-full max-w-md">
                 <h2 class="text-2xl font-bold text-white mb-4">Create Driver Profile</h2>
@@ -167,7 +166,6 @@
             </div>
         </div>
 
-        <!-- Select Profile Modal -->
         <div id="select-profile-modal" class="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center hidden z-40">
             <div class="bg-gray-800 p-8 rounded-lg shadow-2xl w-full max-w-md">
                 <h2 class="text-2xl font-bold text-white mb-4">Select Driver Profile</h2>
@@ -176,7 +174,6 @@
             </div>
         </div>
 
-        <!-- Delete Confirmation Modal -->
         <div id="delete-confirm-modal" class="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center hidden z-40">
             <div class="bg-gray-800 p-8 rounded-lg shadow-2xl w-full max-w-md">
                 <h2 class="text-2xl font-bold text-white mb-4">Confirm Deletion</h2>
@@ -188,7 +185,6 @@
             </div>
         </div>
 
-        <!-- PIN Entry Modal -->
         <div id="pin-entry-modal" class="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center hidden z-40">
             <div class="bg-gray-800 p-8 rounded-lg shadow-2xl w-full max-w-md">
                 <h2 class="text-2xl font-bold text-white mb-4">Enter PIN</h2>
@@ -203,7 +199,6 @@
             </div>
         </div>
 
-        <!-- PIN Settings Modal -->
         <div id="pin-settings-modal" class="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center hidden z-40">
             <div class="bg-gray-800 p-8 rounded-lg shadow-2xl w-full max-w-md">
                 <h2 class="text-2xl font-bold text-white mb-4" id="pin-settings-heading"></h2>
@@ -226,7 +221,6 @@
             </div>
         </div>
 
-        <!-- Footer Area -->
         <div id="footer-container" class="w-full text-center p-4">
             <button id="dev-mode-btn" class="text-sm text-blue-500 hover:underline mb-2">Developer Mode</button>
             <footer class="text-sm text-gray-400 flex flex-col items-center space-y-1 w-full max-w-4xl mx-auto">
@@ -239,7 +233,6 @@
         </div>
     </div>
 
-    <!-- Custom JavaScript -->
     <script src="{{ url_for('static', filename='script.js') }}"></script>
 
 </body>

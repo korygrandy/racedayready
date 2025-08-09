@@ -1,4 +1,3 @@
-
 // --- Global State ---
 let currentUser = null;
 
