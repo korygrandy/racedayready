@@ -35,7 +35,7 @@ print("✅ Firebase Initialized Successfully.")
 # This function fetches the version from Firestore, with a fallback.
 def get_app_version():
     # This version number will be incremented with each new set of changes.
-    default_version = '1.6.2'
+    default_version = '1.6.4'
     try:
         config_ref = db.collection('config').document('app_info')
         config_doc = config_ref.get()
@@ -140,7 +140,7 @@ def check_profiles():
                 'helmetColor': profile_data.get('helmetColor', '#ffffff'),
                 'pinEnabled': profile_data.get('pinEnabled', False),
                 'pin': profile_data.get('pin'),
-                'theme': profile_data.get('theme', 'dark')  # NEW: Get theme
+                'theme': profile_data.get('theme', 'dark')
             })
 
         profile_limit = get_profile_limit()
@@ -175,7 +175,7 @@ def create_profile():
         helmet_color = data.get('helmetColor', '#ffffff')
         pin = data.get('pin')
         pin_enabled = data.get('pinEnabled', False)
-        theme = data.get('theme', 'dark')  # NEW: Get theme
+        theme = data.get('theme', 'dark')
 
         if not username:
             return jsonify({'success': False, 'message': 'Username is required.'}), 400
@@ -193,7 +193,7 @@ def create_profile():
             'helmetColor': helmet_color,
             'pin': pin,
             'pinEnabled': pin_enabled,
-            'theme': theme,  # NEW: Save theme
+            'theme': theme,
             'created_at': datetime.datetime.now(datetime.timezone.utc)
         })
         print(f"✅ New driver profile created: {username}")
@@ -223,7 +223,7 @@ def update_profile(profile_id):
             updates['pin'] = data['pin']
         if 'pinEnabled' in data:
             updates['pinEnabled'] = data['pinEnabled']
-        if 'theme' in data:  # NEW: Handle theme updates
+        if 'theme' in data:
             updates['theme'] = data['theme']
 
         if not profile_id or not updates:
@@ -470,6 +470,101 @@ def update_feature_request_settings():
         return jsonify({'success': True, 'message': 'Feature request settings updated.'}), 200
     except Exception as e:
         print(f"❌ Error updating feature request settings: {e}")
+        return jsonify({'success': False, 'message': f'An error occurred: {e}'}), 500
+
+
+# --- Garage Management Routes ---
+@app.route('/add-garage', methods=['POST'])
+def add_garage():
+    """
+    Adds a new garage for a specific user profile.
+    """
+    try:
+        data = request.get_json()
+        profile_id = data.get('profileId')
+        garage_name = data.get('garageName')
+
+        if not profile_id or not garage_name:
+            return jsonify({'success': False, 'message': 'Profile ID and garage name are required.'}), 400
+
+        if len(garage_name) > 25:
+            return jsonify({'success': False, 'message': 'Garage name cannot exceed 25 characters.'}), 400
+
+        doc_ref = db.collection('driver_profiles').document(profile_id).collection('garages').document()
+        doc_ref.set({
+            'name': garage_name,
+            'created_at': datetime.datetime.now(datetime.timezone.utc)
+        })
+        print(f"✅ New garage '{garage_name}' added for profile {profile_id}")
+        return jsonify(
+            {'success': True, 'message': f"Garage '{garage_name}' added successfully!", 'garageId': doc_ref.id}), 201
+    except Exception as e:
+        print(f"❌ Error adding garage: {e}")
+        return jsonify({'success': False, 'message': f'An error occurred: {e}'}), 500
+
+
+@app.route('/get-garages/<profile_id>', methods=['GET'])
+def get_garages(profile_id):
+    """
+    Retrieves all garages for a specific user profile.
+    """
+    try:
+        if not profile_id:
+            return jsonify({'success': False, 'message': 'Profile ID is required.'}), 400
+
+        garages_ref = db.collection('driver_profiles').document(profile_id).collection('garages').stream()
+        garages = []
+        for doc in garages_ref:
+            garage_data = doc.to_dict()
+            garages.append({
+                'id': doc.id,
+                'name': garage_data.get('name')
+            })
+
+        print(f"✅ Found {len(garages)} garages for profile {profile_id}")
+        return jsonify({'success': True, 'garages': garages}), 200
+    except Exception as e:
+        print(f"❌ Error getting garages: {e}")
+        return jsonify({'success': False, 'error': str(e)}), 500
+
+
+# NEW: Route to update a garage
+@app.route('/update-garage/<profile_id>/<garage_id>', methods=['PUT'])
+def update_garage(profile_id, garage_id):
+    """
+    Updates a garage's name.
+    """
+    try:
+        data = request.get_json()
+        new_name = data.get('name')
+
+        if not new_name:
+            return jsonify({'success': False, 'message': 'New garage name is required.'}), 400
+        if len(new_name) > 25:
+            return jsonify({'success': False, 'message': 'Garage name cannot exceed 25 characters.'}), 400
+
+        db.collection('driver_profiles').document(profile_id).collection('garages').document(garage_id).update({
+            'name': new_name
+        })
+        print(f"✅ Garage {garage_id} updated to '{new_name}' for profile {profile_id}")
+        return jsonify({'success': True, 'message': 'Garage updated successfully!'}), 200
+    except Exception as e:
+        print(f"❌ Error updating garage: {e}")
+        return jsonify({'success': False, 'message': f'An error occurred: {e}'}), 500
+
+
+# NEW: Route to delete a garage
+@app.route('/delete-garage/<profile_id>/<garage_id>', methods=['DELETE'])
+def delete_garage(profile_id, garage_id):
+    """
+    Deletes a garage.
+    """
+    try:
+        db.collection('driver_profiles').document(profile_id).collection('garages').document(garage_id).delete()
+        print(f"✅ Garage {garage_id} deleted for profile {profile_id}")
+        return jsonify({'success': True, 'message': 'Garage deleted successfully!'}), 200
+    except Exception as e:
+        print(f"❌ Error deleting garage: {e}")
         return jsonify({'success': False, 'message': f'An error occurred: {e}'}), 500
 
 

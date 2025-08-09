@@ -4,6 +4,7 @@ import { initTheme } from './theme.js';
 import { initProfiles, checkProfiles, updateProfile } from './profile.js';
 import { initFeatures, loadFeatureRequests } from './features.js';
 import { initAdmin } from './admin.js';
+import { initGarage } from './garage.js'; // NEW
 
 // --- Global App Object ---
 export const App = {
@@ -11,7 +12,8 @@ export const App = {
     isDevModeEnabled: false,
     setView: null,
     updateProfile: updateProfile,
-    loadAdminSettings: null, // Will be populated by admin.js
+    loadAdminSettings: null,
+    loadGarages: null, // NEW
 };
 
 // --- View Toggling Logic ---
@@ -22,6 +24,7 @@ const setView = (viewName) => {
     elements.featuresView.classList.add('hidden');
     elements.raceDayPrepView.classList.add('hidden');
     elements.upcomingFeaturesView.classList.add('hidden');
+    elements.garageManagementView.classList.add('hidden'); // NEW
 
     const isDevMode = viewName === 'developer';
     elements.devModeBtn.classList.toggle('hidden', isDevMode);
@@ -36,11 +39,14 @@ const setView = (viewName) => {
     } else if (viewName === 'upcomingFeatures') {
         elements.upcomingFeaturesView.classList.remove('hidden');
         loadFeatureRequests();
+    } else if (viewName === 'garageManagement') { // NEW
+        elements.garageManagementView.classList.remove('hidden');
+        if (App.loadGarages) App.loadGarages();
     } else {
         elements.mainView.classList.remove('hidden');
     }
 };
-App.setView = setView; // Make it globally accessible via App object
+App.setView = setView;
 
 // --- Developer PIN Modal Logic ---
 const initDevPinModal = () => {
@@ -125,6 +131,11 @@ const initEventListeners = () => {
         setView('raceDayPrep');
     });
 
+    elements.featureCard6.addEventListener('click', () => { // NEW
+        console.log("Click Event: 'Garage Management' card clicked.");
+        setView('garageManagement');
+    });
+
     elements.featureCard7.addEventListener('click', () => {
         console.log("Click Event: 'Upcoming Features' card clicked.");
         setView('upcomingFeatures');
@@ -157,4 +168,5 @@ document.addEventListener('DOMContentLoaded', () => {
     initProfiles();
     initFeatures();
     initAdmin();
+    initGarage(); // NEW
 });

@@ -13,6 +13,7 @@ export const themeSwitcherBtn = document.getElementById('theme-switcher-btn');
 export const raceDayPrepView = document.getElementById('race-day-prep-view');
 export const backToFeaturesBtn = document.getElementById('back-to-features-btn');
 export const featureCard1 = document.getElementById('feature-card-1');
+export const featureCard6 = document.getElementById('feature-card-6'); // Updated for Garage Management
 export const featureCard7 = document.getElementById('feature-card-7');
 export const upcomingFeaturesView = document.getElementById('upcoming-features-view');
 export const backToFeaturesFromUpcomingBtn = document.getElementById('back-to-features-from-upcoming-btn');
@@ -21,6 +22,15 @@ export const featureRequestTextarea = document.getElementById('feature-request-t
 export const submitFeatureRequestBtn = document.getElementById('submit-feature-request-btn');
 export const charCounter = document.getElementById('char-counter');
 export const featureRequestList = document.getElementById('feature-request-list');
+
+// NEW: Garage Management Elements
+export const garageManagementView = document.getElementById('garage-management-view');
+export const addGarageForm = document.getElementById('add-garage-form');
+export const garageNameInput = document.getElementById('garage-name-input');
+export const addGarageBtn = document.getElementById('add-garage-btn');
+export const garageList = document.getElementById('garage-list');
+export const backToFeaturesFromGarageBtn = document.getElementById('back-to-features-from-garage-btn');
+
 
 export const profileModal = document.getElementById('profile-modal');
 export const profileForm = document.getElementById('profile-form');
