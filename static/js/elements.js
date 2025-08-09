@@ -42,11 +42,12 @@ export const vehicleMakeSelect = document.getElementById('vehicle-make-select');
 export const vehicleModelSelect = document.getElementById('vehicle-model-select');
 export const vehicleGarageSelect = document.getElementById('vehicle-garage-select');
 export const vehiclePhotoInput = document.getElementById('vehicle-photo-input');
+export const vehiclePhotoUrlInput = document.getElementById('vehicle-photo-url-input'); // NEW
 export const vehiclePhotoPreview = document.getElementById('vehicle-photo-preview');
 export const addVehicleBtn = document.getElementById('add-vehicle-btn');
 export const vehicleList = document.getElementById('vehicle-list');
 export const backToFeaturesFromVehicleBtn = document.getElementById('back-to-features-from-vehicle-btn');
-export const vehicleSortBtn = document.getElementById('vehicle-sort-btn'); // NEW
+export const vehicleSortBtn = document.getElementById('vehicle-sort-btn');
 
 // Edit Vehicle Modal Elements
 export const editVehicleModal = document.getElementById('edit-vehicle-modal');
@@ -56,6 +57,7 @@ export const editVehicleMakeSelect = document.getElementById('edit-vehicle-make-
 export const editVehicleModelSelect = document.getElementById('edit-vehicle-model-select');
 export const editVehicleGarageSelect = document.getElementById('edit-vehicle-garage-select');
 export const editVehiclePhotoInput = document.getElementById('edit-vehicle-photo-input');
+export const editVehiclePhotoUrlInput = document.getElementById('edit-vehicle-photo-url-input'); // NEW
 export const editVehiclePhotoPreview = document.getElementById('edit-vehicle-photo-preview');
 export const cancelEditVehicleBtn = document.getElementById('cancel-edit-vehicle-btn');
 export const saveVehicleBtn = document.getElementById('save-vehicle-btn');

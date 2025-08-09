@@ -5,6 +5,7 @@ import { App } from './main.js';
 let currentVehicles = [];
 let vehicleToEdit = null;
 let currentSortOrder = 'desc'; // 'desc' for newest first, 'asc' for oldest first
+let sortable = null;
 
 const populateYearDropdown = (selectElement) => {
     const currentYear = new Date().getFullYear();
@@ -98,11 +99,13 @@ const showEditVehicleModal = async (vehicle) => {
     await populateGarageDropdown(elements.editVehicleGarageSelect);
     elements.editVehicleGarageSelect.value = vehicle.garageId;
 
-    if (vehicle.photo) {
-        elements.editVehiclePhotoPreview.src = vehicle.photo;
+    if (vehicle.photo || vehicle.photoURL) {
+        elements.editVehiclePhotoPreview.src = vehicle.photo || vehicle.photoURL;
         elements.editVehiclePhotoPreview.classList.remove('hidden');
+        elements.editVehiclePhotoUrlInput.value = vehicle.photoURL || '';
     } else {
         elements.editVehiclePhotoPreview.classList.add('hidden');
+        elements.editVehiclePhotoUrlInput.value = '';
     }
 
     elements.editVehicleModal.classList.remove('hidden');
@@ -111,7 +114,6 @@ const showEditVehicleModal = async (vehicle) => {
 const renderVehicles = () => {
     elements.vehicleList.innerHTML = '';
 
-    // Sort vehicles based on the current sort order
     const sortedVehicles = [...currentVehicles].sort((a, b) => {
         return currentSortOrder === 'desc' ? b.year - a.year : a.year - b.year;
     });
@@ -124,20 +126,23 @@ const renderVehicles = () => {
     sortedVehicles.forEach(vehicle => {
         const vehicleCard = document.createElement('div');
         vehicleCard.className = 'bg-card-darker p-4 rounded-lg flex items-center justify-between';
+        vehicleCard.dataset.id = vehicle.id; // For SortableJS
 
-        const photo = vehicle.photo ? `<img src="${vehicle.photo}" class="w-16 h-16 object-cover rounded-md mr-4">` : '<div class="w-16 h-16 bg-input rounded-md mr-4"></div>';
+        const photoSrc = vehicle.photo || vehicle.photoURL || 'https://via.placeholder.com/100';
+        const photo = `<img src="${photoSrc}" class="w-16 h-16 object-cover rounded-md mr-4">`;
 
         const details = `
             <div>
                 <h3 class="font-bold text-lg">${vehicle.year} ${vehicle.make} ${vehicle.model}</h3>
-                <p class="text-sm text-text-secondary">Garage: ${vehicle.garageId || 'N/A'}</p>
+                <p class="text-sm text-text-secondary">Garage: ${vehicle.garageName || 'N/A'}</p>
             </div>
         `;
 
         const buttons = `
-            <div class="flex space-x-2">
+            <div class="flex items-center space-x-2">
                 <button class="edit-vehicle-btn px-3 py-1 bg-gray-600 text-white rounded-md hover:bg-gray-500 text-sm" data-id="${vehicle.id}">Edit</button>
                 <button class="delete-vehicle-btn px-3 py-1 bg-red-600 text-white rounded-md hover:bg-red-500 text-sm" data-id="${vehicle.id}">Delete</button>
+                <div class="drag-handle cursor-grab text-text-secondary">☰</div>
             </div>
         `;
 
@@ -170,14 +175,15 @@ export const initVehicle = () => {
     elements.vehicleMakeSelect.addEventListener('change', (e) => populateModelDropdown(e.target.value, elements.vehicleModelSelect));
     elements.editVehicleMakeSelect.addEventListener('change', (e) => populateModelDropdown(e.target.value, elements.editVehicleModelSelect));
 
-    const handlePhotoInput = (input, preview) => {
-        const file = input.files[0];
+    const handlePhotoInput = (fileInput, urlInput, preview) => {
+        const file = fileInput.files[0];
         if (file) {
-            if (file.size > 500 * 1024) { // 500KB limit
-                showMessage('Image size must be less than 500KB.', false);
-                input.value = '';
+            if (file.size > 5 * 1024 * 1024) { // 5MB limit
+                showMessage('Image size must be less than 5MB.', false);
+                fileInput.value = '';
                 return;
             }
+            urlInput.value = ''; // Clear URL input
             const reader = new FileReader();
             reader.onload = (event) => {
                 preview.src = event.target.result;
@@ -187,8 +193,20 @@ export const initVehicle = () => {
         }
     };
 
-    elements.vehiclePhotoInput.addEventListener('change', () => handlePhotoInput(elements.vehiclePhotoInput, elements.vehiclePhotoPreview));
-    elements.editVehiclePhotoInput.addEventListener('change', () => handlePhotoInput(elements.editVehiclePhotoInput, elements.editVehiclePhotoPreview));
+    elements.vehiclePhotoInput.addEventListener('change', () => handlePhotoInput(elements.vehiclePhotoInput, elements.vehiclePhotoUrlInput, elements.vehiclePhotoPreview));
+    elements.editVehiclePhotoInput.addEventListener('change', () => handlePhotoInput(elements.editVehiclePhotoInput, elements.editVehiclePhotoUrlInput, elements.editVehiclePhotoPreview));
+
+    elements.vehiclePhotoUrlInput.addEventListener('input', () => {
+        elements.vehiclePhotoInput.value = ''; // Clear file input
+        elements.vehiclePhotoPreview.src = elements.vehiclePhotoUrlInput.value;
+        elements.vehiclePhotoPreview.classList.remove('hidden');
+    });
+
+    elements.editVehiclePhotoUrlInput.addEventListener('input', () => {
+        elements.editVehiclePhotoInput.value = ''; // Clear file input
+        elements.editVehiclePhotoPreview.src = elements.editVehiclePhotoUrlInput.value;
+        elements.editVehiclePhotoPreview.classList.remove('hidden');
+    });
 
     elements.addVehicleForm.addEventListener('submit', (e) => {
         e.preventDefault();
@@ -197,7 +215,8 @@ export const initVehicle = () => {
             make: elements.vehicleMakeSelect.value,
             model: elements.vehicleModelSelect.value,
             garageId: elements.vehicleGarageSelect.value,
-            photo: elements.vehiclePhotoPreview.src.startsWith('data:') ? elements.vehiclePhotoPreview.src : null
+            photo: elements.vehiclePhotoPreview.src.startsWith('data:') ? elements.vehiclePhotoPreview.src : null,
+            photoURL: elements.vehiclePhotoUrlInput.value || null
         };
 
         fetch(`/add-vehicle/${App.currentUser.id}`, {
@@ -223,10 +242,9 @@ export const initVehicle = () => {
             make: elements.editVehicleMakeSelect.value,
             model: elements.editVehicleModelSelect.value,
             garageId: elements.editVehicleGarageSelect.value,
+            photo: elements.editVehiclePhotoPreview.src.startsWith('data:') ? elements.editVehiclePhotoPreview.src : null,
+            photoURL: elements.editVehiclePhotoUrlInput.value || null
         };
-        if (elements.editVehiclePhotoPreview.src.startsWith('data:')) {
-            vehicleData.photo = elements.editVehiclePhotoPreview.src;
-        }
 
         fetch(`/update-vehicle/${App.currentUser.id}/${vehicleToEdit.id}`, {
             method: 'PUT',
@@ -277,6 +295,21 @@ export const initVehicle = () => {
         console.log(`Vehicle sort order changed to: ${currentSortOrder}`);
         elements.vehicleSortBtn.textContent = `Sort by Year (${currentSortOrder === 'desc' ? 'Newest' : 'Oldest'} First)`;
         renderVehicles();
+    });
+
+    sortable = new Sortable(elements.vehicleList, {
+        handle: '.drag-handle',
+        animation: 150,
+        onEnd: () => {
+            const orderedIds = Array.from(elements.vehicleList.children).map(item => item.dataset.id);
+            fetch(`/update-vehicle-order/${App.currentUser.id}`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ order: orderedIds }),
+            })
+            .then(res => res.json())
+            .then(data => showMessage(data.message, data.success));
+        }
     });
 
     App.loadVehicles = () => {
