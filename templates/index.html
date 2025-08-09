@@ -4,13 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Raceday Ready</title>
-    <!-- NEW: Favicon -->
     <link rel="icon" href="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2050%2050'%3E%3Cpath%20fill='white'%20d='M25,5%20C10,5%205,20%205,30%20C5,45%2015,45%2025,45%20C35,45%2045,45%2045,30%20C45,20%2040,5%2025,5%20Z'%3E%3C/path%3E%3C/svg%3E">
-    <!-- Tailwind CSS for styling -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- SortableJS for drag-and-drop -->
     <script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>
-    <!-- Custom CSS -->
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body class="bg-body text-text-primary transition-colors duration-300">
@@ -19,7 +15,6 @@
 
         <main class="flex-grow w-full p-4 overflow-y-auto">
             <div class="w-full max-w-6xl mx-auto">
-                <!-- View container for toggling between app and dev mode -->
                 <div id="main-view" class="w-full text-center py-16">
                     <h1 id="main-heading" class="text-4xl md:text-5xl font-bold mb-4">Hello World!</h1>
                     <p id="main-subheading" class="text-xl md:text-2xl mb-8">Welcome to Raceday Ready!</p>
@@ -28,7 +23,6 @@
                     </button>
                 </div>
 
-                <!-- Features View -->
                 <div id="features-view" class="w-full max-w-6xl mx-auto hidden text-center py-16">
                     <div class="absolute top-4 left-4 flex items-center space-x-4">
                         <div id="profile-header-btn" class="flex items-center space-x-4 cursor-pointer p-2 rounded-lg hover:bg-interactive-hover" title="Change Profile">
@@ -36,12 +30,10 @@
                             <span id="features-username" class="text-lg font-semibold"></span>
                         </div>
                         <button id="theme-switcher-btn" class="p-2 rounded-full hover:bg-interactive-hover" title="Toggle Theme">
-                            <!-- Icons will be injected by JS -->
-                        </button>
+                            </button>
                     </div>
                     <h1 id="features-heading" class="text-4xl md:text-5xl font-bold mb-8">Raceday Ready Features</h1>
                     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                        <!-- Cards -->
                         <div id="feature-card-1" class="bg-card p-6 rounded-lg shadow-lg hover:bg-interactive-hover cursor-pointer"><h2 class="text-xl font-bold mb-2">Race Day Preparation & Logistics</h2></div>
                         <div id="feature-card-2" class="bg-card p-6 rounded-lg shadow-lg hover:bg-interactive-hover cursor-pointer"><h2 class="text-xl font-bold mb-2">Vehicle Management</h2></div>
                         <div id="feature-card-3" class="bg-card p-6 rounded-lg shadow-lg inactive-card"><h2 class="text-xl font-bold mb-2">Data Analysis & History</h2></div>
@@ -52,11 +44,10 @@
                     </div>
                 </div>
 
-                <!-- Race Day Prep View -->
                 <div id="race-day-prep-view" class="w-full max-w-6xl mx-auto hidden text-center py-16">
                     <h1 class="text-4xl md:text-5xl font-bold mb-8">Race Day Preparation & Logistics</h1>
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                        <div id="race-schedule-card" class="bg-card p-6 rounded-lg shadow-lg inactive-card"><h2 class="text-xl font-bold mb-2">Race Schedule</h2></div>
+                        <div id="race-schedule-card" class="bg-card p-6 rounded-lg shadow-lg hover:bg-interactive-hover cursor-pointer"><h2 class="text-xl font-bold mb-2">Race Schedule</h2></div>
                         <div id="automated-tasks-card" class="bg-card p-6 rounded-lg shadow-lg inactive-card"><h2 class="text-xl font-bold mb-2">Automated Tasks & Schedules</h2></div>
                         <div id="track-info-card" class="bg-card p-6 rounded-lg shadow-lg inactive-card"><h2 class="text-xl font-bold mb-2">Track Information Management</h2></div>
                     </div>
@@ -65,7 +56,44 @@
                     </button>
                 </div>
 
-                <!-- Vehicle Management View -->
+                <div id="race-schedule-view" class="w-full max-w-4xl mx-auto hidden text-center py-16">
+                    <h1 class="text-4xl md:text-5xl font-bold mb-8">Race Schedule</h1>
+                    <div class="bg-card p-8 rounded-lg shadow-lg text-left">
+                        <h2 class="text-2xl font-bold mb-4">Add New Event</h2>
+                        <form id="add-event-form">
+                            <div class="space-y-4">
+                                <div>
+                                    <label for="event-name-input" class="block text-sm font-medium">Event Name</label>
+                                    <input type="text" id="event-name-input" maxlength="50" class="mt-1 block w-full bg-input border border-border rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500" required>
+                                </div>
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                    <div>
+                                        <label for="event-start-input" class="block text-sm font-medium">Start Time</label>
+                                        <input type="datetime-local" id="event-start-input" class="mt-1 block w-full bg-input border border-border rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500" required>
+                                    </div>
+                                    <div>
+                                        <label for="event-end-input" class="block text-sm font-medium">End Time</label>
+                                        <input type="datetime-local" id="event-end-input" class="mt-1 block w-full bg-input border border-border rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                                    </div>
+                                </div>
+                                <div>
+                                    <label for="event-vehicles-select" class="block text-sm font-medium">Vehicles</label>
+                                    <select id="event-vehicles-select" multiple class="mt-1 block w-full bg-input border border-border rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 h-32"></select>
+                                </div>
+                            </div>
+                            <button id="add-event-btn" type="submit" class="mt-6 w-full bg-blue-500 text-white font-semibold py-2 px-4 rounded-lg shadow-md hover:bg-blue-600">Add Event</button>
+                        </form>
+                    </div>
+                    <div class="mt-8 bg-card p-8 rounded-lg shadow-lg text-left">
+                        <h2 class="text-2xl font-bold mb-4">Upcoming Events</h2>
+                        <div id="event-list" class="space-y-4">
+                        </div>
+                    </div>
+                    <button id="back-to-prep-from-schedule-btn" class="mt-8 px-6 py-2 bg-gray-600 text-white font-semibold rounded-lg shadow-md hover:bg-gray-500">
+                        Back to Prep & Logistics
+                    </button>
+                </div>
+
                 <div id="vehicle-management-view" class="w-full max-w-4xl mx-auto hidden text-center py-16">
                     <h1 class="text-4xl md:text-5xl font-bold mb-8">Vehicle Management</h1>
                     <div id="add-vehicle-section" class="bg-card p-8 rounded-lg shadow-lg text-left">
@@ -124,7 +152,6 @@
                     </button>
                 </div>
 
-                <!-- Garage Management View -->
                 <div id="garage-management-view" class="w-full max-w-4xl mx-auto hidden text-center py-16">
                     <h1 class="text-4xl md:text-5xl font-bold mb-8">Garage Management</h1>
                     <div class="bg-card p-8 rounded-lg shadow-lg text-left">
@@ -145,7 +172,6 @@
                     </button>
                 </div>
 
-                <!-- Upcoming Features View -->
                 <div id="upcoming-features-view" class="w-full max-w-4xl mx-auto hidden text-center py-16">
                     <h1 class="text-4xl md:text-5xl font-bold mb-8">Upcoming Features & Requests</h1>
 
@@ -244,16 +270,17 @@
                     <div id="changelog-section" class="mb-8">
                         <h3 id="changelog-heading" class="text-2xl font-semibold mb-3">Changelog</h3>
                         <div class="space-y-4">
-                            <div class="bg-card-darker p-4 rounded-lg shadow">
-                                <h4 class="font-bold text-lg">Version 1.7.8 (August 9, 2025)</h4>
+                             <div class="bg-card-darker p-4 rounded-lg shadow">
+                                <h4 class="font-bold text-lg">Version 1.7.9 (August 9, 2025)</h4>
                                 <ul class="list-disc list-inside mt-2 text-text-secondary space-y-1">
-                                    <li>Fixed a defect where editing a vehicle with a photo URL would clear the URL upon saving.</li>
+                                    <li>Implemented the Race Schedule feature, allowing users to add, edit, and delete race events.</li>
+                                    <li>Users can now associate multiple vehicles with each event.</li>
                                 </ul>
                             </div>
                              <div class="bg-card-darker p-4 rounded-lg shadow">
-                                <h4 class="font-bold text-lg">Version 1.7.7 (August 9, 2025)</h4>
+                                <h4 class="font-bold text-lg">Version 1.7.8 (August 9, 2025)</h4>
                                 <ul class="list-disc list-inside mt-2 text-text-secondary space-y-1">
-                                    <li>Fixed a defect where vehicle images loaded via URL would not display correctly in the Garage Management view.</li>
+                                    <li>Fixed a defect where editing a vehicle with a photo URL would clear the URL upon saving.</li>
                                 </ul>
                             </div>
                         </div>
@@ -266,12 +293,6 @@
                                 <h4 class="font-bold text-lg">Photo URL Cleared on Edit (Fixed: Aug 9, 2025) - v1.7.8</h4>
                                 <p class="mt-2 text-text-secondary">
                                     <strong>Resolution:</strong> Updated the backend logic for the vehicle update route to ensure that an existing `photoURL` is preserved during an edit, unless a new file is explicitly uploaded to replace it.
-                                </p>
-                            </div>
-                             <div id="defect-entry-messaging" class="bg-card-darker p-4 rounded-lg shadow">
-                                <h4 class="font-bold text-lg">Overlapping UI Messages (Fixed: Aug 8, 2025) - v1.6.9</h4>
-                                <p class="mt-2 text-text-secondary">
-                                    <strong>Resolution:</strong> Implemented a message queue in the UI logic to ensure that multiple notifications (e.g., "Raceday Ready!" and "Reminder: No garages found") are displayed sequentially rather than overlapping, which resolves the issue of messages being hidden or unreadable.
                                 </p>
                             </div>
                         </div>
@@ -296,7 +317,6 @@
 
     <div id="message-box" class="fixed bottom-24 right-4 bg-green-500 text-white py-2 px-4 rounded-lg shadow-lg opacity-0 transform translate-y-10 z-50"></div>
 
-    <!-- Modals -->
     <div id="profile-modal" class="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center hidden z-40">
         <div class="bg-card p-8 rounded-lg shadow-2xl w-full max-w-md">
             <h2 class="text-2xl font-bold mb-4">Create Driver Profile</h2>
@@ -444,7 +464,6 @@
         </div>
     </div>
 
-    <!-- Custom JavaScript -->
     <script type="module" src="{{ url_for('static', filename='js/main.js') }}"></script>
 
 </body>

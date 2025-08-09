@@ -6,6 +6,7 @@ import { initFeatures, loadFeatureRequests } from './features.js';
 import { initAdmin } from './admin.js';
 import { initGarage } from './garage.js';
 import { initVehicle } from './vehicle.js';
+import { initSchedule } from './schedule.js'; // NEW
 
 // --- Global App Object ---
 export const App = {
@@ -16,6 +17,7 @@ export const App = {
     loadAdminSettings: null,
     loadGarages: null,
     loadVehicles: null,
+    loadEvents: null, // NEW
 };
 
 // --- View Toggling Logic ---
@@ -28,6 +30,7 @@ const setView = (viewName) => {
     elements.upcomingFeaturesView.classList.add('hidden');
     elements.garageManagementView.classList.add('hidden');
     elements.vehicleManagementView.classList.add('hidden');
+    elements.raceScheduleView.classList.add('hidden'); // NEW
 
     const isDevMode = viewName === 'developer';
     elements.devModeBtn.classList.toggle('hidden', isDevMode);
@@ -37,7 +40,7 @@ const setView = (viewName) => {
         if (App.loadAdminSettings) App.loadAdminSettings();
     } else if (viewName === 'features') {
         elements.featuresView.classList.remove('hidden');
-        checkProfileStatus(); // Check for missing items every time
+        checkProfileStatus();
     } else if (viewName === 'raceDayPrep') {
         elements.raceDayPrepView.classList.remove('hidden');
     } else if (viewName === 'upcomingFeatures') {
@@ -49,6 +52,9 @@ const setView = (viewName) => {
     } else if (viewName === 'vehicleManagement') {
         elements.vehicleManagementView.classList.remove('hidden');
         if (App.loadVehicles) App.loadVehicles();
+    } else if (viewName === 'raceSchedule') { // NEW
+        elements.raceScheduleView.classList.remove('hidden');
+        if (App.loadEvents) App.loadEvents();
     } else {
         elements.mainView.classList.remove('hidden');
     }
@@ -138,6 +144,11 @@ const initEventListeners = () => {
         setView('raceDayPrep');
     });
 
+    elements.raceScheduleCard.addEventListener('click', () => { // NEW
+        console.log("Click Event: 'Race Schedule' card clicked.");
+        setView('raceSchedule');
+    });
+
     elements.featureCard2.addEventListener('click', () => {
         console.log("Click Event: 'Vehicle Management' card clicked.");
         setView('vehicleManagement');
@@ -182,4 +193,5 @@ document.addEventListener('DOMContentLoaded', () => {
     initAdmin();
     initGarage();
     initVehicle();
+    initSchedule(); // NEW
 });

@@ -35,7 +35,7 @@ print("✅ Firebase Initialized Successfully.")
 # This function fetches the version from Firestore, with a fallback.
 def get_app_version():
     # This version number will be incremented with each new set of changes.
-    default_version = '1.7.9'
+    default_version = '1.8.0'
     try:
         config_ref = db.collection('config').document('app_info')
         config_doc = config_ref.get()
@@ -713,6 +713,89 @@ def update_vehicle_order(profile_id):
         return jsonify({'success': True, 'message': 'Vehicle order saved!'}), 200
     except Exception as e:
         print(f"❌ Error updating vehicle order: {e}")
+        return jsonify({'success': False, 'message': f'An error occurred: {e}'}), 500
+
+
+# --- Race Schedule Routes ---
+@app.route('/add-event/<profile_id>', methods=['POST'])
+def add_event(profile_id):
+    try:
+        data = request.get_json()
+        event_data = {
+            'name': data.get('name'),
+            'start_time': data.get('startTime'),
+            'end_time': data.get('endTime'),
+            'vehicles': data.get('vehicles', []),
+            'created_at': datetime.datetime.now(datetime.timezone.utc)
+        }
+        if not event_data['name'] or not event_data['start_time']:
+            return jsonify({'success': False, 'message': 'Event name and start time are required.'}), 400
+
+        doc_ref = db.collection('driver_profiles').document(profile_id).collection('events').document()
+        doc_ref.set(event_data)
+        print(f"✅ New event '{event_data['name']}' added for profile {profile_id}")
+        return jsonify({'success': True, 'message': 'Event added successfully!', 'eventId': doc_ref.id}), 201
+    except Exception as e:
+        print(f"❌ Error adding event: {e}")
+        return jsonify({'success': False, 'message': f'An error occurred: {e}'}), 500
+
+
+@app.route('/get-events/<profile_id>', methods=['GET'])
+def get_events(profile_id):
+    try:
+        vehicles_ref = db.collection('driver_profiles').document(profile_id).collection('vehicles').stream()
+        vehicle_map = {doc.id: doc.to_dict() for doc in vehicles_ref}
+
+        events_ref = db.collection('driver_profiles').document(profile_id).collection('events').order_by(
+            'start_time').stream()
+        events = []
+        for doc in events_ref:
+            event = doc.to_dict()
+            event['id'] = doc.id
+
+            # Populate vehicle details
+            event_vehicles = []
+            for vehicle_id in event.get('vehicles', []):
+                if vehicle_id in vehicle_map:
+                    event_vehicles.append(vehicle_map[vehicle_id])
+            event['vehicles'] = event_vehicles
+
+            events.append(event)
+        return jsonify({'success': True, 'events': events}), 200
+    except Exception as e:
+        print(f"❌ Error getting events: {e}")
+        return jsonify({'success': False, 'error': str(e)}), 500
+
+
+@app.route('/update-event/<profile_id>/<event_id>', methods=['PUT'])
+def update_event(profile_id, event_id):
+    try:
+        data = request.get_json()
+        updates = {
+            'name': data.get('name'),
+            'start_time': data.get('startTime'),
+            'end_time': data.get('endTime'),
+            'vehicles': data.get('vehicles', []),
+        }
+        if not updates['name'] or not updates['start_time']:
+            return jsonify({'success': False, 'message': 'Event name and start time are required.'}), 400
+
+        db.collection('driver_profiles').document(profile_id).collection('events').document(event_id).update(updates)
+        print(f"✅ Event {event_id} updated for profile {profile_id}")
+        return jsonify({'success': True, 'message': 'Event updated successfully!'}), 200
+    except Exception as e:
+        print(f"❌ Error updating event: {e}")
+        return jsonify({'success': False, 'message': f'An error occurred: {e}'}), 500
+
+
+@app.route('/delete-event/<profile_id>/<event_id>', methods=['DELETE'])
+def delete_event(profile_id, event_id):
+    try:
+        db.collection('driver_profiles').document(profile_id).collection('events').document(event_id).delete()
+        print(f"✅ Event {event_id} deleted for profile {profile_id}")
+        return jsonify({'success': True, 'message': 'Event deleted successfully!'}), 200
+    except Exception as e:
+        print(f"❌ Error deleting event: {e}")
         return jsonify({'success': False, 'message': f'An error occurred: {e}'}), 500
 
 
