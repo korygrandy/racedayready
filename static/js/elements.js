@@ -13,6 +13,7 @@ export const themeSwitcherBtn = document.getElementById('theme-switcher-btn');
 export const raceDayPrepView = document.getElementById('race-day-prep-view');
 export const backToFeaturesBtn = document.getElementById('back-to-features-btn');
 export const featureCard1 = document.getElementById('feature-card-1');
+export const featureCard2 = document.getElementById('feature-card-2'); // For Vehicle Management
 export const featureCard6 = document.getElementById('feature-card-6');
 export const featureCard7 = document.getElementById('feature-card-7');
 export const upcomingFeaturesView = document.getElementById('upcoming-features-view');
@@ -23,12 +24,28 @@ export const submitFeatureRequestBtn = document.getElementById('submit-feature-r
 export const charCounter = document.getElementById('char-counter');
 export const featureRequestList = document.getElementById('feature-request-list');
 
+// Garage Management Elements
 export const garageManagementView = document.getElementById('garage-management-view');
 export const addGarageForm = document.getElementById('add-garage-form');
 export const garageNameInput = document.getElementById('garage-name-input');
 export const addGarageBtn = document.getElementById('add-garage-btn');
 export const garageList = document.getElementById('garage-list');
 export const backToFeaturesFromGarageBtn = document.getElementById('back-to-features-from-garage-btn');
+
+// NEW: Vehicle Management Elements
+export const vehicleManagementView = document.getElementById('vehicle-management-view');
+export const addVehicleForm = document.getElementById('add-vehicle-form');
+export const addVehicleFieldset = document.getElementById('add-vehicle-fieldset');
+export const noGaragesWarning = document.getElementById('no-garages-warning');
+export const vehicleYearSelect = document.getElementById('vehicle-year-select');
+export const vehicleMakeSelect = document.getElementById('vehicle-make-select');
+export const vehicleModelSelect = document.getElementById('vehicle-model-select');
+export const vehicleGarageSelect = document.getElementById('vehicle-garage-select');
+export const vehiclePhotoInput = document.getElementById('vehicle-photo-input');
+export const vehiclePhotoPreview = document.getElementById('vehicle-photo-preview');
+export const addVehicleBtn = document.getElementById('add-vehicle-btn');
+export const vehicleList = document.getElementById('vehicle-list');
+export const backToFeaturesFromVehicleBtn = document.getElementById('back-to-features-from-vehicle-btn');
 
 export const profileModal = document.getElementById('profile-modal');
 export const profileForm = document.getElementById('profile-form');
@@ -44,7 +61,6 @@ export const selectProfileModal = document.getElementById('select-profile-modal'
 export const profileList = document.getElementById('profile-list');
 export const addNewProfileBtn = document.getElementById('add-new-profile-btn');
 
-// NEW: Generic Confirmation Modal Elements
 export const confirmationModal = document.getElementById('confirmation-modal');
 export const confirmationModalTitle = document.getElementById('confirmation-modal-title');
 export const confirmationModalText = document.getElementById('confirmation-modal-text');

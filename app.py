@@ -35,7 +35,7 @@ print("✅ Firebase Initialized Successfully.")
 # This function fetches the version from Firestore, with a fallback.
 def get_app_version():
     # This version number will be incremented with each new set of changes.
-    default_version = '1.6.5'
+    default_version = '1.6.9'
     try:
         config_ref = db.collection('config').document('app_info')
         config_doc = config_ref.get()
@@ -506,19 +506,30 @@ def add_garage():
 @app.route('/get-garages/<profile_id>', methods=['GET'])
 def get_garages(profile_id):
     """
-    Retrieves all garages for a specific user profile.
+    Retrieves all garages for a specific user profile and their associated vehicles.
     """
     try:
         if not profile_id:
             return jsonify({'success': False, 'message': 'Profile ID is required.'}), 400
 
+        # Get all vehicles for the profile first
+        vehicles_ref = db.collection('driver_profiles').document(profile_id).collection('vehicles').stream()
+        all_vehicles = []
+        for doc in vehicles_ref:
+            vehicle = doc.to_dict()
+            vehicle['id'] = doc.id
+            all_vehicles.append(vehicle)
+
+        # Get all garages and associate vehicles
         garages_ref = db.collection('driver_profiles').document(profile_id).collection('garages').stream()
         garages = []
         for doc in garages_ref:
             garage_data = doc.to_dict()
+            garage_id = doc.id
             garages.append({
-                'id': doc.id,
-                'name': garage_data.get('name')
+                'id': garage_id,
+                'name': garage_data.get('name'),
+                'vehicles': [v for v in all_vehicles if v.get('garageId') == garage_id]
             })
 
         print(f"✅ Found {len(garages)} garages for profile {profile_id}")
@@ -563,6 +574,85 @@ def delete_garage(profile_id, garage_id):
         return jsonify({'success': True, 'message': 'Garage deleted successfully!'}), 200
     except Exception as e:
         print(f"❌ Error deleting garage: {e}")
+        return jsonify({'success': False, 'message': f'An error occurred: {e}'}), 500
+
+
+# --- Vehicle Management Routes ---
+@app.route('/add-vehicle/<profile_id>', methods=['POST'])
+def add_vehicle(profile_id):
+    try:
+        data = request.get_json()
+        vehicle_data = {
+            'year': data.get('year'),
+            'make': data.get('make'),
+            'model': data.get('model'),
+            'garageId': data.get('garageId'),
+            'photo': data.get('photo'),  # Base64 string
+            'created_at': datetime.datetime.now(datetime.timezone.utc)
+        }
+
+        if not all([vehicle_data['year'], vehicle_data['make'], vehicle_data['model']]):
+            return jsonify({'success': False, 'message': 'Year, Make, and Model are required.'}), 400
+
+        doc_ref = db.collection('driver_profiles').document(profile_id).collection('vehicles').document()
+        doc_ref.set(vehicle_data)
+        print(f"✅ New vehicle added for profile {profile_id}")
+        return jsonify({'success': True, 'message': 'Vehicle added successfully!', 'vehicleId': doc_ref.id}), 201
+    except Exception as e:
+        print(f"❌ Error adding vehicle: {e}")
+        return jsonify({'success': False, 'message': f'An error occurred: {e}'}), 500
+
+
+@app.route('/get-vehicles/<profile_id>', methods=['GET'])
+def get_vehicles(profile_id):
+    try:
+        vehicles_ref = db.collection('driver_profiles').document(profile_id).collection('vehicles').stream()
+        vehicles = []
+        for doc in vehicles_ref:
+            vehicle = doc.to_dict()
+            vehicle['id'] = doc.id
+            vehicles.append(vehicle)
+
+        print(f"✅ Found {len(vehicles)} vehicles for profile {profile_id}")
+        return jsonify({'success': True, 'vehicles': vehicles}), 200
+    except Exception as e:
+        print(f"❌ Error getting vehicles: {e}")
+        return jsonify({'success': False, 'error': str(e)}), 500
+
+
+@app.route('/update-vehicle/<profile_id>/<vehicle_id>', methods=['PUT'])
+def update_vehicle(profile_id, vehicle_id):
+    try:
+        data = request.get_json()
+        updates = {
+            'year': data.get('year'),
+            'make': data.get('make'),
+            'model': data.get('model'),
+            'garageId': data.get('garageId'),
+        }
+        if 'photo' in data:  # Only update photo if a new one is provided
+            updates['photo'] = data.get('photo')
+
+        if not all([updates['year'], updates['make'], updates['model']]):
+            return jsonify({'success': False, 'message': 'Year, Make, and Model are required.'}), 400
+
+        db.collection('driver_profiles').document(profile_id).collection('vehicles').document(vehicle_id).update(
+            updates)
+        print(f"✅ Vehicle {vehicle_id} updated for profile {profile_id}")
+        return jsonify({'success': True, 'message': 'Vehicle updated successfully!'}), 200
+    except Exception as e:
+        print(f"❌ Error updating vehicle: {e}")
+        return jsonify({'success': False, 'message': f'An error occurred: {e}'}), 500
+
+
+@app.route('/delete-vehicle/<profile_id>/<vehicle_id>', methods=['DELETE'])
+def delete_vehicle(profile_id, vehicle_id):
+    try:
+        db.collection('driver_profiles').document(profile_id).collection('vehicles').document(vehicle_id).delete()
+        print(f"✅ Vehicle {vehicle_id} deleted for profile {profile_id}")
+        return jsonify({'success': True, 'message': 'Vehicle deleted successfully!'}), 200
+    except Exception as e:
+        print(f"❌ Error deleting vehicle: {e}")
         return jsonify({'success': False, 'message': f'An error occurred: {e}'}), 500
 
 

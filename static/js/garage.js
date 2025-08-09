@@ -47,11 +47,14 @@ const loadGarages = () => {
             if (data.success && data.garages.length > 0) {
                 data.garages.forEach(garage => {
                     const garageElement = document.createElement('div');
-                    garageElement.className = 'bg-card-darker p-4 rounded-lg flex justify-between items-center';
+                    garageElement.className = 'bg-card-darker p-4 rounded-lg';
+
+                    const header = document.createElement('div');
+                    header.className = 'flex justify-between items-center';
 
                     const nameSpan = document.createElement('span');
                     nameSpan.textContent = garage.name;
-                    nameSpan.className = 'cursor-pointer hover:text-blue-400';
+                    nameSpan.className = 'cursor-pointer hover:text-blue-400 font-bold text-lg';
 
                     const nameInput = document.createElement('input');
                     nameInput.type = 'text';
@@ -97,8 +100,29 @@ const loadGarages = () => {
                     leftContainer.appendChild(nameSpan);
                     leftContainer.appendChild(nameInput);
 
-                    garageElement.appendChild(leftContainer);
-                    garageElement.appendChild(deleteBtn);
+                    header.appendChild(leftContainer);
+                    header.appendChild(deleteBtn);
+                    garageElement.appendChild(header);
+
+                    const vehicleContainer = document.createElement('div');
+                    vehicleContainer.className = 'mt-4 flex flex-wrap gap-4';
+                    if (garage.vehicles && garage.vehicles.length > 0) {
+                        garage.vehicles.forEach(vehicle => {
+                            const vehiclePhoto = document.createElement('img');
+                            vehiclePhoto.src = vehicle.photo || 'https://via.placeholder.com/100';
+                            vehiclePhoto.className = 'w-24 h-24 object-cover rounded-md cursor-pointer hover:opacity-75';
+                            vehiclePhoto.title = `${vehicle.year} ${vehicle.make} ${vehicle.model}`;
+                            vehiclePhoto.onclick = () => {
+                                console.log(`Navigating to Vehicle Management for vehicle ID: ${vehicle.id}`);
+                                App.setView('vehicleManagement');
+                            };
+                            vehicleContainer.appendChild(vehiclePhoto);
+                        });
+                    } else {
+                        vehicleContainer.innerHTML = '<p class="text-sm text-text-secondary">No vehicles in this garage.</p>';
+                    }
+                    garageElement.appendChild(vehicleContainer);
+
                     elements.garageList.appendChild(garageElement);
                 });
             } else {

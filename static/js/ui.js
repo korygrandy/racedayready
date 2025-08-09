@@ -1,11 +1,16 @@
 import * as elements from './elements.js';
 
-/**
- * Displays a message to the user.
- * @param {string} message - The message to display.
- * @param {boolean} isSuccess - Determines the message color (true for green, false for red).
- */
-export const showMessage = (message, isSuccess) => {
+let messageQueue = [];
+let isMessageVisible = false;
+
+const processMessageQueue = () => {
+    if (isMessageVisible || messageQueue.length === 0) {
+        return;
+    }
+
+    isMessageVisible = true;
+    const { message, isSuccess } = messageQueue.shift();
+
     console.log(`Showing message: "${message}", Success: ${isSuccess}`);
     elements.messageBox.textContent = message;
     elements.messageBox.classList.remove('bg-green-500', 'bg-red-500');
@@ -17,7 +22,20 @@ export const showMessage = (message, isSuccess) => {
     setTimeout(() => {
         elements.messageBox.classList.remove('opacity-100', 'translate-y-0');
         elements.messageBox.classList.add('opacity-0', 'translate-y-10');
+        isMessageVisible = false;
+        // Process the next message in the queue after the current one has faded out
+        setTimeout(processMessageQueue, 500); // 500ms matches transition duration
     }, 3000);
+};
+
+/**
+ * Adds a message to the queue to be displayed to the user.
+ * @param {string} message - The message to display.
+ * @param {boolean} isSuccess - Determines the message color (true for green, false for red).
+ */
+export const showMessage = (message, isSuccess) => {
+    messageQueue.push({ message, isSuccess });
+    processMessageQueue();
 };
 
 /**

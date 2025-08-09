@@ -4,7 +4,8 @@ import { initTheme } from './theme.js';
 import { initProfiles, checkProfiles, updateProfile } from './profile.js';
 import { initFeatures, loadFeatureRequests } from './features.js';
 import { initAdmin } from './admin.js';
-import { initGarage } from './garage.js'; // NEW
+import { initGarage } from './garage.js';
+import { initVehicle } from './vehicle.js'; // NEW
 
 // --- Global App Object ---
 export const App = {
@@ -13,7 +14,8 @@ export const App = {
     setView: null,
     updateProfile: updateProfile,
     loadAdminSettings: null,
-    loadGarages: null, // NEW
+    loadGarages: null,
+    loadVehicles: null, // NEW
 };
 
 // --- View Toggling Logic ---
@@ -24,7 +26,8 @@ const setView = (viewName) => {
     elements.featuresView.classList.add('hidden');
     elements.raceDayPrepView.classList.add('hidden');
     elements.upcomingFeaturesView.classList.add('hidden');
-    elements.garageManagementView.classList.add('hidden'); // NEW
+    elements.garageManagementView.classList.add('hidden');
+    elements.vehicleManagementView.classList.add('hidden'); // NEW
 
     const isDevMode = viewName === 'developer';
     elements.devModeBtn.classList.toggle('hidden', isDevMode);
@@ -39,9 +42,12 @@ const setView = (viewName) => {
     } else if (viewName === 'upcomingFeatures') {
         elements.upcomingFeaturesView.classList.remove('hidden');
         loadFeatureRequests();
-    } else if (viewName === 'garageManagement') { // NEW
+    } else if (viewName === 'garageManagement') {
         elements.garageManagementView.classList.remove('hidden');
         if (App.loadGarages) App.loadGarages();
+    } else if (viewName === 'vehicleManagement') { // NEW
+        elements.vehicleManagementView.classList.remove('hidden');
+        if (App.loadVehicles) App.loadVehicles();
     } else {
         elements.mainView.classList.remove('hidden');
     }
@@ -131,7 +137,12 @@ const initEventListeners = () => {
         setView('raceDayPrep');
     });
 
-    elements.featureCard6.addEventListener('click', () => { // NEW
+    elements.featureCard2.addEventListener('click', () => { // NEW
+        console.log("Click Event: 'Vehicle Management' card clicked.");
+        setView('vehicleManagement');
+    });
+
+    elements.featureCard6.addEventListener('click', () => {
         console.log("Click Event: 'Garage Management' card clicked.");
         setView('garageManagement');
     });
@@ -168,5 +179,6 @@ document.addEventListener('DOMContentLoaded', () => {
     initProfiles();
     initFeatures();
     initAdmin();
-    initGarage(); // NEW
+    initGarage();
+    initVehicle(); // NEW
 });
