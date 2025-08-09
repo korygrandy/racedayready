@@ -56,6 +56,10 @@ const editPinInput = document.getElementById('edit-pin-input');
 const cancelPinSettingsBtn = document.getElementById('cancel-pin-settings-btn');
 const savePinSettingsBtn = document.getElementById('save-pin-settings-btn');
 
+// NEW: Admin elements
+const profileLimitInput = document.getElementById('profile-limit-input');
+const updateLimitBtn = document.getElementById('update-limit-btn');
+
 
 // --- View Toggling Logic ---
 const setView = (viewName) => {
@@ -70,6 +74,7 @@ const setView = (viewName) => {
 
     if (isDevMode) {
         developerView.classList.remove('hidden');
+        loadAdminSettings(); // Load admin settings when entering dev mode
     } else if (viewName === 'features') {
         featuresView.classList.remove('hidden');
     } else if (viewName === 'raceDayPrep') {
@@ -229,7 +234,7 @@ const createHelmetIcon = (color, sizeClass = 'w-8 h-8') => {
 
 
 // --- Select Profile Modal Logic ---
-const showSelectProfileModal = (profiles) => {
+const showSelectProfileModal = (profiles, limitReached) => {
     profileList.innerHTML = ''; // Clear existing list
     profiles.forEach(profile => {
         const container = document.createElement('div');
@@ -341,6 +346,18 @@ const showSelectProfileModal = (profiles) => {
         container.appendChild(buttonGroup);
         profileList.appendChild(container);
     });
+
+    // Handle the "Add New Profile" button state
+    if (limitReached) {
+        addNewProfileBtn.disabled = true;
+        addNewProfileBtn.textContent = 'Profile Limit Reached';
+        addNewProfileBtn.classList.add('opacity-50', 'cursor-not-allowed');
+    } else {
+        addNewProfileBtn.disabled = false;
+        addNewProfileBtn.textContent = 'Add New Profile';
+        addNewProfileBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+    }
+
     selectProfileModal.classList.remove('hidden');
 };
 
@@ -524,7 +541,7 @@ const checkProfiles = () => {
         .then(response => response.json())
         .then(data => {
             if (data.profiles && data.profiles.length > 0) {
-                showSelectProfileModal(data.profiles);
+                showSelectProfileModal(data.profiles, data.limit_reached);
             } else {
                 hideSelectProfileModal();
                 showProfileModal();
@@ -548,7 +565,7 @@ readyButton.addEventListener('click', () => {
     .then(data => {
         if (data.profiles_exist) {
             console.log("Profiles exist. Showing selection modal.");
-            showSelectProfileModal(data.profiles);
+            showSelectProfileModal(data.profiles, data.limit_reached);
         } else {
             console.log("No profiles found. Showing create profile modal.");
             showProfileModal();
@@ -565,6 +582,29 @@ readyButton.addEventListener('click', () => {
 });
 
 // --- Feature Request Logic ---
+
+// NEW: Function to delete a feature request
+const deleteFeatureRequest = (requestId) => {
+    if (!confirm('Are you sure you want to delete this feature request?')) {
+        return;
+    }
+
+    fetch(`/delete-feature-request/${requestId}`, {
+        method: 'DELETE',
+    })
+    .then(response => response.json())
+    .then(data => {
+        showMessage(data.message, data.success);
+        if (data.success) {
+            loadFeatureRequests(); // Refresh the list
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        showMessage('Failed to delete request.', false);
+    });
+};
+
 const loadFeatureRequests = () => {
     fetch('/get-feature-requests')
         .then(response => response.json())
@@ -573,8 +613,19 @@ const loadFeatureRequests = () => {
             if (data.success && data.requests.length > 0) {
                 data.requests.forEach(req => {
                     const reqElement = document.createElement('div');
-                    reqElement.className = 'bg-gray-700 p-4 rounded-lg';
-                    reqElement.innerHTML = `<p class="text-gray-300">${req.requestText}</p><p class="text-sm text-gray-500 mt-2">- ${req.username}</p>`;
+                    reqElement.className = 'bg-gray-700 p-4 rounded-lg flex justify-between items-start';
+
+                    const textContainer = document.createElement('div');
+                    textContainer.innerHTML = `<p class="text-gray-300">${req.requestText}</p><p class="text-sm text-gray-500 mt-2">- ${req.username}</p>`;
+
+                    const deleteButton = document.createElement('button');
+                    deleteButton.innerHTML = '&times;';
+                    deleteButton.className = 'ml-4 text-red-500 hover:text-red-400 font-bold text-2xl px-2 leading-none';
+                    deleteButton.title = 'Delete Request';
+                    deleteButton.onclick = () => deleteFeatureRequest(req.id);
+
+                    reqElement.appendChild(textContainer);
+                    reqElement.appendChild(deleteButton);
                     featureRequestList.appendChild(reqElement);
                 });
             } else {
@@ -618,5 +669,29 @@ featureRequestForm.addEventListener('submit', (e) => {
     .finally(() => {
         submitFeatureRequestBtn.disabled = false;
         submitFeatureRequestBtn.textContent = 'Submit Request';
+    });
+});
+
+// --- NEW: Admin Settings Logic ---
+const loadAdminSettings = () => {
+    fetch('/get-profile-limit')
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                profileLimitInput.value = data.limit;
+            }
+        });
+};
+
+updateLimitBtn.addEventListener('click', () => {
+    const newLimit = profileLimitInput.value;
+    fetch('/update-profile-limit', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ limit: newLimit }),
+    })
+    .then(response => response.json())
+    .then(data => {
+        showMessage(data.message, data.success);
     });
 });

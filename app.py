@@ -55,6 +55,28 @@ def get_app_version():
         print(f"❌ Error loading app version from Firestore: {e}. Using default version '{default_version}'.")
         return default_version
 
+# --- NEW: Function to get the profile limit from Firestore ---
+def get_profile_limit():
+    """
+    Retrieves the profile limit from admin_settings in Firestore.
+    Defaults to 3 if not set.
+    """
+    try:
+        settings_ref = db.collection('admin_settings').document('profiles')
+        settings_doc = settings_ref.get()
+        if settings_doc.exists:
+            limit = settings_doc.to_dict().get('limit', 3)
+            print(f"✅ Loaded profile limit from Firestore: {limit}")
+            return int(limit)
+        else:
+            print("⚠️ Profile limit setting not found. Defaulting to 3.")
+            # Create the setting if it doesn't exist
+            settings_ref.set({'limit': 3})
+            return 3
+    except Exception as e:
+        print(f"❌ Error getting profile limit: {e}. Defaulting to 3.")
+        return 3
+
 
 # Initialize the Flask application
 app = Flask(__name__)
@@ -91,12 +113,15 @@ def check_profiles():
                 'pin': profile_data.get('pin')  # Pass the pin for editing
             })
 
+        profile_limit = get_profile_limit()
+        limit_reached = len(profiles) >= profile_limit
+
         if profiles:
             print(f"✅ DB Check: Found {len(profiles)} driver profile(s).")
-            return jsonify({'profiles_exist': True, 'profiles': profiles}), 200
+            return jsonify({'profiles_exist': True, 'profiles': profiles, 'limit_reached': limit_reached}), 200
         else:
             print("ℹ️ DB Check: No driver profiles found in the system.")
-            return jsonify({'profiles_exist': False, 'profiles': []}), 200
+            return jsonify({'profiles_exist': False, 'profiles': [], 'limit_reached': limit_reached}), 200
     except Exception as e:
         print(f"❌ Error checking profiles: {e}")
         return jsonify({'error': str(e)}), 500
@@ -106,9 +131,15 @@ def check_profiles():
 @app.route('/create-profile', methods=['POST'])
 def create_profile():
     """
-    Creates a new driver profile document in Firestore, checking for duplicates.
+    Creates a new driver profile document in Firestore, checking for duplicates and the profile limit.
     """
     try:
+        # Check against the profile limit first
+        profile_limit = get_profile_limit()
+        current_profiles = list(db.collection('driver_profiles').stream())
+        if len(current_profiles) >= profile_limit:
+            return jsonify({'success': False, 'message': f'Profile limit of {profile_limit} reached.'}), 403
+
         data = request.get_json()
         username = data.get('username')
         helmet_color = data.get('helmetColor', '#ffffff')
@@ -273,25 +304,83 @@ def submit_feature_request():
         return jsonify({'success': False, 'message': f'An error occurred: {e}'}), 500
 
 
-# --- NEW: Route to get existing feature requests ---
+# --- Route to get existing feature requests ---
 @app.route('/get-feature-requests', methods=['GET'])
 def get_feature_requests():
     """
-    Retrieves all feature requests from Firestore.
+    Retrieves all feature requests from Firestore, ordered by submission time.
     """
     try:
-        requests_ref = db.collection('feature_requests').stream()
+        requests_ref = db.collection('feature_requests').order_by(
+            'submitted_at', direction=firestore.Query.DESCENDING
+        ).stream()
+
         requests = []
         for doc in requests_ref:
             request_data = doc.to_dict()
             requests.append({
+                'id': doc.id,  # Include the document ID
                 'username': request_data.get('username'),
                 'requestText': request_data.get('requestText')
             })
+        print(f"✅ DB Check: Found {len(requests)} feature request(s).")
         return jsonify({'success': True, 'requests': requests}), 200
     except Exception as e:
         print(f"❌ Error getting feature requests: {e}")
         return jsonify({'success': False, 'error': str(e)}), 500
+
+
+# --- Route to delete a feature request ---
+@app.route('/delete-feature-request/<request_id>', methods=['DELETE'])
+def delete_feature_request(request_id):
+    """
+    Deletes a specific feature request document from Firestore.
+    """
+    try:
+        if not request_id:
+            return jsonify({'success': False, 'message': 'Request ID is required.'}), 400
+
+        db.collection('feature_requests').document(request_id).delete()
+        print(f"✅ Feature request deleted: {request_id}")
+        return jsonify({'success': True, 'message': 'Feature request deleted successfully!'}), 200
+    except Exception as e:
+        print(f"❌ Error deleting feature request: {e}")
+        return jsonify({'success': False, 'message': f'An error occurred: {e}'}), 500
+
+
+# --- NEW: Routes for Admin Settings ---
+@app.route('/get-profile-limit', methods=['GET'])
+def get_profile_limit_route():
+    limit = get_profile_limit()
+    return jsonify({'success': True, 'limit': limit}), 200
+
+@app.route('/update-profile-limit', methods=['POST'])
+def update_profile_limit():
+    """
+    Updates the profile limit in Firestore.
+    """
+    try:
+        data = request.get_json()
+        new_limit = data.get('limit')
+
+        if new_limit is None:
+            return jsonify({'success': False, 'message': 'Limit is required.'}), 400
+
+        try:
+            new_limit = int(new_limit)
+        except ValueError:
+            return jsonify({'success': False, 'message': 'Limit must be a number.'}), 400
+
+        if not 1 <= new_limit <= 20:
+            return jsonify({'success': False, 'message': 'Limit must be between 1 and 20.'}), 400
+
+        db.collection('admin_settings').document('profiles').set({'limit': new_limit})
+        print(f"✅ Profile limit updated to: {new_limit}")
+        return jsonify({'success': True, 'message': f'Profile limit updated to {new_limit}.'}), 200
+    except Exception as e:
+        print(f"❌ Error updating profile limit: {e}")
+        return jsonify({'success': False, 'message': f'An error occurred: {e}'}), 500
+
 
 if __name__ == '__main__':
     # This block allows the script to be run directly.
