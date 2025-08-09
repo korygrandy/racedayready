@@ -24,6 +24,18 @@ export const submitFeatureRequestBtn = document.getElementById('submit-feature-r
 export const charCounter = document.getElementById('char-counter');
 export const featureRequestList = document.getElementById('feature-request-list');
 
+// NEW: Race Schedule Elements
+export const raceScheduleView = document.getElementById('race-schedule-view');
+export const raceScheduleCard = document.getElementById('race-schedule-card');
+export const addEventForm = document.getElementById('add-event-form');
+export const eventNameInput = document.getElementById('event-name-input');
+export const eventStartInput = document.getElementById('event-start-input');
+export const eventEndInput = document.getElementById('event-end-input');
+export const eventVehiclesSelect = document.getElementById('event-vehicles-select');
+export const addEventBtn = document.getElementById('add-event-btn');
+export const eventList = document.getElementById('event-list');
+export const backToPrepFromScheduleBtn = document.getElementById('back-to-prep-from-schedule-btn');
+
 // Garage Management Elements
 export const garageManagementView = document.getElementById('garage-management-view');
 export const addGarageForm = document.getElementById('add-garage-form');
@@ -42,7 +54,7 @@ export const vehicleMakeSelect = document.getElementById('vehicle-make-select');
 export const vehicleModelSelect = document.getElementById('vehicle-model-select');
 export const vehicleGarageSelect = document.getElementById('vehicle-garage-select');
 export const vehiclePhotoInput = document.getElementById('vehicle-photo-input');
-export const vehiclePhotoUrlInput = document.getElementById('vehicle-photo-url-input'); // NEW
+export const vehiclePhotoUrlInput = document.getElementById('vehicle-photo-url-input');
 export const vehiclePhotoPreview = document.getElementById('vehicle-photo-preview');
 export const addVehicleBtn = document.getElementById('add-vehicle-btn');
 export const vehicleList = document.getElementById('vehicle-list');
@@ -57,7 +69,7 @@ export const editVehicleMakeSelect = document.getElementById('edit-vehicle-make-
 export const editVehicleModelSelect = document.getElementById('edit-vehicle-model-select');
 export const editVehicleGarageSelect = document.getElementById('edit-vehicle-garage-select');
 export const editVehiclePhotoInput = document.getElementById('edit-vehicle-photo-input');
-export const editVehiclePhotoUrlInput = document.getElementById('edit-vehicle-photo-url-input'); // NEW
+export const editVehiclePhotoUrlInput = document.getElementById('edit-vehicle-photo-url-input');
 export const editVehiclePhotoPreview = document.getElementById('edit-vehicle-photo-preview');
 export const cancelEditVehicleBtn = document.getElementById('cancel-edit-vehicle-btn');
 export const saveVehicleBtn = document.getElementById('save-vehicle-btn');
