@@ -35,7 +35,7 @@ print("✅ Firebase Initialized Successfully.")
 # This function fetches the version from Firestore, with a fallback.
 def get_app_version():
     # This version number will be incremented with each new set of changes.
-    default_version = '1.5.9'
+    default_version = '1.6.1'
     try:
         config_ref = db.collection('config').document('app_info')
         config_doc = config_ref.get()
@@ -139,7 +139,8 @@ def check_profiles():
                 'username': profile_data.get('username'),
                 'helmetColor': profile_data.get('helmetColor', '#ffffff'),
                 'pinEnabled': profile_data.get('pinEnabled', False),
-                'pin': profile_data.get('pin')  # Pass the pin for editing
+                'pin': profile_data.get('pin'),
+                'theme': profile_data.get('theme', 'dark')  # NEW: Get theme
             })
 
         profile_limit = get_profile_limit()
@@ -174,6 +175,7 @@ def create_profile():
         helmet_color = data.get('helmetColor', '#ffffff')
         pin = data.get('pin')
         pin_enabled = data.get('pinEnabled', False)
+        theme = data.get('theme', 'dark')  # NEW: Get theme
 
         if not username:
             return jsonify({'success': False, 'message': 'Username is required.'}), 400
@@ -191,6 +193,7 @@ def create_profile():
             'helmetColor': helmet_color,
             'pin': pin,
             'pinEnabled': pin_enabled,
+            'theme': theme,  # NEW: Save theme
             'created_at': datetime.datetime.now(datetime.timezone.utc)
         })
         print(f"✅ New driver profile created: {username}")
@@ -220,6 +223,8 @@ def update_profile(profile_id):
             updates['pin'] = data['pin']
         if 'pinEnabled' in data:
             updates['pinEnabled'] = data['pinEnabled']
+        if 'theme' in data:  # NEW: Handle theme updates
+            updates['theme'] = data['theme']
 
         if not profile_id or not updates:
             return jsonify({'success': False, 'message': 'Profile ID and update data are required.'}), 400
