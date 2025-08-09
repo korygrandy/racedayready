@@ -1,6 +1,6 @@
 // --- Global State ---
 let currentUser = null;
-let isDevModeEnabled = false; // Tracks if developer mode is active
+let isDevModeEnabled = false;
 
 // --- Element Selection ---
 const readyButton = document.getElementById('ready-button');
@@ -13,6 +13,7 @@ const featuresView = document.getElementById('features-view');
 const featuresHelmetDisplay = document.getElementById('features-helmet-display');
 const featuresUsername = document.getElementById('features-username');
 const profileHeaderBtn = document.getElementById('profile-header-btn');
+const themeSwitcherBtn = document.getElementById('theme-switcher-btn'); // NEW
 const raceDayPrepView = document.getElementById('race-day-prep-view');
 const backToFeaturesBtn = document.getElementById('back-to-features-btn');
 const featureCard1 = document.getElementById('feature-card-1');
@@ -29,6 +30,7 @@ const profileModal = document.getElementById('profile-modal');
 const profileForm = document.getElementById('profile-form');
 const usernameInput = document.getElementById('username-input');
 const helmetColorInput = document.getElementById('helmet-color-input');
+const themeSelect = document.getElementById('theme-select'); // NEW
 const enablePinCheckbox = document.getElementById('enable-pin-checkbox');
 const pinInput = document.getElementById('pin-input');
 const saveProfileBtn = document.getElementById('save-profile-btn');
@@ -71,6 +73,30 @@ const enableDeletionCheckbox = document.getElementById('enable-deletion-checkbox
 const updateFeatureSettingsBtn = document.getElementById('update-feature-settings-btn');
 const manageFeatureRequestsLink = document.getElementById('manage-feature-requests-link');
 
+
+// --- Theme Logic ---
+const applyTheme = (theme) => {
+    console.log(`Applying theme: ${theme}`);
+    const html = document.documentElement;
+    if (theme === 'light') {
+        html.classList.add('light');
+    } else {
+        html.classList.remove('light');
+    }
+    // Update switcher icon
+    themeSwitcherBtn.innerHTML = theme === 'light'
+        ? `<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" /></svg>` // Moon
+        : `<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" /></svg>`; // Sun
+};
+
+themeSwitcherBtn.addEventListener('click', () => {
+    const newTheme = document.documentElement.classList.contains('light') ? 'dark' : 'light';
+    console.log(`Theme toggled to: ${newTheme}`);
+    applyTheme(newTheme);
+    if (currentUser && currentUser.id) {
+        updateProfile(currentUser.id, { theme: newTheme });
+    }
+});
 
 // --- View Toggling Logic ---
 const setView = (viewName) => {
@@ -125,6 +151,14 @@ featureCard1.addEventListener('click', () => {
 featureCard7.addEventListener('click', () => {
     console.log("Click Event: 'Upcoming Features' card clicked.");
     setView('upcomingFeatures');
+});
+
+// Add event listeners for inactive cards
+document.querySelectorAll('.inactive-card').forEach(card => {
+    card.addEventListener('click', () => {
+        console.log(`Click Event: Inactive card clicked. ID: ${card.id}`);
+        showMessage('This feature is coming soon!', true);
+    });
 });
 
 backToFeaturesBtn.addEventListener('click', () => {
@@ -188,6 +222,7 @@ profileForm.addEventListener('submit', (e) => {
     const helmetColor = helmetColorInput.value;
     const pinEnabled = enablePinCheckbox.checked;
     const pin = pinInput.value;
+    const theme = themeSelect.value;
 
     if (!username) {
         showMessage('Username is required.', false);
@@ -204,7 +239,7 @@ profileForm.addEventListener('submit', (e) => {
     fetch('/create-profile', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ username, helmetColor, pinEnabled, pin }),
+        body: JSON.stringify({ username, helmetColor, pinEnabled, pin, theme }),
     })
     .then(response => response.json())
     .then(data => {
@@ -264,7 +299,7 @@ const showSelectProfileModal = (profiles, limitReached) => {
     profileList.innerHTML = '';
     profiles.forEach(profile => {
         const container = document.createElement('div');
-        container.className = 'group flex items-center justify-between p-3 bg-gray-700 rounded-md';
+        container.className = 'group flex items-center justify-between p-3 bg-interactive-hover rounded-md';
 
         const leftSection = document.createElement('div');
         leftSection.className = 'flex items-center flex-grow';
@@ -299,7 +334,7 @@ const showSelectProfileModal = (profiles, limitReached) => {
         nameInput.type = 'text';
         nameInput.value = profile.username;
         nameInput.maxLength = 12;
-        nameInput.className = 'hidden flex-grow bg-gray-600 text-white rounded px-2 py-1';
+        nameInput.className = 'hidden flex-grow bg-input rounded px-2 py-1';
 
         nameSpan.onclick = () => {
             nameSpan.classList.add('hidden');
@@ -333,7 +368,7 @@ const showSelectProfileModal = (profiles, limitReached) => {
 
         const pinButton = document.createElement('button');
         pinButton.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" /></svg>`;
-        pinButton.className = 'ml-4 text-gray-400 hover:text-white';
+        pinButton.className = 'ml-4 text-text-secondary hover:text-text-primary';
         pinButton.title = 'Edit PIN Settings';
         pinButton.onclick = () => {
             console.log(`Click Event: Edit PIN for profile '${profile.username}'.`);
@@ -342,13 +377,13 @@ const showSelectProfileModal = (profiles, limitReached) => {
 
         const selectButton = document.createElement('button');
         selectButton.textContent = 'Select';
-        selectButton.className = 'ml-4 px-3 py-1 bg-blue-500 hover:bg-blue-600 rounded-md text-sm';
+        selectButton.className = 'ml-4 px-3 py-1 bg-blue-500 hover:bg-blue-600 rounded-md text-sm text-white';
         selectButton.onclick = () => {
             console.log(`Click Event: Selected profile '${profile.username}'.`);
             if (profile.pinEnabled) {
                 showPinEntryModal(profile);
             } else {
-                selectProfile(profile.username, profile.helmetColor);
+                selectProfile(profile);
             }
         };
 
@@ -393,22 +428,23 @@ const hideSelectProfileModal = () => {
     selectProfileModal.classList.add('hidden');
 };
 
-const selectProfile = (username, helmetColor) => {
-    currentUser = { username, helmetColor };
+const selectProfile = (profile) => {
+    currentUser = profile;
+    applyTheme(profile.theme);
     hideSelectProfileModal();
     hidePinEntryModal();
     fetch('/get-ready', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ username: username }),
+        body: JSON.stringify({ username: profile.username }),
     })
     .then(response => response.json())
     .then(data => {
         showMessage(data.message, data.success);
         if (data.success) {
-            featuresUsername.textContent = username;
+            featuresUsername.textContent = profile.username;
             featuresHelmetDisplay.innerHTML = '';
-            featuresHelmetDisplay.appendChild(createHelmetIcon(helmetColor, 'w-12 h-12'));
+            featuresHelmetDisplay.appendChild(createHelmetIcon(profile.helmetColor, 'w-12 h-12'));
             setView('features');
         }
     })
@@ -505,7 +541,7 @@ const showPinEntryModal = (profile, forDelete = false) => {
                 if (forDelete) {
                     executeDelete(profile.id);
                 } else {
-                    selectProfile(profile.username, profile.helmetColor);
+                    selectProfile(profile);
                 }
             } else {
                 showMessage(data.message, false);
@@ -622,6 +658,13 @@ readyButton.addEventListener('click', () => {
     readyButton.disabled = true;
     readyButton.textContent = 'Checking...';
 
+    // Log an anonymous readiness check immediately
+    fetch('/get-ready', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({}), // No username yet
+    });
+
     fetch('/check-profiles')
     .then(response => response.json())
     .then(data => {
@@ -687,15 +730,15 @@ const loadFeatureRequests = () => {
                     submitFeatureRequestBtn.textContent = 'Submit Request';
                     featureRequestTextarea.placeholder = 'Describe your feature idea...';
                 }
-                
+
                 // Render list
                 if (data.requests.length > 0) {
                     data.requests.forEach(req => {
                         const reqElement = document.createElement('div');
-                        reqElement.className = 'bg-gray-700 p-4 rounded-lg flex justify-between items-start';
+                        reqElement.className = 'bg-card-darker p-4 rounded-lg flex justify-between items-start';
 
                         const textContainer = document.createElement('div');
-                        textContainer.innerHTML = `<p class="text-gray-300">${req.requestText}</p><p class="text-sm text-gray-500 mt-2">- ${req.username}</p>`;
+                        textContainer.innerHTML = `<p class="text-text-primary">${req.requestText}</p><p class="text-sm text-text-secondary mt-2">- ${req.username}</p>`;
                         reqElement.appendChild(textContainer);
 
                         if (isDevModeEnabled && data.deletion_enabled) {
@@ -706,11 +749,11 @@ const loadFeatureRequests = () => {
                             deleteButton.onclick = () => deleteFeatureRequest(req.id);
                             reqElement.appendChild(deleteButton);
                         }
-                        
+
                         featureRequestList.appendChild(reqElement);
                     });
                 } else {
-                    featureRequestList.innerHTML = '<p class="text-gray-500">No feature requests submitted yet.</p>';
+                    featureRequestList.innerHTML = '<p class="text-text-secondary">No feature requests submitted yet.</p>';
                 }
             }
         });
@@ -797,4 +840,9 @@ updateFeatureSettingsBtn.addEventListener('click', () => {
     .then(data => {
         showMessage(data.message, data.success);
     });
+});
+
+// --- Initial Load ---
+document.addEventListener('DOMContentLoaded', () => {
+    applyTheme('dark'); // Default to dark theme on initial load
 });

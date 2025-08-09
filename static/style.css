@@ -1,14 +1,54 @@
-body {
-    transition: background-color 0.5s ease-in-out, color 0.5s ease-in-out;
+/* --- NEW: CSS Variables for Theming --- */
+:root {
+    --color-bg-body: #000000;
+    --color-text-primary: #D1D5DB; /* gray-300 */
+    --color-text-secondary: #9CA3AF; /* gray-400 */
+    --color-card: #1F2937; /* gray-800 */
+    --color-card-darker: #111827; /* gray-900 */
+    --color-interactive-hover: #374151; /* gray-700 */
+    --color-input: #374151; /* gray-700 */
+    --color-border: #4B5563; /* gray-600 */
 }
+
+html.light {
+    --color-bg-body: #F9FAFB; /* gray-50 */
+    --color-text-primary: #111827; /* gray-900 */
+    --color-text-secondary: #6B7280; /* gray-500 */
+    --color-card: #FFFFFF;
+    --color-card-darker: #F3F4F6; /* gray-100 */
+    --color-interactive-hover: #F3F4F6; /* gray-100 */
+    --color-input: #F3F4F6; /* gray-100 */
+    --color-border: #D1D5DB; /* gray-300 */
+}
+/* --- End Theming --- */
+
+
+body {
+    transition: background-color 0.3s ease-in-out, color 0.3s ease-in-out;
+    background-color: var(--color-bg-body);
+    color: var(--color-text-primary);
+}
+
 #message-box {
     transition: opacity 0.5s ease-in-out, transform 0.5s ease-in-out;
 }
+
+/* Update components to use CSS variables */
+.bg-body { background-color: var(--color-bg-body); }
+.text-text-primary { color: var(--color-text-primary); }
+.text-text-secondary { color: var(--color-text-secondary); }
+.bg-card { background-color: var(--color-card); }
+.bg-card-darker { background-color: var(--color-card-darker); }
+.hover\:bg-interactive-hover:hover { background-color: var(--color-interactive-hover); }
+.bg-input { background-color: var(--color-input); }
+.border-border { border-color: var(--color-border); }
+
+/* Inactive card styles */
 .inactive-card {
-    background-color: #2D3748; /* gray-800 */
+    background-color: var(--color-card-darker);
     cursor: not-allowed;
     opacity: 0.6;
 }
 .inactive-card:hover {
-    background-color: #2D3748; /* Keep the same color on hover */
+    background-color: var(--color-card-darker);
 }
