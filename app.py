@@ -35,7 +35,7 @@ print("✅ Firebase Initialized Successfully.")
 # This function fetches the version from Firestore, with a fallback.
 def get_app_version():
     # This version number will be incremented with each new set of changes.
-    default_version = '1.5.8'
+    default_version = '1.5.9'
     try:
         config_ref = db.collection('config').document('app_info')
         config_doc = config_ref.get()
