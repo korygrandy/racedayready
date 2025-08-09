@@ -231,16 +231,16 @@
                         <h3 id="changelog-heading" class="text-2xl font-semibold mb-3">Changelog</h3>
                         <div class="space-y-4">
                             <div class="bg-card-darker p-4 rounded-lg shadow">
-                                <h4 class="font-bold text-lg">Version 1.7.0 (August 9, 2025)</h4>
+                                <h4 class="font-bold text-lg">Version 1.7.2 (August 9, 2025)</h4>
                                 <ul class="list-disc list-inside mt-2 text-text-secondary space-y-1">
-                                    <li>Added administrative controls for setting limits on the number of garages and vehicles per user profile.</li>
+                                    <li>Implemented full edit functionality for vehicles, including a dedicated modal and dynamic dropdowns for make and model.</li>
                                 </ul>
                             </div>
                              <div class="bg-card-darker p-4 rounded-lg shadow">
-                                <h4 class="font-bold text-lg">Version 1.6.9 (August 9, 2025)</h4>
+                                <h4 class="font-bold text-lg">Version 1.7.1 (August 9, 2025)</h4>
                                 <ul class="list-disc list-inside mt-2 text-text-secondary space-y-1">
-                                    <li>Implemented a message queue to prevent overlapping UI notifications.</li>
-                                    <li>Fixed a bug where the warning for missing vehicles was not being displayed.</li>
+                                    <li>Added a direct link from the Garage Management page to the Vehicle Management page for easier navigation.</li>
+                                    <li>Fixed a bug where contextual warning messages were not consistently displayed.</li>
                                 </ul>
                             </div>
                         </div>
@@ -249,6 +249,12 @@
                     <div id="defect-resolutions-section" class="mb-8">
                         <h3 id="defect-resolutions-heading" class="text-2xl font-semibold mb-3">Defect Resolutions</h3>
                         <div class="space-y-4">
+                             <div id="defect-entry-edit-vehicle" class="bg-card-darker p-4 rounded-lg shadow">
+                                <h4 class="font-bold text-lg">Vehicle Edit Button Inoperative (Fixed: Aug 9, 2025) - v1.7.2</h4>
+                                <p class="mt-2 text-text-secondary">
+                                    <strong>Resolution:</strong> The event listener for the vehicle list was updated to correctly handle clicks on the "Edit" button. A new modal and the corresponding JavaScript logic were created to allow users to modify all aspects of a vehicle, including its photo.
+                                </p>
+                            </div>
                              <div id="defect-entry-messaging" class="bg-card-darker p-4 rounded-lg shadow">
                                 <h4 class="font-bold text-lg">Overlapping UI Messages (Fixed: Aug 8, 2025) - v1.6.9</h4>
                                 <p class="mt-2 text-text-secondary">
@@ -380,6 +386,42 @@
                 <div class="mt-6 flex justify-end space-x-4">
                     <button id="cancel-pin-settings-btn" type="button" class="px-4 py-2 bg-gray-600 text-white font-semibold rounded-lg hover:bg-gray-500">Cancel</button>
                     <button id="save-pin-settings-btn" type="submit" class="px-4 py-2 bg-blue-500 text-white font-semibold rounded-lg shadow-md hover:bg-blue-600">Save Settings</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- NEW: Edit Vehicle Modal -->
+    <div id="edit-vehicle-modal" class="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center hidden z-40">
+        <div class="bg-card p-8 rounded-lg shadow-2xl w-full max-w-md">
+            <h2 class="text-2xl font-bold mb-4">Edit Vehicle</h2>
+            <form id="edit-vehicle-form">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div>
+                        <label for="edit-vehicle-year-select" class="block text-sm font-medium">Year</label>
+                        <select id="edit-vehicle-year-select" class="mt-1 block w-full bg-input border border-border rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500" required></select>
+                    </div>
+                    <div>
+                        <label for="edit-vehicle-make-select" class="block text-sm font-medium">Make</label>
+                        <select id="edit-vehicle-make-select" class="mt-1 block w-full bg-input border border-border rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500" required></select>
+                    </div>
+                    <div>
+                        <label for="edit-vehicle-model-select" class="block text-sm font-medium">Model</label>
+                        <select id="edit-vehicle-model-select" class="mt-1 block w-full bg-input border border-border rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500" required></select>
+                    </div>
+                </div>
+                <div class="mt-4">
+                    <label for="edit-vehicle-garage-select" class="block text-sm font-medium">Assign to Garage</label>
+                    <select id="edit-vehicle-garage-select" class="mt-1 block w-full bg-input border border-border rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500"></select>
+                </div>
+                <div class="mt-4">
+                    <label for="edit-vehicle-photo-input" class="block text-sm font-medium">Vehicle Photo (Optional, < 500KB)</label>
+                    <input type="file" id="edit-vehicle-photo-input" accept="image/*" class="mt-1 block w-full text-sm text-text-secondary file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"/>
+                    <img id="edit-vehicle-photo-preview" class="hidden mt-4 rounded-lg max-h-48 w-auto"/>
+                </div>
+                <div class="mt-6 flex justify-end space-x-4">
+                    <button id="cancel-edit-vehicle-btn" type="button" class="px-4 py-2 bg-gray-600 text-white font-semibold rounded-lg hover:bg-gray-500">Cancel</button>
+                    <button id="save-vehicle-btn" type="submit" class="px-4 py-2 bg-blue-500 text-white font-semibold rounded-lg shadow-md hover:bg-blue-600">Save Changes</button>
                 </div>
             </form>
         </div>

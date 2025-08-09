@@ -126,7 +126,16 @@ const loadGarages = () => {
                                 vehicleContainer.appendChild(vehiclePhoto);
                             });
                         } else {
-                            vehicleContainer.innerHTML = '<p class="text-sm text-text-secondary">No vehicles in this garage.</p>';
+                            const addVehicleLink = document.createElement('a');
+                            addVehicleLink.href = '#';
+                            addVehicleLink.className = 'text-blue-500 hover:underline';
+                            addVehicleLink.textContent = 'Add a vehicle to this garage';
+                            addVehicleLink.onclick = (e) => {
+                                e.preventDefault();
+                                App.setView('vehicleManagement');
+                            };
+                            vehicleContainer.innerHTML = '<p class="text-sm text-text-secondary">No vehicles in this garage. </p>';
+                            vehicleContainer.querySelector('p').appendChild(addVehicleLink);
                         }
                         garageElement.appendChild(vehicleContainer);
 

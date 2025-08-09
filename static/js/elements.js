@@ -47,6 +47,18 @@ export const addVehicleBtn = document.getElementById('add-vehicle-btn');
 export const vehicleList = document.getElementById('vehicle-list');
 export const backToFeaturesFromVehicleBtn = document.getElementById('back-to-features-from-vehicle-btn');
 
+// NEW: Edit Vehicle Modal Elements
+export const editVehicleModal = document.getElementById('edit-vehicle-modal');
+export const editVehicleForm = document.getElementById('edit-vehicle-form');
+export const editVehicleYearSelect = document.getElementById('edit-vehicle-year-select');
+export const editVehicleMakeSelect = document.getElementById('edit-vehicle-make-select');
+export const editVehicleModelSelect = document.getElementById('edit-vehicle-model-select');
+export const editVehicleGarageSelect = document.getElementById('edit-vehicle-garage-select');
+export const editVehiclePhotoInput = document.getElementById('edit-vehicle-photo-input');
+export const editVehiclePhotoPreview = document.getElementById('edit-vehicle-photo-preview');
+export const cancelEditVehicleBtn = document.getElementById('cancel-edit-vehicle-btn');
+export const saveVehicleBtn = document.getElementById('save-vehicle-btn');
+
 export const profileModal = document.getElementById('profile-modal');
 export const profileForm = document.getElementById('profile-form');
 export const usernameInput = document.getElementById('username-input');
@@ -89,9 +101,9 @@ export const savePinSettingsBtn = document.getElementById('save-pin-settings-btn
 // Admin elements
 export const profileLimitInput = document.getElementById('profile-limit-input');
 export const updateProfileLimitBtn = document.getElementById('update-profile-limit-btn');
-export const garageLimitInput = document.getElementById('garage-limit-input'); // NEW
-export const vehicleLimitInput = document.getElementById('vehicle-limit-input'); // NEW
-export const updateGarageVehicleLimitsBtn = document.getElementById('update-garage-vehicle-limits-btn'); // NEW
+export const garageLimitInput = document.getElementById('garage-limit-input');
+export const vehicleLimitInput = document.getElementById('vehicle-limit-input');
+export const updateGarageVehicleLimitsBtn = document.getElementById('update-garage-vehicle-limits-btn');
 export const featureRequestLimitInput = document.getElementById('feature-request-limit-input');
 export const enableDeletionCheckbox = document.getElementById('enable-deletion-checkbox');
 export const updateFeatureSettingsBtn = document.getElementById('update-feature-settings-btn');
