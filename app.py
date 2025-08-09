@@ -35,7 +35,7 @@ print("✅ Firebase Initialized Successfully.")
 # This function fetches the version from Firestore, with a fallback.
 def get_app_version():
     # This version number will be incremented with each new set of changes.
-    default_version = '1.5.7'
+    default_version = '1.5.8'
     try:
         config_ref = db.collection('config').document('app_info')
         config_doc = config_ref.get()
@@ -286,16 +286,16 @@ def get_ready():
     """
     try:
         data = request.get_json()
-        username = data.get('username')
-        if not username:
-            return jsonify({'success': False, 'message': 'Username is required.'}), 400
+        username = data.get('username', 'Anonymous Readiness Check')  # Default username
+        app_version = get_app_version()
 
         print(f"LOG: '{username}' is getting ready. Writing to Firestore...")
         doc_ref = db.collection('readiness_checks').document()
         doc_ref.set({
             'username': username,
             'timestamp': datetime.datetime.now(datetime.timezone.utc),
-            'status': 'Ready!'
+            'status': 'Ready!',
+            'app_version': app_version
         })
         print(f"✅ Successfully wrote to Firestore for {username}. Document ID: {doc_ref.id}")
         return jsonify({'success': True, 'message': f'{username} is now Raceday Ready!'}), 200

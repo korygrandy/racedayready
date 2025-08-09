@@ -155,16 +155,16 @@
                         <h3 id="changelog-heading" class="text-2xl font-semibold mb-3 text-gray-100">Changelog</h3>
                         <div class="space-y-4">
                             <div class="bg-gray-900 p-4 rounded-lg shadow">
-                                <h4 class="font-bold text-lg text-gray-100">Version 1.5.6 (August 8, 2025)</h4>
+                                <h4 class="font-bold text-lg text-gray-100">Version 1.5.8 (August 8, 2025)</h4>
                                 <ul class="list-disc list-inside mt-2 text-gray-300 space-y-1">
-                                    <li>Fixed a UI defect where inactive sub-page cards were not grayed out, ensuring a consistent user experience.</li>
+                                    <li>Resolved a defect where the "Get Ready" button click was not being logged to Firestore.</li>
+                                    <li>Enhanced the `readiness_checks` collection to include the application version with each entry.</li>
                                 </ul>
                             </div>
                              <div class="bg-gray-900 p-4 rounded-lg shadow">
-                                <h4 class="font-bold text-lg text-gray-100">Version 1.5.5 (August 8, 2025)</h4>
+                                <h4 class="font-bold text-lg text-gray-100">Version 1.5.7 (August 8, 2025)</h4>
                                 <ul class="list-disc list-inside mt-2 text-gray-300 space-y-1">
-                                    <li>Added a favicon (browser tab icon) for a more polished appearance.</li>
-                                    <li>Performed a code cleanup, adding console logs for all actions and improving user messages.</li>
+                                    <li>Fixed a UI defect where inactive sub-page cards were not grayed out, ensuring a consistent user experience.</li>
                                 </ul>
                             </div>
                         </div>
@@ -174,16 +174,16 @@
                     <div id="defect-resolutions-section" class="mb-8">
                         <h3 id="defect-resolutions-heading" class="text-2xl font-semibold mb-3 text-gray-100">Defect Resolutions</h3>
                         <div class="space-y-4">
-                             <div id="defect-entry-favicon" class="bg-gray-900 p-4 rounded-lg shadow">
-                                <h4 class="font-bold text-lg text-gray-100">Missing Favicon (Fixed: Aug 8, 2025) - v1.5.5</h4>
+                             <div id="defect-entry-readiness-check" class="bg-gray-900 p-4 rounded-lg shadow">
+                                <h4 class="font-bold text-lg text-gray-100">Readiness Check Logging (Fixed: Aug 8, 2025) - v1.5.8</h4>
                                 <p class="mt-2 text-gray-300">
-                                    <strong>Resolution:</strong> Implemented a white helmet SVG as a data URI for the application's favicon, ensuring it displays correctly in the browser tab.
+                                    <strong>Resolution:</strong> Corrected the backend logic for the `/get-ready` endpoint to ensure that a `readiness_checks` event is successfully created in Firestore every time a user selects their profile. The endpoint now also supports anonymous checks.
                                 </p>
                             </div>
-                             <div id="defect-entry-versioning" class="bg-gray-900 p-4 rounded-lg shadow">
-                                <h4 class="font-bold text-lg text-gray-100">Incorrect Version Display (Fixed: Aug 8, 2025) - v1.5.1</h4>
+                             <div id="defect-entry-inactive-cards" class="bg-gray-900 p-4 rounded-lg shadow">
+                                <h4 class="font-bold text-lg text-gray-100">Inactive Cards Not Grayed Out (Fixed: Aug 8, 2025) - v1.5.7</h4>
                                 <p class="mt-2 text-gray-300">
-                                    <strong>Resolution:</strong> Corrected a logic error in the backend that caused the UI to display "Version none" if the version was not explicitly set in Firestore. The application now reliably falls back to the default version specified in `app.py`.
+                                    <strong>Resolution:</strong> Applied the `.inactive-card` CSS class to the sub-page cards on the "Race Day Preparation & Logistics" page to visually indicate that they are not yet functional, creating a consistent user experience.
                                 </p>
                             </div>
                         </div>
