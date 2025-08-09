@@ -101,7 +101,6 @@ const selectProfile = (profile) => {
     hideSelectProfileModal();
     hidePinEntryModal();
 
-    // Log the readiness check first
     fetch('/get-ready', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -109,21 +108,7 @@ const selectProfile = (profile) => {
     })
     .then(response => response.json())
     .then(data => {
-        // Queue the success message first
         showMessage(data.message, data.success);
-
-        // Then, check for garages and vehicles to queue warnings if necessary
-        fetch(`/get-garages/${profile.id}`).then(res => res.json()).then(garageData => {
-            if (garageData.success && garageData.garages.length === 0) {
-                showMessage('Reminder: No garages found. Please add a garage.', false);
-            } else {
-                fetch(`/get-vehicles/${profile.id}`).then(res => res.json()).then(vehicleData => {
-                    if (vehicleData.success && vehicleData.vehicles.length === 0) {
-                        showMessage('Reminder: No vehicles found. Please add a vehicle.', false);
-                    }
-                });
-            }
-        });
 
         if (data.success) {
             elements.featuresUsername.textContent = profile.username;

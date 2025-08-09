@@ -35,7 +35,7 @@ print("✅ Firebase Initialized Successfully.")
 # This function fetches the version from Firestore, with a fallback.
 def get_app_version():
     # This version number will be incremented with each new set of changes.
-    default_version = '1.6.9'
+    default_version = '1.7.1'
     try:
         config_ref = db.collection('config').document('app_info')
         config_doc = config_ref.get()
@@ -58,27 +58,22 @@ def get_app_version():
         return default_version
 
 
-# --- Function to get the profile limit from Firestore ---
-def get_profile_limit():
-    """
-    Retrieves the profile limit from admin_settings in Firestore.
-    Defaults to 3 if not set.
-    """
+# --- Function to get a generic limit from Firestore ---
+def get_limit(collection_name, document_name, default_limit):
     try:
-        settings_ref = db.collection('admin_settings').document('profiles')
+        settings_ref = db.collection(collection_name).document(document_name)
         settings_doc = settings_ref.get()
         if settings_doc.exists:
-            limit = settings_doc.to_dict().get('limit', 3)
-            print(f"✅ Loaded profile limit from Firestore: {limit}")
+            limit = settings_doc.to_dict().get('limit', default_limit)
+            print(f"✅ Loaded {document_name} limit from Firestore: {limit}")
             return int(limit)
         else:
-            print("⚠️ Profile limit setting not found. Defaulting to 3.")
-            # Create the setting if it doesn't exist
-            settings_ref.set({'limit': 3})
-            return 3
+            print(f"⚠️ {document_name} limit setting not found. Defaulting to {default_limit}.")
+            settings_ref.set({'limit': default_limit})
+            return default_limit
     except Exception as e:
-        print(f"❌ Error getting profile limit: {e}. Defaulting to 3.")
-        return 3
+        print(f"❌ Error getting {document_name} limit: {e}. Defaulting to {default_limit}.")
+        return default_limit
 
 
 # --- Function to get feature request settings from Firestore ---
@@ -143,7 +138,7 @@ def check_profiles():
                 'theme': profile_data.get('theme', 'dark')
             })
 
-        profile_limit = get_profile_limit()
+        profile_limit = get_limit('admin_settings', 'profiles', 3)
         limit_reached = len(profiles) >= profile_limit
 
         if profiles:
@@ -165,7 +160,7 @@ def create_profile():
     """
     try:
         # Check against the profile limit first
-        profile_limit = get_profile_limit()
+        profile_limit = get_limit('admin_settings', 'profiles', 3)
         current_profiles = list(db.collection('driver_profiles').stream())
         if len(current_profiles) >= profile_limit:
             return jsonify({'success': False, 'message': f'Profile limit of {profile_limit} reached.'}), 403
@@ -400,20 +395,20 @@ def delete_feature_request(request_id):
 # --- Routes for Admin Settings ---
 @app.route('/get-admin-settings', methods=['GET'])
 def get_admin_settings():
-    profile_limit = get_profile_limit()
+    profile_limit = get_limit('admin_settings', 'profiles', 3)
     feature_request_settings = get_feature_request_settings()
+    garage_limit = get_limit('admin_settings', 'garages', 10)
+    vehicle_limit = get_limit('admin_settings', 'vehicles', 25)
     return jsonify({
         'success': True,
         'profile_limit': profile_limit,
-        'feature_request_settings': feature_request_settings
+        'feature_request_settings': feature_request_settings,
+        'garage_limit': garage_limit,
+        'vehicle_limit': vehicle_limit,
     }), 200
 
 
-@app.route('/update-profile-limit', methods=['POST'])
-def update_profile_limit():
-    """
-    Updates the profile limit in Firestore.
-    """
+def update_limit(collection_name, document_name, min_val, max_val):
     try:
         data = request.get_json()
         new_limit = data.get('limit')
@@ -426,15 +421,30 @@ def update_profile_limit():
         except ValueError:
             return jsonify({'success': False, 'message': 'Limit must be a number.'}), 400
 
-        if not 1 <= new_limit <= 20:
-            return jsonify({'success': False, 'message': 'Limit must be between 1 and 20.'}), 400
+        if not min_val <= new_limit <= max_val:
+            return jsonify({'success': False, 'message': f'Limit must be between {min_val} and {max_val}.'}), 400
 
-        db.collection('admin_settings').document('profiles').set({'limit': new_limit})
-        print(f"✅ Profile limit updated to: {new_limit}")
-        return jsonify({'success': True, 'message': f'Profile limit updated to {new_limit}.'}), 200
+        db.collection(collection_name).document(document_name).set({'limit': new_limit})
+        print(f"✅ {document_name.capitalize()} limit updated to: {new_limit}")
+        return jsonify({'success': True, 'message': f'{document_name.capitalize()} limit updated to {new_limit}.'}), 200
     except Exception as e:
-        print(f"❌ Error updating profile limit: {e}")
+        print(f"❌ Error updating {document_name} limit: {e}")
         return jsonify({'success': False, 'message': f'An error occurred: {e}'}), 500
+
+
+@app.route('/update-profile-limit', methods=['POST'])
+def update_profile_limit():
+    return update_limit('admin_settings', 'profiles', 1, 20)
+
+
+@app.route('/update-garage-limit', methods=['POST'])
+def update_garage_limit():
+    return update_limit('admin_settings', 'garages', 1, 10)
+
+
+@app.route('/update-vehicle-limit', methods=['POST'])
+def update_vehicle_limit():
+    return update_limit('admin_settings', 'vehicles', 1, 25)
 
 
 @app.route('/update-feature-request-settings', methods=['POST'])
@@ -490,6 +500,11 @@ def add_garage():
         if len(garage_name) > 25:
             return jsonify({'success': False, 'message': 'Garage name cannot exceed 25 characters.'}), 400
 
+        garage_limit = get_limit('admin_settings', 'garages', 10)
+        current_garages = list(db.collection('driver_profiles').document(profile_id).collection('garages').stream())
+        if len(current_garages) >= garage_limit:
+            return jsonify({'success': False, 'message': f'Garage limit of {garage_limit} reached.'}), 403
+
         doc_ref = db.collection('driver_profiles').document(profile_id).collection('garages').document()
         doc_ref.set({
             'name': garage_name,
@@ -532,8 +547,11 @@ def get_garages(profile_id):
                 'vehicles': [v for v in all_vehicles if v.get('garageId') == garage_id]
             })
 
+        garage_limit = get_limit('admin_settings', 'garages', 10)
+        limit_reached = len(garages) >= garage_limit
+
         print(f"✅ Found {len(garages)} garages for profile {profile_id}")
-        return jsonify({'success': True, 'garages': garages}), 200
+        return jsonify({'success': True, 'garages': garages, 'limit_reached': limit_reached}), 200
     except Exception as e:
         print(f"❌ Error getting garages: {e}")
         return jsonify({'success': False, 'error': str(e)}), 500
@@ -581,6 +599,11 @@ def delete_garage(profile_id, garage_id):
 @app.route('/add-vehicle/<profile_id>', methods=['POST'])
 def add_vehicle(profile_id):
     try:
+        vehicle_limit = get_limit('admin_settings', 'vehicles', 25)
+        current_vehicles = list(db.collection('driver_profiles').document(profile_id).collection('vehicles').stream())
+        if len(current_vehicles) >= vehicle_limit:
+            return jsonify({'success': False, 'message': f'Vehicle limit of {vehicle_limit} reached.'}), 403
+
         data = request.get_json()
         vehicle_data = {
             'year': data.get('year'),
@@ -613,8 +636,11 @@ def get_vehicles(profile_id):
             vehicle['id'] = doc.id
             vehicles.append(vehicle)
 
+        vehicle_limit = get_limit('admin_settings', 'vehicles', 25)
+        limit_reached = len(vehicles) >= vehicle_limit
+
         print(f"✅ Found {len(vehicles)} vehicles for profile {profile_id}")
-        return jsonify({'success': True, 'vehicles': vehicles}), 200
+        return jsonify({'success': True, 'vehicles': vehicles, 'limit_reached': limit_reached}), 200
     except Exception as e:
         print(f"❌ Error getting vehicles: {e}")
         return jsonify({'success': False, 'error': str(e)}), 500
