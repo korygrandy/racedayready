@@ -24,7 +24,7 @@ export const submitFeatureRequestBtn = document.getElementById('submit-feature-r
 export const charCounter = document.getElementById('char-counter');
 export const featureRequestList = document.getElementById('feature-request-list');
 
-// NEW: Race Schedule Elements
+// Race Schedule Elements
 export const raceScheduleView = document.getElementById('race-schedule-view');
 export const raceScheduleCard = document.getElementById('race-schedule-card');
 export const addEventForm = document.getElementById('add-event-form');
@@ -35,6 +35,16 @@ export const eventVehiclesSelect = document.getElementById('event-vehicles-selec
 export const addEventBtn = document.getElementById('add-event-btn');
 export const eventList = document.getElementById('event-list');
 export const backToPrepFromScheduleBtn = document.getElementById('back-to-prep-from-schedule-btn');
+
+// Edit Event Modal Elements
+export const editEventModal = document.getElementById('edit-event-modal');
+export const editEventForm = document.getElementById('edit-event-form');
+export const editEventNameInput = document.getElementById('edit-event-name-input');
+export const editEventStartInput = document.getElementById('edit-event-start-input');
+export const editEventEndInput = document.getElementById('edit-event-end-input');
+export const editEventVehiclesSelect = document.getElementById('edit-event-vehicles-select');
+export const cancelEditEventBtn = document.getElementById('cancel-edit-event-btn');
+export const saveEventBtn = document.getElementById('save-event-btn');
 
 // Garage Management Elements
 export const garageManagementView = document.getElementById('garage-management-view');
