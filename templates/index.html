@@ -111,47 +111,18 @@
                     <div id="changelog-section" class="mb-8">
                         <h3 id="changelog-heading" class="text-2xl font-semibold mb-3 text-gray-100">Changelog</h3>
                         <div class="space-y-4">
+                             <div class="bg-gray-900 p-4 rounded-lg shadow">
+                                <h4 class="font-bold text-lg text-gray-100">Version 1.5.1 (August 8, 2025)</h4>
+                                <ul class="list-disc list-inside mt-2 text-gray-300 space-y-1">
+                                    <li>Fixed a bug where the application version was not displaying correctly in the footer.</li>
+                                </ul>
+                            </div>
                             <div class="bg-gray-900 p-4 rounded-lg shadow">
-                                <h4 class="font-bold text-lg text-gray-100">August 8, 2025: Security & Administration</h4>
+                                <h4 class="font-bold text-lg text-gray-100">Version 1.5.0 (August 8, 2025)</h4>
                                 <ul class="list-disc list-inside mt-2 text-gray-300 space-y-1">
                                     <li>Implemented a PIN prompt for accessing Developer Mode to enhance security.</li>
                                     <li>Added a new "Administration" section to Developer Mode.</li>
                                     <li>Implemented a configurable limit for user profile creation, manageable from the admin panel.</li>
-                                    <li>The "Add New Profile" button is now disabled when the limit is reached.</li>
-                                </ul>
-                            </div>
-                            <div class="bg-gray-900 p-4 rounded-lg shadow">
-                                <h4 class="font-bold text-lg text-gray-100">August 8, 2025: Developer Mode Enhancements</h4>
-                                <ul class="list-disc list-inside mt-2 text-gray-300 space-y-1">
-                                    <li>Added the application version number to each entry in the Defect Resolutions section for better tracking.</li>
-                                    <li>Fixed a scrolling issue on the Developer Mode page to improve user experience on content-heavy views.</li>
-                                </ul>
-                            </div>
-                            <div id="changelog-entry-new-2" class="bg-gray-900 p-4 rounded-lg shadow">
-                                <h4 class="font-bold text-lg text-gray-100">August 8, 2025: Feature Request Management</h4>
-                                <ul class="list-disc list-inside mt-2 text-gray-300 space-y-1">
-                                    <li>Added a "Critical Upcoming Features" section to highlight development priorities.</li>
-                                    <li>Users can now delete feature requests directly from the list using a new 'X' button.</li>
-                                    <li>The backend now supports deleting individual requests from Firestore.</li>
-                                </ul>
-                            </div>
-                             <div id="changelog-entry-new" class="bg-gray-900 p-4 rounded-lg shadow">
-                                <h4 class="font-bold text-lg text-gray-100">August 8, 2025: UI and Layout Bugfixes</h4>
-                                <ul class="list-disc list-inside mt-2 text-gray-300 space-y-1">
-                                    <li>Fixed a critical bug where the 'Developer Mode' link was not accessible on all application views by making the footer visible at all times.</li>
-                                </ul>
-                            </div>
-                            <div id="changelog-entry-1" class="bg-gray-900 p-4 rounded-lg shadow">
-                                <h4 class="font-bold text-lg text-gray-100">August 8, 2025: Display Existing Feature Requests</h4>
-                                <ul class="list-disc list-inside mt-2 text-gray-300 space-y-1">
-                                    <li>The "Upcoming Features" page now fetches and displays all previously submitted feature requests from Firestore.</li>
-                                    <li>This prevents duplicate submissions and keeps users informed of existing ideas.</li>
-                                </ul>
-                            </div>
-                            <div id="changelog-entry-2" class="bg-gray-900 p-4 rounded-lg shadow">
-                                <h4 class="font-bold text-lg text-gray-100">August 8, 2025: Implemented Input Validation</h4>
-                                <ul class="list-disc list-inside mt-2 text-gray-300 space-y-1">
-                                    <li>Added character limits to all user input fields and a real-time character counter to the feature request form.</li>
                                 </ul>
                             </div>
                         </div>
@@ -160,20 +131,26 @@
                     <div id="defect-resolutions-section" class="mb-8">
                         <h3 id="defect-resolutions-heading" class="text-2xl font-semibold mb-3 text-gray-100">Defect Resolutions</h3>
                         <div class="space-y-4">
+                             <div id="defect-entry-versioning" class="bg-gray-900 p-4 rounded-lg shadow">
+                                <h4 class="font-bold text-lg text-gray-100">Incorrect Version Display (Fixed: Aug 8, 2025) - v1.5.1</h4>
+                                <p class="mt-2 text-gray-300">
+                                    <strong>Resolution:</strong> Corrected a logic error in the backend that caused the UI to display "Version none" if the version was not explicitly set in Firestore. The application now reliably falls back to the default version specified in `app.py`.
+                                </p>
+                            </div>
                             <div id="defect-entry-scroll" class="bg-gray-900 p-4 rounded-lg shadow">
-                                <h4 class="font-bold text-lg text-gray-100">Content Overflow and Scrolling (Fixed: Aug 8, 2025) - v{{ app_version }}</h4>
+                                <h4 class="font-bold text-lg text-gray-100">Content Overflow and Scrolling (Fixed: Aug 8, 2025) - v1.5.0</h4>
                                 <p class="mt-2 text-gray-300">
                                     <strong>Resolution:</strong> The main application layout was restructured to allow vertical scrolling on pages where content exceeds the viewport height. The `main` container now handles `overflow-y: auto`, ensuring that all content is accessible without requiring the user to zoom out.
                                 </p>
                             </div>
                              <div id="defect-entry-new" class="bg-gray-900 p-4 rounded-lg shadow">
-                                <h4 class="font-bold text-lg text-gray-100">Developer Mode Link Unresponsive (Fixed: Aug 8, 2025) - v{{ app_version }}</h4>
+                                <h4 class="font-bold text-lg text-gray-100">Developer Mode Link Unresponsive (Fixed: Aug 8, 2025) - v1.5.0</h4>
                                 <p class="mt-2 text-gray-300">
                                     <strong>Resolution:</strong> The main application container was restructured to ensure the footer containing the 'Developer Mode' link remains fixed and accessible at the bottom of the viewport, regardless of the content height in the main view. This resolves an issue where the link could be pushed off-screen and become unclickable on certain pages.
                                 </p>
                             </div>
                              <div id="defect-entry-1" class="bg-gray-900 p-4 rounded-lg shadow">
-                                <h4 class="font-bold text-lg text-gray-100">PIN Input Autofilled (Fixed: Aug 8, 2025) - v{{ app_version }}</h4>
+                                <h4 class="font-bold text-lg text-gray-100">PIN Input Autofilled (Fixed: Aug 8, 2025) - v1.5.0</h4>
                                 <p class="mt-2 text-gray-300">
                                     <strong>Resolution:</strong> The `autocomplete="new-password"` attribute was added to the PIN input fields to prevent browsers from auto-filling previously entered PINs.
                                 </p>

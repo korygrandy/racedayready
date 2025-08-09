@@ -34,22 +34,24 @@ print("✅ Firebase Initialized Successfully.")
 # --- App Configuration Loading ---
 # This function fetches the version from Firestore, with a fallback.
 def get_app_version():
-    default_version = '1.4.8'
+    # This version number will be incremented with each new set of changes.
+    default_version = '1.5.1'
     try:
         config_ref = db.collection('config').document('app_info')
         config_doc = config_ref.get()
         if config_doc.exists:
-            print("✅ DB Check Passed: 'app_info' document found in 'config' collection.")
             version = config_doc.to_dict().get('version')
-            if version:
-                print(f"✅ Loaded app version from Firestore: {version}")
-                return version
-            else:
+            # If version is missing or empty in Firestore, use the default
+            if not version:
                 print(f"⚠️ Warning: 'version' field in Firestore is empty. Using default version '{default_version}'.")
                 return default_version
+            print(f"✅ Loaded app version from Firestore: {version}")
+            return version
         else:
             print(
                 f"⚠️ Warning: 'app_info' document not found in 'config' collection. Using default version '{default_version}'.")
+            # Create the setting if it doesn't exist
+            config_ref.set({'version': default_version})
             return default_version
     except Exception as e:
         print(f"❌ Error loading app version from Firestore: {e}. Using default version '{default_version}'.")
