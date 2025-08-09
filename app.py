@@ -34,26 +34,77 @@ print("✅ Firebase Initialized Successfully.")
 # --- App Configuration Loading ---
 # This function fetches the version from Firestore, with a fallback.
 def get_app_version():
-    default_version = '1.4.8'
+    # This version number will be incremented with each new set of changes.
+    default_version = '1.6.1'
     try:
         config_ref = db.collection('config').document('app_info')
         config_doc = config_ref.get()
         if config_doc.exists:
-            print("✅ DB Check Passed: 'app_info' document found in 'config' collection.")
             version = config_doc.to_dict().get('version')
-            if version:
-                print(f"✅ Loaded app version from Firestore: {version}")
-                return version
-            else:
+            # If version is missing or empty in Firestore, use the default
+            if not version:
                 print(f"⚠️ Warning: 'version' field in Firestore is empty. Using default version '{default_version}'.")
                 return default_version
+            print(f"✅ Loaded app version from Firestore: {version}")
+            return version
         else:
             print(
                 f"⚠️ Warning: 'app_info' document not found in 'config' collection. Using default version '{default_version}'.")
+            # Create the setting if it doesn't exist
+            config_ref.set({'version': default_version})
             return default_version
     except Exception as e:
         print(f"❌ Error loading app version from Firestore: {e}. Using default version '{default_version}'.")
         return default_version
+
+
+# --- Function to get the profile limit from Firestore ---
+def get_profile_limit():
+    """
+    Retrieves the profile limit from admin_settings in Firestore.
+    Defaults to 3 if not set.
+    """
+    try:
+        settings_ref = db.collection('admin_settings').document('profiles')
+        settings_doc = settings_ref.get()
+        if settings_doc.exists:
+            limit = settings_doc.to_dict().get('limit', 3)
+            print(f"✅ Loaded profile limit from Firestore: {limit}")
+            return int(limit)
+        else:
+            print("⚠️ Profile limit setting not found. Defaulting to 3.")
+            # Create the setting if it doesn't exist
+            settings_ref.set({'limit': 3})
+            return 3
+    except Exception as e:
+        print(f"❌ Error getting profile limit: {e}. Defaulting to 3.")
+        return 3
+
+
+# --- Function to get feature request settings from Firestore ---
+def get_feature_request_settings():
+    """
+    Retrieves feature request settings from admin_settings in Firestore.
+    Defaults to deletion disabled and a limit of 3 if not set.
+    """
+    default_settings = {'deletion_enabled': False, 'limit': 3}
+    try:
+        settings_ref = db.collection('admin_settings').document('feature_requests')
+        settings_doc = settings_ref.get()
+        if settings_doc.exists:
+            settings = settings_doc.to_dict()
+            # Ensure both keys exist, falling back to defaults if necessary
+            settings['deletion_enabled'] = settings.get('deletion_enabled', default_settings['deletion_enabled'])
+            settings['limit'] = int(settings.get('limit', default_settings['limit']))
+            print(f"✅ Loaded feature request settings from Firestore: {settings}")
+            return settings
+        else:
+            print(f"⚠️ Feature request settings not found. Defaulting to {default_settings}.")
+            settings_ref.set(default_settings)
+            return default_settings
+    except Exception as e:
+        print(f"❌ Error getting feature request settings: {e}. Defaulting to {default_settings}.")
+        return default_settings
 
 
 # Initialize the Flask application
@@ -88,15 +139,19 @@ def check_profiles():
                 'username': profile_data.get('username'),
                 'helmetColor': profile_data.get('helmetColor', '#ffffff'),
                 'pinEnabled': profile_data.get('pinEnabled', False),
-                'pin': profile_data.get('pin')  # Pass the pin for editing
+                'pin': profile_data.get('pin'),
+                'theme': profile_data.get('theme', 'dark')  # NEW: Get theme
             })
+
+        profile_limit = get_profile_limit()
+        limit_reached = len(profiles) >= profile_limit
 
         if profiles:
             print(f"✅ DB Check: Found {len(profiles)} driver profile(s).")
-            return jsonify({'profiles_exist': True, 'profiles': profiles}), 200
+            return jsonify({'profiles_exist': True, 'profiles': profiles, 'limit_reached': limit_reached}), 200
         else:
             print("ℹ️ DB Check: No driver profiles found in the system.")
-            return jsonify({'profiles_exist': False, 'profiles': []}), 200
+            return jsonify({'profiles_exist': False, 'profiles': [], 'limit_reached': limit_reached}), 200
     except Exception as e:
         print(f"❌ Error checking profiles: {e}")
         return jsonify({'error': str(e)}), 500
@@ -106,14 +161,21 @@ def check_profiles():
 @app.route('/create-profile', methods=['POST'])
 def create_profile():
     """
-    Creates a new driver profile document in Firestore, checking for duplicates.
+    Creates a new driver profile document in Firestore, checking for duplicates and the profile limit.
     """
     try:
+        # Check against the profile limit first
+        profile_limit = get_profile_limit()
+        current_profiles = list(db.collection('driver_profiles').stream())
+        if len(current_profiles) >= profile_limit:
+            return jsonify({'success': False, 'message': f'Profile limit of {profile_limit} reached.'}), 403
+
         data = request.get_json()
         username = data.get('username')
         helmet_color = data.get('helmetColor', '#ffffff')
         pin = data.get('pin')
         pin_enabled = data.get('pinEnabled', False)
+        theme = data.get('theme', 'dark')  # NEW: Get theme
 
         if not username:
             return jsonify({'success': False, 'message': 'Username is required.'}), 400
@@ -131,6 +193,7 @@ def create_profile():
             'helmetColor': helmet_color,
             'pin': pin,
             'pinEnabled': pin_enabled,
+            'theme': theme,  # NEW: Save theme
             'created_at': datetime.datetime.now(datetime.timezone.utc)
         })
         print(f"✅ New driver profile created: {username}")
@@ -160,6 +223,8 @@ def update_profile(profile_id):
             updates['pin'] = data['pin']
         if 'pinEnabled' in data:
             updates['pinEnabled'] = data['pinEnabled']
+        if 'theme' in data:  # NEW: Handle theme updates
+            updates['theme'] = data['theme']
 
         if not profile_id or not updates:
             return jsonify({'success': False, 'message': 'Profile ID and update data are required.'}), 400
@@ -226,16 +291,16 @@ def get_ready():
     """
     try:
         data = request.get_json()
-        username = data.get('username')
-        if not username:
-            return jsonify({'success': False, 'message': 'Username is required.'}), 400
+        username = data.get('username', 'Anonymous Readiness Check')  # Default username
+        app_version = get_app_version()
 
         print(f"LOG: '{username}' is getting ready. Writing to Firestore...")
         doc_ref = db.collection('readiness_checks').document()
         doc_ref.set({
             'username': username,
             'timestamp': datetime.datetime.now(datetime.timezone.utc),
-            'status': 'Ready!'
+            'status': 'Ready!',
+            'app_version': app_version
         })
         print(f"✅ Successfully wrote to Firestore for {username}. Document ID: {doc_ref.id}")
         return jsonify({'success': True, 'message': f'{username} is now Raceday Ready!'}), 200
@@ -251,6 +316,12 @@ def submit_feature_request():
     Saves a new feature request to Firestore.
     """
     try:
+        # Check against the feature request limit
+        settings = get_feature_request_settings()
+        current_requests = list(db.collection('feature_requests').stream())
+        if len(current_requests) >= settings['limit']:
+            return jsonify({'success': False, 'message': f"Feature request limit of {settings['limit']} reached."}), 403
+
         data = request.get_json()
         username = data.get('username')
         request_text = data.get('requestText')
@@ -273,25 +344,134 @@ def submit_feature_request():
         return jsonify({'success': False, 'message': f'An error occurred: {e}'}), 500
 
 
-# --- NEW: Route to get existing feature requests ---
+# --- Route to get existing feature requests ---
 @app.route('/get-feature-requests', methods=['GET'])
 def get_feature_requests():
     """
-    Retrieves all feature requests from Firestore.
+    Retrieves all feature requests from Firestore, ordered by submission time.
     """
     try:
-        requests_ref = db.collection('feature_requests').stream()
+        requests_ref = db.collection('feature_requests').order_by(
+            'submitted_at', direction=firestore.Query.DESCENDING
+        ).stream()
+
         requests = []
         for doc in requests_ref:
             request_data = doc.to_dict()
             requests.append({
+                'id': doc.id,
                 'username': request_data.get('username'),
                 'requestText': request_data.get('requestText')
             })
-        return jsonify({'success': True, 'requests': requests}), 200
+
+        settings = get_feature_request_settings()
+        limit_reached = len(requests) >= settings['limit']
+
+        print(f"✅ DB Check: Found {len(requests)} feature request(s).")
+        return jsonify({
+            'success': True,
+            'requests': requests,
+            'deletion_enabled': settings['deletion_enabled'],
+            'limit_reached': limit_reached
+        }), 200
     except Exception as e:
         print(f"❌ Error getting feature requests: {e}")
         return jsonify({'success': False, 'error': str(e)}), 500
+
+
+# --- Route to delete a feature request ---
+@app.route('/delete-feature-request/<request_id>', methods=['DELETE'])
+def delete_feature_request(request_id):
+    """
+    Deletes a specific feature request document from Firestore.
+    """
+    try:
+        if not request_id:
+            return jsonify({'success': False, 'message': 'Request ID is required.'}), 400
+
+        db.collection('feature_requests').document(request_id).delete()
+        print(f"✅ Feature request deleted: {request_id}")
+        return jsonify({'success': True, 'message': 'Feature request deleted successfully!'}), 200
+    except Exception as e:
+        print(f"❌ Error deleting feature request: {e}")
+        return jsonify({'success': False, 'message': f'An error occurred: {e}'}), 500
+
+
+# --- Routes for Admin Settings ---
+@app.route('/get-admin-settings', methods=['GET'])
+def get_admin_settings():
+    profile_limit = get_profile_limit()
+    feature_request_settings = get_feature_request_settings()
+    return jsonify({
+        'success': True,
+        'profile_limit': profile_limit,
+        'feature_request_settings': feature_request_settings
+    }), 200
+
+
+@app.route('/update-profile-limit', methods=['POST'])
+def update_profile_limit():
+    """
+    Updates the profile limit in Firestore.
+    """
+    try:
+        data = request.get_json()
+        new_limit = data.get('limit')
+
+        if new_limit is None:
+            return jsonify({'success': False, 'message': 'Limit is required.'}), 400
+
+        try:
+            new_limit = int(new_limit)
+        except ValueError:
+            return jsonify({'success': False, 'message': 'Limit must be a number.'}), 400
+
+        if not 1 <= new_limit <= 20:
+            return jsonify({'success': False, 'message': 'Limit must be between 1 and 20.'}), 400
+
+        db.collection('admin_settings').document('profiles').set({'limit': new_limit})
+        print(f"✅ Profile limit updated to: {new_limit}")
+        return jsonify({'success': True, 'message': f'Profile limit updated to {new_limit}.'}), 200
+    except Exception as e:
+        print(f"❌ Error updating profile limit: {e}")
+        return jsonify({'success': False, 'message': f'An error occurred: {e}'}), 500
+
+
+@app.route('/update-feature-request-settings', methods=['POST'])
+def update_feature_request_settings():
+    """
+    Updates the feature request settings in Firestore.
+    """
+    try:
+        data = request.get_json()
+        new_limit = data.get('limit')
+        deletion_enabled = data.get('deletion_enabled')
+
+        updates = {}
+        if new_limit is not None:
+            try:
+                new_limit = int(new_limit)
+                if not 1 <= new_limit <= 50:
+                    return jsonify({'success': False, 'message': 'Limit must be between 1 and 50.'}), 400
+                updates['limit'] = new_limit
+            except ValueError:
+                return jsonify({'success': False, 'message': 'Limit must be a number.'}), 400
+
+        if deletion_enabled is not None:
+            if not isinstance(deletion_enabled, bool):
+                return jsonify({'success': False, 'message': 'Deletion enabled must be a boolean.'}), 400
+            updates['deletion_enabled'] = deletion_enabled
+
+        if not updates:
+            return jsonify({'success': False, 'message': 'No settings to update.'}), 400
+
+        db.collection('admin_settings').document('feature_requests').update(updates)
+        print(f"✅ Feature request settings updated: {updates}")
+        return jsonify({'success': True, 'message': 'Feature request settings updated.'}), 200
+    except Exception as e:
+        print(f"❌ Error updating feature request settings: {e}")
+        return jsonify({'success': False, 'message': f'An error occurred: {e}'}), 500
+
 
 if __name__ == '__main__':
     # This block allows the script to be run directly.
