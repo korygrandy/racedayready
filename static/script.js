@@ -1,5 +1,6 @@
 // --- Global State ---
 let currentUser = null;
+let isDevModeEnabled = false; // NEW: Tracks if developer mode is active
 
 // --- Element Selection ---
 const readyButton = document.getElementById('ready-button');
@@ -63,9 +64,13 @@ const editPinInput = document.getElementById('edit-pin-input');
 const cancelPinSettingsBtn = document.getElementById('cancel-pin-settings-btn');
 const savePinSettingsBtn = document.getElementById('save-pin-settings-btn');
 
-// NEW: Admin elements
+// Admin elements
 const profileLimitInput = document.getElementById('profile-limit-input');
-const updateLimitBtn = document.getElementById('update-limit-btn');
+const updateProfileLimitBtn = document.getElementById('update-profile-limit-btn');
+const featureRequestLimitInput = document.getElementById('feature-request-limit-input');
+const enableDeletionCheckbox = document.getElementById('enable-deletion-checkbox');
+const updateFeatureSettingsBtn = document.getElementById('update-feature-settings-btn');
+const manageFeatureRequestsLink = document.getElementById('manage-feature-requests-link');
 
 
 // --- View Toggling Logic ---
@@ -81,14 +86,14 @@ const setView = (viewName) => {
 
     if (isDevMode) {
         developerView.classList.remove('hidden');
-        loadAdminSettings(); // Load admin settings when entering dev mode
+        loadAdminSettings();
     } else if (viewName === 'features') {
         featuresView.classList.remove('hidden');
     } else if (viewName === 'raceDayPrep') {
         raceDayPrepView.classList.remove('hidden');
     } else if (viewName === 'upcomingFeatures') {
         upcomingFeaturesView.classList.remove('hidden');
-        loadFeatureRequests(); // Load requests when view is shown
+        loadFeatureRequests();
     } else {
         mainView.classList.remove('hidden');
     }
@@ -102,13 +107,14 @@ devModeBtn.addEventListener('click', () => {
 
 backToAppBtn.addEventListener('click', () => {
     console.log("Click Event: 'Back to App' button clicked.");
+    isDevModeEnabled = false;
     setView('main');
 });
 
 profileHeaderBtn.addEventListener('click', () => {
     console.log("Click Event: 'Profile Header' button clicked.");
-    setView('main'); // Hide the features view
-    checkProfiles(); // Show the profile selection modal
+    setView('main');
+    checkProfiles();
 });
 
 featureCard1.addEventListener('click', () => {
@@ -131,6 +137,12 @@ backToFeaturesFromUpcomingBtn.addEventListener('click', () => {
     setView('features');
 });
 
+// NEW: Event listener for the manage requests link
+manageFeatureRequestsLink.addEventListener('click', () => {
+    console.log("Click Event: 'Manage Requests' link clicked.");
+    setView('upcomingFeatures');
+});
+
 
 // --- Message Box Logic ---
 const showMessage = (message, isSuccess) => {
@@ -150,7 +162,6 @@ const showMessage = (message, isSuccess) => {
 // --- Profile Modal Logic ---
 const showProfileModal = () => {
     hideSelectProfileModal();
-    // Reset form to default state
     profileForm.reset();
     pinInput.disabled = true;
     profileModal.classList.remove('hidden');
@@ -210,7 +221,7 @@ profileForm.addEventListener('submit', (e) => {
 cancelCreateBtn.addEventListener('click', () => {
     console.log("Click Event: 'Cancel Create Profile' button clicked.");
     hideProfileModal();
-    checkProfiles(); // Go back to the selection screen
+    checkProfiles();
 });
 
 // --- Helmet Icon Creation ---
@@ -223,7 +234,7 @@ const createHelmetIcon = (color, sizeClass = 'w-8 h-8') => {
     const helmetPath = document.createElementNS(svgNS, 'path');
     helmetPath.setAttribute('d', 'M25,5 C10,5 5,20 5,30 C5,45 15,45 25,45 C35,45 45,45 45,30 C45,20 40,5 25,5 Z');
     helmetPath.setAttribute('fill', color);
-    helmetPath.setAttribute('stroke', '#4A5568'); // gray-600
+    helmetPath.setAttribute('stroke', '#4A5568');
     helmetPath.setAttribute('stroke-width', '2');
 
     const visor = document.createElementNS(svgNS, 'rect');
@@ -231,7 +242,7 @@ const createHelmetIcon = (color, sizeClass = 'w-8 h-8') => {
     visor.setAttribute('y', '20');
     visor.setAttribute('width', '20');
     visor.setAttribute('height', '10');
-    visor.setAttribute('fill', '#2D3748'); // gray-800
+    visor.setAttribute('fill', '#2D3748');
     visor.setAttribute('rx', '2');
 
     svg.appendChild(helmetPath);
@@ -243,7 +254,7 @@ const createHelmetIcon = (color, sizeClass = 'w-8 h-8') => {
 
 // --- Select Profile Modal Logic ---
 const showSelectProfileModal = (profiles, limitReached) => {
-    profileList.innerHTML = ''; // Clear existing list
+    profileList.innerHTML = '';
     profiles.forEach(profile => {
         const container = document.createElement('div');
         container.className = 'group flex items-center justify-between p-3 bg-gray-700 rounded-md';
@@ -355,7 +366,6 @@ const showSelectProfileModal = (profiles, limitReached) => {
         profileList.appendChild(container);
     });
 
-    // Handle the "Add New Profile" button state
     if (limitReached) {
         addNewProfileBtn.disabled = true;
         addNewProfileBtn.textContent = 'Profile Limit Reached';
@@ -374,7 +384,7 @@ const hideSelectProfileModal = () => {
 };
 
 const selectProfile = (username, helmetColor) => {
-    currentUser = { username, helmetColor }; // Store current user
+    currentUser = { username, helmetColor };
     hideSelectProfileModal();
     hidePinEntryModal();
     fetch('/get-ready', {
@@ -387,7 +397,7 @@ const selectProfile = (username, helmetColor) => {
         showMessage(data.message, data.success);
         if (data.success) {
             featuresUsername.textContent = username;
-            featuresHelmetDisplay.innerHTML = ''; // Clear previous icon
+            featuresHelmetDisplay.innerHTML = '';
             featuresHelmetDisplay.appendChild(createHelmetIcon(helmetColor, 'w-12 h-12'));
             setView('features');
         }
@@ -408,7 +418,7 @@ const updateProfile = (profileId, updates) => {
     .then(data => {
         showMessage(data.message, data.success);
         if (data.success) {
-            checkProfiles(); // Refresh the list to show the updated name/color
+            checkProfiles();
         }
     })
     .catch(error => {
@@ -514,18 +524,19 @@ devPinEntryForm.addEventListener('submit', (e) => {
         console.log("Dev PIN validation successful.");
         showMessage('Access Granted.', true);
         devPinEntryModal.classList.add('hidden');
-        devPinEntryInput.value = ''; // Clear input
+        devPinEntryInput.value = '';
+        isDevModeEnabled = true;
         setView('developer');
     } else {
         console.error("Dev PIN validation failed.");
         showMessage('Incorrect PIN.', false);
-        devPinEntryInput.value = ''; // Clear input
+        devPinEntryInput.value = '';
     }
 });
 
 cancelDevPinBtn.addEventListener('click', () => {
     devPinEntryModal.classList.add('hidden');
-    devPinEntryInput.value = ''; // Clear input
+    devPinEntryInput.value = '';
     console.log("Dev PIN entry canceled.");
 });
 
@@ -618,7 +629,6 @@ readyButton.addEventListener('click', () => {
 
 // --- Feature Request Logic ---
 
-// NEW: Function to delete a feature request
 const deleteFeatureRequest = (requestId) => {
     if (!confirm('Are you sure you want to delete this feature request?')) {
         return;
@@ -631,7 +641,7 @@ const deleteFeatureRequest = (requestId) => {
     .then(data => {
         showMessage(data.message, data.success);
         if (data.success) {
-            loadFeatureRequests(); // Refresh the list
+            loadFeatureRequests();
         }
     })
     .catch(error => {
@@ -644,27 +654,45 @@ const loadFeatureRequests = () => {
     fetch('/get-feature-requests')
         .then(response => response.json())
         .then(data => {
-            featureRequestList.innerHTML = ''; // Clear list
-            if (data.success && data.requests.length > 0) {
-                data.requests.forEach(req => {
-                    const reqElement = document.createElement('div');
-                    reqElement.className = 'bg-gray-700 p-4 rounded-lg flex justify-between items-start';
+            featureRequestList.innerHTML = '';
+            if (data.success) {
+                // Handle submission form state
+                if (data.limit_reached) {
+                    featureRequestTextarea.disabled = true;
+                    submitFeatureRequestBtn.disabled = true;
+                    submitFeatureRequestBtn.textContent = 'Request Limit Reached';
+                    featureRequestTextarea.placeholder = 'The maximum number of feature requests has been submitted.';
+                } else {
+                    featureRequestTextarea.disabled = false;
+                    submitFeatureRequestBtn.disabled = false;
+                    submitFeatureRequestBtn.textContent = 'Submit Request';
+                    featureRequestTextarea.placeholder = 'Describe your feature idea...';
+                }
 
-                    const textContainer = document.createElement('div');
-                    textContainer.innerHTML = `<p class="text-gray-300">${req.requestText}</p><p class="text-sm text-gray-500 mt-2">- ${req.username}</p>`;
+                // Render list
+                if (data.requests.length > 0) {
+                    data.requests.forEach(req => {
+                        const reqElement = document.createElement('div');
+                        reqElement.className = 'bg-gray-700 p-4 rounded-lg flex justify-between items-start';
 
-                    const deleteButton = document.createElement('button');
-                    deleteButton.innerHTML = '&times;';
-                    deleteButton.className = 'ml-4 text-red-500 hover:text-red-400 font-bold text-2xl px-2 leading-none';
-                    deleteButton.title = 'Delete Request';
-                    deleteButton.onclick = () => deleteFeatureRequest(req.id);
+                        const textContainer = document.createElement('div');
+                        textContainer.innerHTML = `<p class="text-gray-300">${req.requestText}</p><p class="text-sm text-gray-500 mt-2">- ${req.username}</p>`;
+                        reqElement.appendChild(textContainer);
 
-                    reqElement.appendChild(textContainer);
-                    reqElement.appendChild(deleteButton);
-                    featureRequestList.appendChild(reqElement);
-                });
-            } else {
-                featureRequestList.innerHTML = '<p class="text-gray-500">No feature requests submitted yet.</p>';
+                        if (isDevModeEnabled && data.deletion_enabled) {
+                            const deleteButton = document.createElement('button');
+                            deleteButton.innerHTML = '&times;';
+                            deleteButton.className = 'ml-4 text-red-500 hover:text-red-400 font-bold text-2xl px-2 leading-none';
+                            deleteButton.title = 'Delete Request';
+                            deleteButton.onclick = () => deleteFeatureRequest(req.id);
+                            reqElement.appendChild(deleteButton);
+                        }
+
+                        featureRequestList.appendChild(reqElement);
+                    });
+                } else {
+                    featureRequestList.innerHTML = '<p class="text-gray-500">No feature requests submitted yet.</p>';
+                }
             }
         });
 };
@@ -694,7 +722,7 @@ featureRequestForm.addEventListener('submit', (e) => {
         if (data.success) {
             featureRequestTextarea.value = '';
             charCounter.textContent = '0 / 500';
-            loadFeatureRequests(); // Refresh the list
+            loadFeatureRequests();
         }
     })
     .catch(error => {
@@ -702,28 +730,43 @@ featureRequestForm.addEventListener('submit', (e) => {
         showMessage('Failed to submit request.', false);
     })
     .finally(() => {
-        submitFeatureRequestBtn.disabled = false;
-        submitFeatureRequestBtn.textContent = 'Submit Request';
+        // The button's state will be correctly set by the next loadFeatureRequests() call
     });
 });
 
-// --- NEW: Admin Settings Logic ---
+// --- Admin Settings Logic ---
 const loadAdminSettings = () => {
-    fetch('/get-profile-limit')
+    fetch('/get-admin-settings')
         .then(response => response.json())
         .then(data => {
             if (data.success) {
-                profileLimitInput.value = data.limit;
+                profileLimitInput.value = data.profile_limit;
+                featureRequestLimitInput.value = data.feature_request_settings.limit;
+                enableDeletionCheckbox.checked = data.feature_request_settings.deletion_enabled;
             }
         });
 };
 
-updateLimitBtn.addEventListener('click', () => {
+updateProfileLimitBtn.addEventListener('click', () => {
     const newLimit = profileLimitInput.value;
     fetch('/update-profile-limit', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ limit: newLimit }),
+    })
+    .then(response => response.json())
+    .then(data => {
+        showMessage(data.message, data.success);
+    });
+});
+
+updateFeatureSettingsBtn.addEventListener('click', () => {
+    const newLimit = featureRequestLimitInput.value;
+    const deletionEnabled = enableDeletionCheckbox.checked;
+    fetch('/update-feature-request-settings', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ limit: newLimit, deletion_enabled: deletionEnabled }),
     })
     .then(response => response.json())
     .then(data => {

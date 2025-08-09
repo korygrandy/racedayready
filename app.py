@@ -35,7 +35,7 @@ print("✅ Firebase Initialized Successfully.")
 # This function fetches the version from Firestore, with a fallback.
 def get_app_version():
     # This version number will be incremented with each new set of changes.
-    default_version = '1.5.1'
+    default_version = '1.5.4'
     try:
         config_ref = db.collection('config').document('app_info')
         config_doc = config_ref.get()
@@ -57,7 +57,8 @@ def get_app_version():
         print(f"❌ Error loading app version from Firestore: {e}. Using default version '{default_version}'.")
         return default_version
 
-# --- NEW: Function to get the profile limit from Firestore ---
+
+# --- Function to get the profile limit from Firestore ---
 def get_profile_limit():
     """
     Retrieves the profile limit from admin_settings in Firestore.
@@ -78,6 +79,32 @@ def get_profile_limit():
     except Exception as e:
         print(f"❌ Error getting profile limit: {e}. Defaulting to 3.")
         return 3
+
+
+# --- NEW: Function to get feature request settings from Firestore ---
+def get_feature_request_settings():
+    """
+    Retrieves feature request settings from admin_settings in Firestore.
+    Defaults to deletion disabled and a limit of 3 if not set.
+    """
+    default_settings = {'deletion_enabled': False, 'limit': 3}
+    try:
+        settings_ref = db.collection('admin_settings').document('feature_requests')
+        settings_doc = settings_ref.get()
+        if settings_doc.exists:
+            settings = settings_doc.to_dict()
+            # Ensure both keys exist, falling back to defaults if necessary
+            settings['deletion_enabled'] = settings.get('deletion_enabled', default_settings['deletion_enabled'])
+            settings['limit'] = int(settings.get('limit', default_settings['limit']))
+            print(f"✅ Loaded feature request settings from Firestore: {settings}")
+            return settings
+        else:
+            print(f"⚠️ Feature request settings not found. Defaulting to {default_settings}.")
+            settings_ref.set(default_settings)
+            return default_settings
+    except Exception as e:
+        print(f"❌ Error getting feature request settings: {e}. Defaulting to {default_settings}.")
+        return default_settings
 
 
 # Initialize the Flask application
@@ -284,6 +311,12 @@ def submit_feature_request():
     Saves a new feature request to Firestore.
     """
     try:
+        # Check against the feature request limit
+        settings = get_feature_request_settings()
+        current_requests = list(db.collection('feature_requests').stream())
+        if len(current_requests) >= settings['limit']:
+            return jsonify({'success': False, 'message': f"Feature request limit of {settings['limit']} reached."}), 403
+
         data = request.get_json()
         username = data.get('username')
         request_text = data.get('requestText')
@@ -321,12 +354,21 @@ def get_feature_requests():
         for doc in requests_ref:
             request_data = doc.to_dict()
             requests.append({
-                'id': doc.id,  # Include the document ID
+                'id': doc.id,
                 'username': request_data.get('username'),
                 'requestText': request_data.get('requestText')
             })
+
+        settings = get_feature_request_settings()
+        limit_reached = len(requests) >= settings['limit']
+
         print(f"✅ DB Check: Found {len(requests)} feature request(s).")
-        return jsonify({'success': True, 'requests': requests}), 200
+        return jsonify({
+            'success': True,
+            'requests': requests,
+            'deletion_enabled': settings['deletion_enabled'],
+            'limit_reached': limit_reached
+        }), 200
     except Exception as e:
         print(f"❌ Error getting feature requests: {e}")
         return jsonify({'success': False, 'error': str(e)}), 500
@@ -350,11 +392,17 @@ def delete_feature_request(request_id):
         return jsonify({'success': False, 'message': f'An error occurred: {e}'}), 500
 
 
-# --- NEW: Routes for Admin Settings ---
-@app.route('/get-profile-limit', methods=['GET'])
-def get_profile_limit_route():
-    limit = get_profile_limit()
-    return jsonify({'success': True, 'limit': limit}), 200
+# --- Routes for Admin Settings ---
+@app.route('/get-admin-settings', methods=['GET'])
+def get_admin_settings():
+    profile_limit = get_profile_limit()
+    feature_request_settings = get_feature_request_settings()
+    return jsonify({
+        'success': True,
+        'profile_limit': profile_limit,
+        'feature_request_settings': feature_request_settings
+    }), 200
+
 
 @app.route('/update-profile-limit', methods=['POST'])
 def update_profile_limit():
@@ -381,6 +429,42 @@ def update_profile_limit():
         return jsonify({'success': True, 'message': f'Profile limit updated to {new_limit}.'}), 200
     except Exception as e:
         print(f"❌ Error updating profile limit: {e}")
+        return jsonify({'success': False, 'message': f'An error occurred: {e}'}), 500
+
+
+@app.route('/update-feature-request-settings', methods=['POST'])
+def update_feature_request_settings():
+    """
+    Updates the feature request settings in Firestore.
+    """
+    try:
+        data = request.get_json()
+        new_limit = data.get('limit')
+        deletion_enabled = data.get('deletion_enabled')
+
+        updates = {}
+        if new_limit is not None:
+            try:
+                new_limit = int(new_limit)
+                if not 1 <= new_limit <= 50:
+                    return jsonify({'success': False, 'message': 'Limit must be between 1 and 50.'}), 400
+                updates['limit'] = new_limit
+            except ValueError:
+                return jsonify({'success': False, 'message': 'Limit must be a number.'}), 400
+
+        if deletion_enabled is not None:
+            if not isinstance(deletion_enabled, bool):
+                return jsonify({'success': False, 'message': 'Deletion enabled must be a boolean.'}), 400
+            updates['deletion_enabled'] = deletion_enabled
+
+        if not updates:
+            return jsonify({'success': False, 'message': 'No settings to update.'}), 400
+
+        db.collection('admin_settings').document('feature_requests').update(updates)
+        print(f"✅ Feature request settings updated: {updates}")
+        return jsonify({'success': True, 'message': 'Feature request settings updated.'}), 200
+    except Exception as e:
+        print(f"❌ Error updating feature request settings: {e}")
         return jsonify({'success': False, 'message': f'An error occurred: {e}'}), 500
 
 
