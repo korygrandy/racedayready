@@ -25,7 +25,7 @@ const processMessageQueue = () => {
         isMessageVisible = false;
         // Process the next message in the queue after the current one has faded out
         setTimeout(processMessageQueue, 500); // 500ms matches transition duration
-    }, 3000);
+    }, 1500); // NEW: Reduced display time
 };
 
 /**

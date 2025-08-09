@@ -4,6 +4,7 @@ import { App } from './main.js';
 
 let currentVehicles = [];
 let vehicleToEdit = null;
+let currentSortOrder = 'desc'; // 'desc' for newest first, 'asc' for oldest first
 
 const populateYearDropdown = (selectElement) => {
     const currentYear = new Date().getFullYear();
@@ -109,12 +110,18 @@ const showEditVehicleModal = async (vehicle) => {
 
 const renderVehicles = () => {
     elements.vehicleList.innerHTML = '';
-    if (currentVehicles.length === 0) {
+
+    // Sort vehicles based on the current sort order
+    const sortedVehicles = [...currentVehicles].sort((a, b) => {
+        return currentSortOrder === 'desc' ? b.year - a.year : a.year - b.year;
+    });
+
+    if (sortedVehicles.length === 0) {
         elements.vehicleList.innerHTML = '<p class="text-text-secondary">No vehicles added yet.</p>';
         return;
     }
 
-    currentVehicles.forEach(vehicle => {
+    sortedVehicles.forEach(vehicle => {
         const vehicleCard = document.createElement('div');
         vehicleCard.className = 'bg-card-darker p-4 rounded-lg flex items-center justify-between';
 
@@ -263,6 +270,13 @@ export const initVehicle = () => {
         } else if (button.classList.contains('edit-vehicle-btn')) {
             showEditVehicleModal(vehicle);
         }
+    });
+
+    elements.vehicleSortBtn.addEventListener('click', () => {
+        currentSortOrder = currentSortOrder === 'desc' ? 'asc' : 'desc';
+        console.log(`Vehicle sort order changed to: ${currentSortOrder}`);
+        elements.vehicleSortBtn.textContent = `Sort by Year (${currentSortOrder === 'desc' ? 'Newest' : 'Oldest'} First)`;
+        renderVehicles();
     });
 
     App.loadVehicles = () => {

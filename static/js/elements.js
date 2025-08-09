@@ -46,8 +46,9 @@ export const vehiclePhotoPreview = document.getElementById('vehicle-photo-previe
 export const addVehicleBtn = document.getElementById('add-vehicle-btn');
 export const vehicleList = document.getElementById('vehicle-list');
 export const backToFeaturesFromVehicleBtn = document.getElementById('back-to-features-from-vehicle-btn');
+export const vehicleSortBtn = document.getElementById('vehicle-sort-btn'); // NEW
 
-// NEW: Edit Vehicle Modal Elements
+// Edit Vehicle Modal Elements
 export const editVehicleModal = document.getElementById('edit-vehicle-modal');
 export const editVehicleForm = document.getElementById('edit-vehicle-form');
 export const editVehicleYearSelect = document.getElementById('edit-vehicle-year-select');

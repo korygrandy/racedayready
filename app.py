@@ -35,7 +35,7 @@ print("✅ Firebase Initialized Successfully.")
 # This function fetches the version from Firestore, with a fallback.
 def get_app_version():
     # This version number will be incremented with each new set of changes.
-    default_version = '1.7.2'
+    default_version = '1.7.4'
     try:
         config_ref = db.collection('config').document('app_info')
         config_doc = config_ref.get()
@@ -609,7 +609,8 @@ def add_vehicle(profile_id):
             'model': data.get('model'),
             'garageId': data.get('garageId'),
             'photo': data.get('photo'),  # Base64 string
-            'created_at': datetime.datetime.now(datetime.timezone.utc)
+            'created_at': datetime.datetime.now(datetime.timezone.utc),
+            'order': len(current_vehicles)
         }
 
         if not all([vehicle_data['year'], vehicle_data['make'], vehicle_data['model']]):
@@ -627,7 +628,8 @@ def add_vehicle(profile_id):
 @app.route('/get-vehicles/<profile_id>', methods=['GET'])
 def get_vehicles(profile_id):
     try:
-        vehicles_ref = db.collection('driver_profiles').document(profile_id).collection('vehicles').stream()
+        vehicles_ref = db.collection('driver_profiles').document(profile_id).collection('vehicles').order_by(
+            'order').stream()
         vehicles = []
         for doc in vehicles_ref:
             vehicle = doc.to_dict()
@@ -677,6 +679,24 @@ def delete_vehicle(profile_id, vehicle_id):
         return jsonify({'success': True, 'message': 'Vehicle deleted successfully!'}), 200
     except Exception as e:
         print(f"❌ Error deleting vehicle: {e}")
+        return jsonify({'success': False, 'message': f'An error occurred: {e}'}), 500
+
+
+@app.route('/update-vehicle-order/<profile_id>', methods=['POST'])
+def update_vehicle_order(profile_id):
+    try:
+        data = request.get_json()
+        ordered_ids = data.get('order')
+        batch = db.batch()
+        for index, vehicle_id in enumerate(ordered_ids):
+            vehicle_ref = db.collection('driver_profiles').document(profile_id).collection('vehicles').document(
+                vehicle_id)
+            batch.update(vehicle_ref, {'order': index})
+        batch.commit()
+        print(f"✅ Vehicle order updated for profile {profile_id}")
+        return jsonify({'success': True, 'message': 'Vehicle order saved!'}), 200
+    except Exception as e:
+        print(f"❌ Error updating vehicle order: {e}")
         return jsonify({'success': False, 'message': f'An error occurred: {e}'}), 500
 
 
