@@ -100,6 +100,8 @@ const selectProfile = (profile) => {
     applyTheme(profile.theme);
     hideSelectProfileModal();
     hidePinEntryModal();
+
+    // Log the readiness check first
     fetch('/get-ready', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -107,7 +109,22 @@ const selectProfile = (profile) => {
     })
     .then(response => response.json())
     .then(data => {
+        // Queue the success message first
         showMessage(data.message, data.success);
+
+        // Then, check for garages and vehicles to queue warnings if necessary
+        fetch(`/get-garages/${profile.id}`).then(res => res.json()).then(garageData => {
+            if (garageData.success && garageData.garages.length === 0) {
+                showMessage('Reminder: No garages found. Please add a garage.', false);
+            } else {
+                fetch(`/get-vehicles/${profile.id}`).then(res => res.json()).then(vehicleData => {
+                    if (vehicleData.success && vehicleData.vehicles.length === 0) {
+                        showMessage('Reminder: No vehicles found. Please add a vehicle.', false);
+                    }
+                });
+            }
+        });
+
         if (data.success) {
             elements.featuresUsername.textContent = profile.username;
             elements.featuresHelmetDisplay.innerHTML = '';
@@ -224,14 +241,16 @@ const showSelectProfileModal = (profiles, limitReached) => {
         deleteButton.className = 'ml-2 text-red-500 hover:text-red-400 font-bold text-2xl px-2';
         deleteButton.onclick = () => {
             console.log(`Click Event: Delete initiated for profile '${profile.username}'.`);
-            if (profile.pinEnabled) {
-                showPinEntryForDelete(profile);
-            } else {
-                showConfirmationModal(
-                    `Are you sure you want to delete the profile for "${profile.username}"? This action cannot be undone.`,
-                    () => executeDelete(profile.id)
-                );
-            }
+            showConfirmationModal(
+                `Are you sure you want to delete the profile for "${profile.username}"? This action cannot be undone.`,
+                () => {
+                    if (profile.pinEnabled) {
+                        showPinEntryForDelete(profile);
+                    } else {
+                        executeDelete(profile.id);
+                    }
+                }
+            );
         };
         leftSection.appendChild(helmetContainer);
         leftSection.appendChild(nameSpan);

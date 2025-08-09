@@ -41,7 +41,7 @@
                     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                         <!-- Cards -->
                         <div id="feature-card-1" class="bg-card p-6 rounded-lg shadow-lg hover:bg-interactive-hover cursor-pointer"><h2 class="text-xl font-bold mb-2">Race Day Preparation & Logistics</h2></div>
-                        <div id="feature-card-2" class="bg-card p-6 rounded-lg shadow-lg inactive-card"><h2 class="text-xl font-bold mb-2">Vehicle Management</h2></div>
+                        <div id="feature-card-2" class="bg-card p-6 rounded-lg shadow-lg hover:bg-interactive-hover cursor-pointer"><h2 class="text-xl font-bold mb-2">Vehicle Management</h2></div>
                         <div id="feature-card-3" class="bg-card p-6 rounded-lg shadow-lg inactive-card"><h2 class="text-xl font-bold mb-2">Data Analysis & History</h2></div>
                         <div id="feature-card-4" class="bg-card p-6 rounded-lg shadow-lg inactive-card"><h2 class="text-xl font-bold mb-2">Social & Community Features</h2></div>
                         <div id="feature-card-5" class="bg-card p-6 rounded-lg shadow-lg inactive-card"><h2 class="text-xl font-bold mb-2">Engagement & Motivation</h2></div>
@@ -59,6 +59,53 @@
                         <div id="track-info-card" class="bg-card p-6 rounded-lg shadow-lg inactive-card"><h2 class="text-xl font-bold mb-2">Track Information Management</h2></div>
                     </div>
                     <button id="back-to-features-btn" class="mt-8 px-6 py-2 bg-gray-600 text-white font-semibold rounded-lg shadow-md hover:bg-gray-500">
+                        Back to Features
+                    </button>
+                </div>
+
+                <!-- Vehicle Management View -->
+                <div id="vehicle-management-view" class="w-full max-w-4xl mx-auto hidden text-center py-16">
+                    <h1 class="text-4xl md:text-5xl font-bold mb-8">Vehicle Management</h1>
+                    <div id="add-vehicle-section" class="bg-card p-8 rounded-lg shadow-lg text-left">
+                        <h2 class="text-2xl font-bold mb-4">Add a New Vehicle</h2>
+                        <div id="no-garages-warning" class="hidden bg-yellow-900/30 border border-yellow-700 text-yellow-300 px-4 py-3 rounded-lg mb-4">
+                            You must create a garage before you can add a vehicle.
+                        </div>
+                        <form id="add-vehicle-form">
+                            <fieldset id="add-vehicle-fieldset">
+                                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                                    <div>
+                                        <label for="vehicle-year-select" class="block text-sm font-medium">Year</label>
+                                        <select id="vehicle-year-select" class="mt-1 block w-full bg-input border border-border rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500" required></select>
+                                    </div>
+                                    <div>
+                                        <label for="vehicle-make-select" class="block text-sm font-medium">Make</label>
+                                        <select id="vehicle-make-select" class="mt-1 block w-full bg-input border border-border rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500" required disabled></select>
+                                    </div>
+                                    <div>
+                                        <label for="vehicle-model-select" class="block text-sm font-medium">Model</label>
+                                        <select id="vehicle-model-select" class="mt-1 block w-full bg-input border border-border rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500" required disabled></select>
+                                    </div>
+                                </div>
+                                <div class="mt-4">
+                                    <label for="vehicle-garage-select" class="block text-sm font-medium">Assign to Garage</label>
+                                    <select id="vehicle-garage-select" class="mt-1 block w-full bg-input border border-border rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500"></select>
+                                </div>
+                                <div class="mt-4">
+                                    <label for="vehicle-photo-input" class="block text-sm font-medium">Vehicle Photo (Optional, < 500KB)</label>
+                                    <input type="file" id="vehicle-photo-input" accept="image/*" class="mt-1 block w-full text-sm text-text-secondary file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"/>
+                                    <img id="vehicle-photo-preview" class="hidden mt-4 rounded-lg max-h-48 w-auto"/>
+                                </div>
+                                <button id="add-vehicle-btn" type="submit" class="mt-6 w-full bg-blue-500 text-white font-semibold py-2 px-4 rounded-lg shadow-md hover:bg-blue-600">Add Vehicle</button>
+                            </fieldset>
+                        </form>
+                    </div>
+                    <div class="mt-8 bg-card p-8 rounded-lg shadow-lg text-left">
+                        <h2 class="text-2xl font-bold mb-4">My Vehicles</h2>
+                        <div id="vehicle-list" class="space-y-4">
+                        </div>
+                    </div>
+                    <button id="back-to-features-from-vehicle-btn" class="mt-8 px-6 py-2 bg-gray-600 text-white font-semibold rounded-lg shadow-md hover:bg-gray-500">
                         Back to Features
                     </button>
                 </div>
@@ -170,15 +217,17 @@
                         <h3 id="changelog-heading" class="text-2xl font-semibold mb-3">Changelog</h3>
                         <div class="space-y-4">
                             <div class="bg-card-darker p-4 rounded-lg shadow">
-                                <h4 class="font-bold text-lg">Version 1.6.5 (August 8, 2025)</h4>
+                                <h4 class="font-bold text-lg">Version 1.6.8 (August 8, 2025)</h4>
                                 <ul class="list-disc list-inside mt-2 text-text-secondary space-y-1">
-                                    <li>Replaced all native browser `confirm()` dialogs with a single, reusable in-app modal for a more consistent UI and improved testability.</li>
+                                    <li>Implemented a message queue to prevent overlapping UI notifications.</li>
+                                    <li>Fixed a bug where the warning for missing vehicles was not being displayed.</li>
                                 </ul>
                             </div>
                              <div class="bg-card-darker p-4 rounded-lg shadow">
-                                <h4 class="font-bold text-lg">Version 1.6.4 (August 8, 2025)</h4>
+                                <h4 class="font-bold text-lg">Version 1.6.7 (August 8, 2025)</h4>
                                 <ul class="list-disc list-inside mt-2 text-text-secondary space-y-1">
-                                    <li>Enhanced Garage Management to allow users to edit and delete their garages.</li>
+                                    <li>Enhanced the Garage Management page to display associated vehicle photos.</li>
+                                    <li>Added user guidance messages on the main features page if no garages or vehicles have been created.</li>
                                 </ul>
                             </div>
                         </div>
@@ -187,10 +236,16 @@
                     <div id="defect-resolutions-section" class="mb-8">
                         <h3 id="defect-resolutions-heading" class="text-2xl font-semibold mb-3">Defect Resolutions</h3>
                         <div class="space-y-4">
-                             <div id="defect-entry-messaging" class="bg-card-darker p-4 rounded-lg shadow">
-                                <h4 class="font-bold text-lg">UI Message Box Not Displaying (Fixed: Aug 8, 2025) - v1.5.9</h4>
+                            <div id="defect-entry-messaging" class="bg-card-darker p-4 rounded-lg shadow">
+                                <h4 class="font-bold text-lg">Overlapping UI Messages (Fixed: Aug 8, 2025) - v1.6.8</h4>
                                 <p class="mt-2 text-text-secondary">
-                                    <strong>Resolution:</strong> The message box element was moved in the HTML structure to prevent it from being affected by the layout properties of its parent container. This ensures that feedback messages are always visible to the user after an action is performed.
+                                    <strong>Resolution:</strong> Implemented a message queue in the UI logic to ensure that multiple notifications (e.g., "Raceday Ready!" and "Reminder: No garages found") are displayed sequentially rather than overlapping, which resolves the issue of messages being hidden or unreadable.
+                                </p>
+                            </div>
+                             <div id="defect-entry-readiness-check" class="bg-card-darker p-4 rounded-lg shadow">
+                                <h4 class="font-bold text-lg">Readiness Check Logging (Fixed: Aug 8, 2025) - v1.5.8</h4>
+                                <p class="mt-2 text-text-secondary">
+                                    <strong>Resolution:</strong> Corrected the backend logic for the `/get-ready` endpoint to ensure that a `readiness_checks` event is successfully created in Firestore every time a user selects their profile. The endpoint now also supports anonymous checks.
                                 </p>
                             </div>
                         </div>
