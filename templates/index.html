@@ -148,16 +148,16 @@
                     <div id="changelog-section" class="mb-8">
                         <h3 id="changelog-heading" class="text-2xl font-semibold mb-3">Changelog</h3>
                         <div class="space-y-4">
+                            <div class="bg-card-darker p-4 rounded-lg shadow">
+                                <h4 class="font-bold text-lg">Version 1.6.2 (August 8, 2025)</h4>
+                                <ul class="list-disc list-inside mt-2 text-text-secondary space-y-1">
+                                    <li>Refactored the main JavaScript file into smaller, more manageable modules to improve code organization and maintainability.</li>
+                                </ul>
+                            </div>
                              <div class="bg-card-darker p-4 rounded-lg shadow">
                                 <h4 class="font-bold text-lg">Version 1.6.1 (August 8, 2025)</h4>
                                 <ul class="list-disc list-inside mt-2 text-text-secondary space-y-1">
                                     <li>Updated the footer to include the specific Gemini model version.</li>
-                                </ul>
-                            </div>
-                            <div class="bg-card-darker p-4 rounded-lg shadow">
-                                <h4 class="font-bold text-lg">Version 1.6.0 (August 8, 2025)</h4>
-                                <ul class="list-disc list-inside mt-2 text-text-secondary space-y-1">
-                                    <li>Implemented a persistent light/dark theme switcher, with the user's preference saved to their profile.</li>
                                 </ul>
                             </div>
                         </div>
@@ -166,7 +166,7 @@
                     <div id="defect-resolutions-section" class="mb-8">
                         <h3 id="defect-resolutions-heading" class="text-2xl font-semibold mb-3">Defect Resolutions</h3>
                         <div class="space-y-4">
-                            <div id="defect-entry-messaging" class="bg-card-darker p-4 rounded-lg shadow">
+                             <div id="defect-entry-messaging" class="bg-card-darker p-4 rounded-lg shadow">
                                 <h4 class="font-bold text-lg">UI Message Box Not Displaying (Fixed: Aug 8, 2025) - v1.5.9</h4>
                                 <p class="mt-2 text-text-secondary">
                                     <strong>Resolution:</strong> The message box element was moved in the HTML structure to prevent it from being affected by the layout properties of its parent container. This ensures that feedback messages are always visible to the user after an action is performed.
@@ -309,7 +309,7 @@
     </div>
 
     <!-- Custom JavaScript -->
-    <script src="{{ url_for('static', filename='script.js') }}"></script>
+    <script type="module" src="{{ url_for('static', filename='js/main.js') }}"></script>
 
 </body>
 </html>
