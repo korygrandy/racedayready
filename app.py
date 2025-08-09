@@ -35,7 +35,7 @@ print("✅ Firebase Initialized Successfully.")
 # This function fetches the version from Firestore, with a fallback.
 def get_app_version():
     # This version number will be incremented with each new set of changes.
-    default_version = '1.7.8'
+    default_version = '1.7.9'
     try:
         config_ref = db.collection('config').document('app_info')
         config_doc = config_ref.get()
@@ -668,12 +668,12 @@ def update_vehicle(profile_id, vehicle_id):
             'model': data.get('model'),
             'garageId': data.get('garageId'),
         }
-        if 'photo' in data:  # Only update photo if a new one is provided
+        if data.get('photo'):
             updates['photo'] = data.get('photo')
-            updates['photoURL'] = None  # Clear URL if photo is uploaded
+            updates['photoURL'] = None
         elif 'photoURL' in data:
             updates['photoURL'] = data.get('photoURL')
-            updates['photo'] = None  # Clear photo if URL is provided
+            updates['photo'] = None
 
         if not all([updates['year'], updates['make'], updates['model']]):
             return jsonify({'success': False, 'message': 'Year, Make, and Model are required.'}), 400

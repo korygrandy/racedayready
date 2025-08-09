@@ -244,16 +244,16 @@
                     <div id="changelog-section" class="mb-8">
                         <h3 id="changelog-heading" class="text-2xl font-semibold mb-3">Changelog</h3>
                         <div class="space-y-4">
+                            <div class="bg-card-darker p-4 rounded-lg shadow">
+                                <h4 class="font-bold text-lg">Version 1.7.8 (August 9, 2025)</h4>
+                                <ul class="list-disc list-inside mt-2 text-text-secondary space-y-1">
+                                    <li>Fixed a defect where editing a vehicle with a photo URL would clear the URL upon saving.</li>
+                                </ul>
+                            </div>
                              <div class="bg-card-darker p-4 rounded-lg shadow">
                                 <h4 class="font-bold text-lg">Version 1.7.7 (August 9, 2025)</h4>
                                 <ul class="list-disc list-inside mt-2 text-text-secondary space-y-1">
                                     <li>Fixed a defect where vehicle images loaded via URL would not display correctly in the Garage Management view.</li>
-                                </ul>
-                            </div>
-                             <div class="bg-card-darker p-4 rounded-lg shadow">
-                                <h4 class="font-bold text-lg">Version 1.7.6 (August 9, 2025)</h4>
-                                <ul class="list-disc list-inside mt-2 text-text-secondary space-y-1">
-                                    <li>Added the ability to add a vehicle photo via URL, providing an alternative to file uploads.</li>
                                 </ul>
                             </div>
                         </div>
@@ -262,10 +262,16 @@
                     <div id="defect-resolutions-section" class="mb-8">
                         <h3 id="defect-resolutions-heading" class="text-2xl font-semibold mb-3">Defect Resolutions</h3>
                         <div class="space-y-4">
-                             <div id="defect-entry-broken-image" class="bg-card-darker p-4 rounded-lg shadow">
-                                <h4 class="font-bold text-lg">Broken Vehicle Images in Garage View (Fixed: Aug 9, 2025) - v1.7.7</h4>
+                             <div id="defect-entry-photo-url" class="bg-card-darker p-4 rounded-lg shadow">
+                                <h4 class="font-bold text-lg">Photo URL Cleared on Edit (Fixed: Aug 9, 2025) - v1.7.8</h4>
                                 <p class="mt-2 text-text-secondary">
-                                    <strong>Resolution:</strong> The JavaScript logic for rendering garages was updated to correctly check for both `photo` (Base64) and `photoURL` (URL) properties on a vehicle object. This ensures that images from both sources are displayed correctly.
+                                    <strong>Resolution:</strong> Updated the backend logic for the vehicle update route to ensure that an existing `photoURL` is preserved during an edit, unless a new file is explicitly uploaded to replace it.
+                                </p>
+                            </div>
+                             <div id="defect-entry-messaging" class="bg-card-darker p-4 rounded-lg shadow">
+                                <h4 class="font-bold text-lg">Overlapping UI Messages (Fixed: Aug 8, 2025) - v1.6.9</h4>
+                                <p class="mt-2 text-text-secondary">
+                                    <strong>Resolution:</strong> Implemented a message queue in the UI logic to ensure that multiple notifications (e.g., "Raceday Ready!" and "Reminder: No garages found") are displayed sequentially rather than overlapping, which resolves the issue of messages being hidden or unreadable.
                                 </p>
                             </div>
                         </div>
