@@ -28,7 +28,7 @@ export const initTheme = () => {
         console.log(`Theme toggled to: ${newTheme}`);
         applyTheme(newTheme);
         if (App.currentUser && App.currentUser.id) {
-            App.updateProfile(App.currentUser.id, { theme: newTheme });
+            App.updateProfile(App.currentUser.id, { theme: newTheme }, false); // Pass false to prevent list refresh
         }
     });
 

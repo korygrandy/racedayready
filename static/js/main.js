@@ -6,7 +6,7 @@ import { initFeatures, loadFeatureRequests } from './features.js';
 import { initAdmin } from './admin.js';
 import { initGarage } from './garage.js';
 import { initVehicle } from './vehicle.js';
-import { initSchedule } from './schedule.js'; // NEW
+import { initSchedule, updateRacedayCountdown } from './schedule.js';
 
 // --- Global App Object ---
 export const App = {
@@ -41,6 +41,7 @@ const setView = (viewName) => {
     } else if (viewName === 'features') {
         elements.featuresView.classList.remove('hidden');
         checkProfileStatus();
+        updateRacedayCountdown(); // NEW
     } else if (viewName === 'raceDayPrep') {
         elements.raceDayPrepView.classList.remove('hidden');
     } else if (viewName === 'upcomingFeatures') {
@@ -144,7 +145,7 @@ const initEventListeners = () => {
         setView('raceDayPrep');
     });
 
-    elements.raceScheduleCard.addEventListener('click', () => { // NEW
+    elements.raceScheduleCard.addEventListener('click', () => {
         console.log("Click Event: 'Race Schedule' card clicked.");
         setView('raceSchedule');
     });
@@ -193,5 +194,5 @@ document.addEventListener('DOMContentLoaded', () => {
     initAdmin();
     initGarage();
     initVehicle();
-    initSchedule(); // NEW
+    initSchedule();
 });

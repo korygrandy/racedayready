@@ -5,6 +5,30 @@ import { App } from './main.js';
 let currentEvents = [];
 let eventToEdit = null;
 
+export const updateRacedayCountdown = () => {
+    if (!App.currentUser) {
+        elements.racedayCountdown.classList.add('hidden');
+        return;
+    }
+
+    fetch(`/get-next-raceday/${App.currentUser.id}`)
+        .then(res => res.json())
+        .then(data => {
+            if (data.success && data.event) {
+                const now = new Date();
+                const eventDate = new Date(data.event.start_time);
+                const diffTime = eventDate - now;
+                const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+                elements.racedayCountdownText.textContent = `${diffDays} Days`;
+                elements.racedayCountdown.classList.remove('hidden');
+            } else {
+                elements.racedayCountdownText.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 mx-auto" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>`;
+                elements.racedayCountdown.classList.remove('hidden');
+            }
+        });
+};
+
 const populateVehicleMultiSelect = async (selectElement, selectedVehicleIds = []) => {
     try {
         const response = await fetch(`/get-vehicles/${App.currentUser.id}`);
@@ -34,6 +58,7 @@ const showEditEventModal = (event) => {
     elements.editEventNameInput.value = event.name;
     elements.editEventStartInput.value = event.start_time;
     elements.editEventEndInput.value = event.end_time;
+    elements.editIsRacedayCheckbox.checked = event.is_raceday;
     populateVehicleMultiSelect(elements.editEventVehiclesSelect, event.vehicles.map(v => v.id));
     elements.editEventModal.classList.remove('hidden');
 };
@@ -65,7 +90,7 @@ const renderEvents = () => {
         eventCard.innerHTML = `
             <div class="flex justify-between items-start">
                 <div>
-                    <h3 class="font-bold text-lg">${event.name}</h3>
+                    <h3 class="font-bold text-lg">${event.name} ${event.is_raceday ? '🏁' : ''}</h3>
                     <p class="text-sm text-text-secondary">Starts: ${startTime}</p>
                     <p class="text-sm text-text-secondary">Ends: ${endTime}</p>
                 </div>
@@ -103,6 +128,7 @@ export const initSchedule = () => {
             startTime: elements.eventStartInput.value,
             endTime: elements.eventEndInput.value,
             vehicles: selectedVehicles,
+            isRaceday: elements.isRacedayCheckbox.checked,
         };
 
         fetch(`/add-event/${App.currentUser.id}`, {
@@ -128,6 +154,7 @@ export const initSchedule = () => {
             startTime: elements.editEventStartInput.value,
             endTime: elements.editEventEndInput.value,
             vehicles: selectedVehicles,
+            isRaceday: elements.editIsRacedayCheckbox.checked,
         };
 
         fetch(`/update-event/${App.currentUser.id}/${eventToEdit.id}`, {
