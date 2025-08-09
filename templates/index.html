@@ -181,6 +181,20 @@
                                 </div>
                             </div>
                             <div>
+                                <h4 class="font-bold text-lg">Garage & Vehicle Limits</h4>
+                                <div class="mt-4 space-y-4">
+                                    <div class="flex items-center space-x-4">
+                                        <input type="number" id="garage-limit-input" min="1" max="10" class="w-24 bg-input border border-border rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                                        <label for="garage-limit-input">Garage limit per profile (1-10).</label>
+                                    </div>
+                                    <div class="flex items-center space-x-4">
+                                        <input type="number" id="vehicle-limit-input" min="1" max="25" class="w-24 bg-input border border-border rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                                        <label for="vehicle-limit-input">Vehicle limit per profile (1-25).</label>
+                                    </div>
+                                    <button id="update-garage-vehicle-limits-btn" class="px-4 py-2 bg-blue-600 text-white font-semibold rounded-lg shadow-md hover:bg-blue-700">Update Limits</button>
+                                </div>
+                            </div>
+                            <div>
                                 <h4 class="font-bold text-lg">Feature Request Settings</h4>
                                 <div class="mt-4 space-y-4">
                                     <div class="flex items-center space-x-4">
@@ -217,14 +231,14 @@
                         <h3 id="changelog-heading" class="text-2xl font-semibold mb-3">Changelog</h3>
                         <div class="space-y-4">
                             <div class="bg-card-darker p-4 rounded-lg shadow">
-                                <h4 class="font-bold text-lg">Version 1.6.8 (August 8, 2025)</h4>
+                                <h4 class="font-bold text-lg">Version 1.6.9 (August 9, 2025)</h4>
                                 <ul class="list-disc list-inside mt-2 text-text-secondary space-y-1">
                                     <li>Implemented a message queue to prevent overlapping UI notifications.</li>
                                     <li>Fixed a bug where the warning for missing vehicles was not being displayed.</li>
                                 </ul>
                             </div>
                              <div class="bg-card-darker p-4 rounded-lg shadow">
-                                <h4 class="font-bold text-lg">Version 1.6.7 (August 8, 2025)</h4>
+                                <h4 class="font-bold text-lg">Version 1.6.8 (August 8, 2025)</h4>
                                 <ul class="list-disc list-inside mt-2 text-text-secondary space-y-1">
                                     <li>Enhanced the Garage Management page to display associated vehicle photos.</li>
                                     <li>Added user guidance messages on the main features page if no garages or vehicles have been created.</li>
@@ -236,16 +250,10 @@
                     <div id="defect-resolutions-section" class="mb-8">
                         <h3 id="defect-resolutions-heading" class="text-2xl font-semibold mb-3">Defect Resolutions</h3>
                         <div class="space-y-4">
-                            <div id="defect-entry-messaging" class="bg-card-darker p-4 rounded-lg shadow">
-                                <h4 class="font-bold text-lg">Overlapping UI Messages (Fixed: Aug 8, 2025) - v1.6.8</h4>
+                             <div id="defect-entry-messaging" class="bg-card-darker p-4 rounded-lg shadow">
+                                <h4 class="font-bold text-lg">Overlapping UI Messages (Fixed: Aug 8, 2025) - v1.6.9</h4>
                                 <p class="mt-2 text-text-secondary">
                                     <strong>Resolution:</strong> Implemented a message queue in the UI logic to ensure that multiple notifications (e.g., "Raceday Ready!" and "Reminder: No garages found") are displayed sequentially rather than overlapping, which resolves the issue of messages being hidden or unreadable.
-                                </p>
-                            </div>
-                             <div id="defect-entry-readiness-check" class="bg-card-darker p-4 rounded-lg shadow">
-                                <h4 class="font-bold text-lg">Readiness Check Logging (Fixed: Aug 8, 2025) - v1.5.8</h4>
-                                <p class="mt-2 text-text-secondary">
-                                    <strong>Resolution:</strong> Corrected the backend logic for the `/get-ready` endpoint to ensure that a `readiness_checks` event is successfully created in Firestore every time a user selects their profile. The endpoint now also supports anonymous checks.
                                 </p>
                             </div>
                         </div>

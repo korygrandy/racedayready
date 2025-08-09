@@ -1,11 +1,4 @@
-import {
-    profileLimitInput,
-    updateProfileLimitBtn,
-    featureRequestLimitInput,
-    enableDeletionCheckbox,
-    updateFeatureSettingsBtn,
-    manageFeatureRequestsLink
-} from './elements.js';
+import * as elements from './elements.js';
 import { showMessage } from './ui.js';
 import { App } from './main.js';
 
@@ -18,9 +11,11 @@ const loadAdminSettings = () => {
         .then(response => response.json())
         .then(data => {
             if (data.success) {
-                profileLimitInput.value = data.profile_limit;
-                featureRequestLimitInput.value = data.feature_request_settings.limit;
-                enableDeletionCheckbox.checked = data.feature_request_settings.deletion_enabled;
+                elements.profileLimitInput.value = data.profile_limit;
+                elements.garageLimitInput.value = data.garage_limit;
+                elements.vehicleLimitInput.value = data.vehicle_limit;
+                elements.featureRequestLimitInput.value = data.feature_request_settings.limit;
+                elements.enableDeletionCheckbox.checked = data.feature_request_settings.deletion_enabled;
             }
         });
 };
@@ -29,9 +24,9 @@ const loadAdminSettings = () => {
  * Initializes all event listeners for the admin panel.
  */
 export const initAdmin = () => {
-    updateProfileLimitBtn.addEventListener('click', () => {
+    elements.updateProfileLimitBtn.addEventListener('click', () => {
         console.log("Click Event: 'Update Profile Limit' button clicked.");
-        const newLimit = profileLimitInput.value;
+        const newLimit = elements.profileLimitInput.value;
         fetch('/update-profile-limit', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -43,10 +38,40 @@ export const initAdmin = () => {
         });
     });
 
-    updateFeatureSettingsBtn.addEventListener('click', () => {
+    elements.updateGarageVehicleLimitsBtn.addEventListener('click', () => {
+        console.log("Click Event: 'Update Garage & Vehicle Limits' button clicked.");
+        const garageLimit = elements.garageLimitInput.value;
+        const vehicleLimit = elements.vehicleLimitInput.value;
+
+        // Create two separate promises to update both limits
+        const garagePromise = fetch('/update-garage-limit', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ limit: garageLimit }),
+        }).then(res => res.json());
+
+        const vehiclePromise = fetch('/update-vehicle-limit', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ limit: vehicleLimit }),
+        }).then(res => res.json());
+
+        // Wait for both to complete
+        Promise.all([garagePromise, vehiclePromise]).then(results => {
+            const garageResult = results[0];
+            const vehicleResult = results[1];
+            if (garageResult.success && vehicleResult.success) {
+                showMessage("Garage and vehicle limits updated successfully.", true);
+            } else {
+                showMessage("One or more limits failed to update.", false);
+            }
+        });
+    });
+
+    elements.updateFeatureSettingsBtn.addEventListener('click', () => {
         console.log("Click Event: 'Update Feature Settings' button clicked.");
-        const newLimit = featureRequestLimitInput.value;
-        const deletionEnabled = enableDeletionCheckbox.checked;
+        const newLimit = elements.featureRequestLimitInput.value;
+        const deletionEnabled = elements.enableDeletionCheckbox.checked;
         fetch('/update-feature-request-settings', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -58,7 +83,7 @@ export const initAdmin = () => {
         });
     });
 
-    manageFeatureRequestsLink.addEventListener('click', () => {
+    elements.manageFeatureRequestsLink.addEventListener('click', () => {
         console.log("Click Event: 'Manage Requests' link clicked.");
         App.setView('upcomingFeatures');
     });

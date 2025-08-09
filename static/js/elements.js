@@ -13,7 +13,7 @@ export const themeSwitcherBtn = document.getElementById('theme-switcher-btn');
 export const raceDayPrepView = document.getElementById('race-day-prep-view');
 export const backToFeaturesBtn = document.getElementById('back-to-features-btn');
 export const featureCard1 = document.getElementById('feature-card-1');
-export const featureCard2 = document.getElementById('feature-card-2'); // For Vehicle Management
+export const featureCard2 = document.getElementById('feature-card-2');
 export const featureCard6 = document.getElementById('feature-card-6');
 export const featureCard7 = document.getElementById('feature-card-7');
 export const upcomingFeaturesView = document.getElementById('upcoming-features-view');
@@ -32,7 +32,7 @@ export const addGarageBtn = document.getElementById('add-garage-btn');
 export const garageList = document.getElementById('garage-list');
 export const backToFeaturesFromGarageBtn = document.getElementById('back-to-features-from-garage-btn');
 
-// NEW: Vehicle Management Elements
+// Vehicle Management Elements
 export const vehicleManagementView = document.getElementById('vehicle-management-view');
 export const addVehicleForm = document.getElementById('add-vehicle-form');
 export const addVehicleFieldset = document.getElementById('add-vehicle-fieldset');
@@ -89,6 +89,9 @@ export const savePinSettingsBtn = document.getElementById('save-pin-settings-btn
 // Admin elements
 export const profileLimitInput = document.getElementById('profile-limit-input');
 export const updateProfileLimitBtn = document.getElementById('update-profile-limit-btn');
+export const garageLimitInput = document.getElementById('garage-limit-input'); // NEW
+export const vehicleLimitInput = document.getElementById('vehicle-limit-input'); // NEW
+export const updateGarageVehicleLimitsBtn = document.getElementById('update-garage-vehicle-limits-btn'); // NEW
 export const featureRequestLimitInput = document.getElementById('feature-request-limit-input');
 export const enableDeletionCheckbox = document.getElementById('enable-deletion-checkbox');
 export const updateFeatureSettingsBtn = document.getElementById('update-feature-settings-btn');
