@@ -35,7 +35,7 @@ print("✅ Firebase Initialized Successfully.")
 # This function fetches the version from Firestore, with a fallback.
 def get_app_version():
     # This version number will be incremented with each new set of changes.
-    default_version = '1.5.4'
+    default_version = '1.5.5'
     try:
         config_ref = db.collection('config').document('app_info')
         config_doc = config_ref.get()
@@ -81,7 +81,7 @@ def get_profile_limit():
         return 3
 
 
-# --- NEW: Function to get feature request settings from Firestore ---
+# --- Function to get feature request settings from Firestore ---
 def get_feature_request_settings():
     """
     Retrieves feature request settings from admin_settings in Firestore.

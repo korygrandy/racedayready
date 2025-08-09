@@ -1,6 +1,6 @@
 // --- Global State ---
 let currentUser = null;
-let isDevModeEnabled = false; // NEW: Tracks if developer mode is active
+let isDevModeEnabled = false; // Tracks if developer mode is active
 
 // --- Element Selection ---
 const readyButton = document.getElementById('ready-button');
@@ -49,7 +49,6 @@ const pinEntryForm = document.getElementById('pin-entry-form');
 const pinEntryInput = document.getElementById('pin-entry-input');
 const cancelPinEntryBtn = document.getElementById('cancel-pin-entry-btn');
 
-// NEW: Dev PIN Modal Elements
 const devPinEntryModal = document.getElementById('dev-pin-entry-modal');
 const devPinEntryForm = document.getElementById('dev-pin-entry-form');
 const devPinEntryInput = document.getElementById('dev-pin-entry-input');
@@ -75,6 +74,7 @@ const manageFeatureRequestsLink = document.getElementById('manage-feature-reques
 
 // --- View Toggling Logic ---
 const setView = (viewName) => {
+    console.log(`Setting view to: ${viewName}`);
     mainView.classList.add('hidden');
     developerView.classList.add('hidden');
     featuresView.classList.add('hidden');
@@ -137,7 +137,6 @@ backToFeaturesFromUpcomingBtn.addEventListener('click', () => {
     setView('features');
 });
 
-// NEW: Event listener for the manage requests link
 manageFeatureRequestsLink.addEventListener('click', () => {
     console.log("Click Event: 'Manage Requests' link clicked.");
     setView('upcomingFeatures');
@@ -146,6 +145,7 @@ manageFeatureRequestsLink.addEventListener('click', () => {
 
 // --- Message Box Logic ---
 const showMessage = (message, isSuccess) => {
+    console.log(`Showing message: "${message}", Success: ${isSuccess}`);
     messageBox.textContent = message;
     messageBox.classList.remove('bg-green-500', 'bg-red-500');
     messageBox.classList.add(isSuccess ? 'bg-green-500' : 'bg-red-500');
@@ -161,6 +161,7 @@ const showMessage = (message, isSuccess) => {
 
 // --- Profile Modal Logic ---
 const showProfileModal = () => {
+    console.log("Showing create profile modal.");
     hideSelectProfileModal();
     profileForm.reset();
     pinInput.disabled = true;
@@ -168,12 +169,14 @@ const showProfileModal = () => {
 };
 
 const hideProfileModal = () => {
+    console.log("Hiding create profile modal.");
     profileModal.classList.add('hidden');
 };
 
-enablePinCheckbox.addEventListener('change', () => {
-    pinInput.disabled = !enablePinCheckbox.checked;
-    if (!enablePinCheckbox.checked) {
+enablePinCheckbox.addEventListener('change', (e) => {
+    pinInput.disabled = !e.target.checked;
+    console.log(`PIN input enabled state changed to: ${!pinInput.disabled}`);
+    if (!e.target.checked) {
         pinInput.value = '';
     }
 });
@@ -186,7 +189,10 @@ profileForm.addEventListener('submit', (e) => {
     const pinEnabled = enablePinCheckbox.checked;
     const pin = pinInput.value;
 
-    if (!username) return;
+    if (!username) {
+        showMessage('Username is required.', false);
+        return;
+    };
     if (pinEnabled && (pin.length !== 4 || !/^\d{4}$/.test(pin))) {
         showMessage('PIN must be 4 digits.', false);
         return;
@@ -209,7 +215,7 @@ profileForm.addEventListener('submit', (e) => {
         }
     })
     .catch(error => {
-        console.error('Error:', error);
+        console.error('Error creating profile:', error);
         showMessage('Failed to create profile.', false);
     })
     .finally(() => {
@@ -254,6 +260,7 @@ const createHelmetIcon = (color, sizeClass = 'w-8 h-8') => {
 
 // --- Select Profile Modal Logic ---
 const showSelectProfileModal = (profiles, limitReached) => {
+    console.log(`Showing select profile modal. Profiles: ${profiles.length}, Limit Reached: ${limitReached}`);
     profileList.innerHTML = '';
     profiles.forEach(profile => {
         const container = document.createElement('div');
@@ -279,6 +286,7 @@ const showSelectProfileModal = (profiles, limitReached) => {
             helmetIcon.querySelector('path').setAttribute('fill', e.target.value);
         });
         colorInput.addEventListener('change', (e) => {
+            console.log(`Profile color changed for ${profile.username}`);
             updateProfile(profile.id, { helmetColor: e.target.value });
         });
 
@@ -302,6 +310,7 @@ const showSelectProfileModal = (profiles, limitReached) => {
         const saveEdit = () => {
             const newUsername = nameInput.value.trim();
             if (newUsername && newUsername !== profile.username) {
+                console.log(`Profile username updated for ${profile.id}`);
                 updateProfile(profile.id, { username: newUsername });
             } else {
                 nameInput.classList.add('hidden');
@@ -380,6 +389,7 @@ const showSelectProfileModal = (profiles, limitReached) => {
 };
 
 const hideSelectProfileModal = () => {
+    console.log("Hiding select profile modal.");
     selectProfileModal.classList.add('hidden');
 };
 
@@ -403,8 +413,8 @@ const selectProfile = (username, helmetColor) => {
         }
     })
     .catch(error => {
-        console.error('Error:', error);
-        showMessage('An error occurred.', false);
+        console.error('Error selecting profile:', error);
+        showMessage('An error occurred while selecting the profile.', false);
     });
 };
 
@@ -422,7 +432,7 @@ const updateProfile = (profileId, updates) => {
         }
     })
     .catch(error => {
-        console.error('Error:', error);
+        console.error('Error updating profile:', error);
         showMessage('Failed to update profile.', false);
     });
 };
@@ -434,7 +444,8 @@ addNewProfileBtn.addEventListener('click', () => {
 
 // --- Delete Confirmation Modal Logic ---
 const showDeleteConfirmModal = (profileId, username) => {
-    deleteConfirmText.textContent = `Are you sure you want to delete the profile for "${username}"?`;
+    console.log(`Showing delete confirmation for profile: ${username}`);
+    deleteConfirmText.textContent = `Are you sure you want to delete the profile for "${username}"? This action cannot be undone.`;
     deleteConfirmModal.classList.remove('hidden');
 
     confirmDeleteBtn.onclick = () => {
@@ -444,6 +455,7 @@ const showDeleteConfirmModal = (profileId, username) => {
 };
 
 const hideDeleteConfirmModal = () => {
+    console.log("Hiding delete confirmation modal.");
     deleteConfirmModal.classList.add('hidden');
 };
 
@@ -466,13 +478,14 @@ const executeDelete = (profileId) => {
         }
     })
     .catch(error => {
-        console.error('Error:', error);
+        console.error('Error deleting profile:', error);
         showMessage('Failed to delete profile.', false);
     });
 };
 
 // --- PIN Entry Modal Logic ---
 const showPinEntryModal = (profile, forDelete = false) => {
+    console.log(`Showing PIN entry modal for ${profile.username}. For delete: ${forDelete}`);
     pinEntryText.textContent = forDelete ? `Enter PIN to delete ${profile.username}` : `Enter PIN for ${profile.username}`;
     pinEntryInput.value = '';
     pinEntryModal.classList.remove('hidden');
@@ -506,6 +519,7 @@ const showPinEntryForDelete = (profile) => {
 };
 
 const hidePinEntryModal = () => {
+    console.log("Hiding PIN entry modal.");
     pinEntryModal.classList.add('hidden');
 };
 
@@ -529,7 +543,7 @@ devPinEntryForm.addEventListener('submit', (e) => {
         setView('developer');
     } else {
         console.error("Dev PIN validation failed.");
-        showMessage('Incorrect PIN.', false);
+        showMessage('Incorrect PIN. Access Denied.', false);
         devPinEntryInput.value = '';
     }
 });
@@ -543,10 +557,11 @@ cancelDevPinBtn.addEventListener('click', () => {
 
 // --- PIN Settings Modal Logic ---
 const showPinSettingsModal = (profile) => {
+    console.log(`Showing PIN settings modal for ${profile.username}`);
     pinSettingsHeading.textContent = `PIN Settings for ${profile.username}`;
     editEnablePinCheckbox.checked = profile.pinEnabled;
     editPinInput.disabled = !profile.pinEnabled;
-    editPinInput.value = profile.pin || '';
+    editPinInput.value = ''; // Always clear for security
 
     pinSettingsModal.classList.remove('hidden');
 
@@ -566,12 +581,13 @@ const showPinSettingsModal = (profile) => {
 };
 
 const hidePinSettingsModal = () => {
+    console.log("Hiding PIN settings modal.");
     pinSettingsModal.classList.add('hidden');
 };
 
-editEnablePinCheckbox.addEventListener('change', () => {
-    editPinInput.disabled = !editEnablePinCheckbox.checked;
-    if (!editEnablePinCheckbox.checked) {
+editEnablePinCheckbox.addEventListener('change', (e) => {
+    editPinInput.disabled = !e.target.checked;
+    if (!e.target.checked) {
         editPinInput.value = '';
     }
 });
@@ -583,18 +599,18 @@ cancelPinSettingsBtn.addEventListener('click', () => {
 
 // --- Central Profile Check Function ---
 const checkProfiles = () => {
+    console.log("Checking for existing profiles...");
     return fetch('/check-profiles')
         .then(response => response.json())
         .then(data => {
             if (data.profiles && data.profiles.length > 0) {
                 showSelectProfileModal(data.profiles, data.limit_reached);
             } else {
-                hideSelectProfileModal();
                 showProfileModal();
             }
         })
         .catch(error => {
-            console.error('Error:', error);
+            console.error('Error checking profiles:', error);
             showMessage('An error occurred while checking profiles.', false);
         });
 };
@@ -618,7 +634,7 @@ readyButton.addEventListener('click', () => {
         }
     })
     .catch(error => {
-        console.error('Error:', error);
+        console.error('Error on Get Ready:', error);
         showMessage('An error occurred.', false);
     })
     .finally(() => {
@@ -630,7 +646,9 @@ readyButton.addEventListener('click', () => {
 // --- Feature Request Logic ---
 
 const deleteFeatureRequest = (requestId) => {
-    if (!confirm('Are you sure you want to delete this feature request?')) {
+    console.log(`Initiating deletion for feature request ID: ${requestId}`);
+    if (!confirm('Are you sure you want to permanently delete this feature request?')) {
+        console.log("Feature request deletion canceled by user.");
         return;
     }
 
@@ -645,12 +663,13 @@ const deleteFeatureRequest = (requestId) => {
         }
     })
     .catch(error => {
-        console.error('Error:', error);
+        console.error('Error deleting feature request:', error);
         showMessage('Failed to delete request.', false);
     });
 };
 
 const loadFeatureRequests = () => {
+    console.log("Loading feature requests...");
     fetch('/get-feature-requests')
         .then(response => response.json())
         .then(data => {
@@ -668,7 +687,7 @@ const loadFeatureRequests = () => {
                     submitFeatureRequestBtn.textContent = 'Submit Request';
                     featureRequestTextarea.placeholder = 'Describe your feature idea...';
                 }
-
+                
                 // Render list
                 if (data.requests.length > 0) {
                     data.requests.forEach(req => {
@@ -687,7 +706,7 @@ const loadFeatureRequests = () => {
                             deleteButton.onclick = () => deleteFeatureRequest(req.id);
                             reqElement.appendChild(deleteButton);
                         }
-
+                        
                         featureRequestList.appendChild(reqElement);
                     });
                 } else {
@@ -706,7 +725,10 @@ featureRequestForm.addEventListener('submit', (e) => {
     e.preventDefault();
     console.log("Click Event: 'Submit Feature Request' button clicked.");
     const requestText = featureRequestTextarea.value.trim();
-    if (!requestText || !currentUser) return;
+    if (!requestText || !currentUser) {
+        showMessage('Cannot submit an empty request.', false);
+        return;
+    }
 
     submitFeatureRequestBtn.disabled = true;
     submitFeatureRequestBtn.textContent = 'Submitting...';
@@ -726,7 +748,7 @@ featureRequestForm.addEventListener('submit', (e) => {
         }
     })
     .catch(error => {
-        console.error('Error:', error);
+        console.error('Error submitting feature request:', error);
         showMessage('Failed to submit request.', false);
     })
     .finally(() => {
@@ -736,6 +758,7 @@ featureRequestForm.addEventListener('submit', (e) => {
 
 // --- Admin Settings Logic ---
 const loadAdminSettings = () => {
+    console.log("Loading admin settings...");
     fetch('/get-admin-settings')
         .then(response => response.json())
         .then(data => {
@@ -748,6 +771,7 @@ const loadAdminSettings = () => {
 };
 
 updateProfileLimitBtn.addEventListener('click', () => {
+    console.log("Click Event: 'Update Profile Limit' button clicked.");
     const newLimit = profileLimitInput.value;
     fetch('/update-profile-limit', {
         method: 'POST',
@@ -761,6 +785,7 @@ updateProfileLimitBtn.addEventListener('click', () => {
 });
 
 updateFeatureSettingsBtn.addEventListener('click', () => {
+    console.log("Click Event: 'Update Feature Settings' button clicked.");
     const newLimit = featureRequestLimitInput.value;
     const deletionEnabled = enableDeletionCheckbox.checked;
     fetch('/update-feature-request-settings', {
