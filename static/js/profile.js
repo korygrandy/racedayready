@@ -63,6 +63,7 @@ const executeDelete = (profileId) => {
         showMessage(data.message, data.success);
         if (data.success) {
             hidePinEntryModal();
+            elements.devPinEntryModal.classList.add('hidden');
             checkProfiles();
         }
     })
@@ -99,6 +100,34 @@ const showPinEntryModal = (profile, forDelete = false) => {
                 showMessage(data.message, false);
             }
         });
+    };
+};
+
+const showAdminPinForDelete = (profile) => {
+    console.log(`Showing admin PIN modal for deleting ${profile.username}`);
+    elements.devPinEntryModal.classList.remove('hidden');
+    elements.devPinEntryInput.focus();
+
+    elements.devPinEntryForm.onsubmit = async (e) => {
+        e.preventDefault();
+        const enteredPin = elements.devPinEntryInput.value;
+
+        try {
+            const response = await fetch('/get-admin-pin');
+            const data = await response.json();
+
+            if (data.success && enteredPin === data.pin) {
+                console.log("Admin PIN correct. Executing delete.");
+                executeDelete(profile.id);
+            } else {
+                showMessage('Incorrect Admin PIN.', false);
+            }
+        } catch (error) {
+            console.error("Error verifying admin PIN:", error);
+            showMessage("An error occurred during verification.", false);
+        } finally {
+            elements.devPinEntryInput.value = '';
+        }
     };
 };
 
@@ -253,7 +282,7 @@ const showSelectProfileModal = (profiles, limitReached) => {
                     if (profile.pinEnabled) {
                         showPinEntryForDelete(profile);
                     } else {
-                        executeDelete(profile.id);
+                        showAdminPinForDelete(profile);
                     }
                 }
             );

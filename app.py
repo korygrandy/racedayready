@@ -128,6 +128,23 @@ def index():
                            changelog=changelog_data, defects=defects_data)
 
 
+# --- Route to get the admin PIN ---
+@app.route('/get-admin-pin', methods=['GET'])
+def get_admin_pin():
+    try:
+        pin_ref = db.collection('config').document('admin_pin')
+        pin_doc = pin_ref.get()
+        if pin_doc.exists:
+            pin = pin_doc.to_dict().get('pin')
+            return jsonify({'success': True, 'pin': pin}), 200
+        else:
+            # If the PIN doesn't exist, create it with a default value
+            pin_ref.set({'pin': '3511'})
+            return jsonify({'success': True, 'pin': '3511'}), 200
+    except Exception as e:
+        return jsonify({'success': False, 'error': str(e)}), 500
+
+
 # --- Route to check for and retrieve driver profiles ---
 @app.route('/check-profiles', methods=['GET'])
 def check_profiles():

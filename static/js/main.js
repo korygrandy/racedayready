@@ -79,22 +79,30 @@ App.setView = setView;
 
 // --- Developer PIN Modal Logic ---
 const initDevPinModal = () => {
-    elements.devPinEntryForm.addEventListener('submit', (e) => {
+    elements.devPinEntryForm.addEventListener('submit', async (e) => {
         e.preventDefault();
         const enteredPin = elements.devPinEntryInput.value;
         console.log(`Dev PIN submitted: ${enteredPin}`);
 
-        if (enteredPin === '3511') {
-            console.log("Dev PIN validation successful.");
-            showMessage('Access Granted.', true);
-            elements.devPinEntryModal.classList.add('hidden');
-            elements.devPinEntryInput.value = '';
-            App.isDevModeEnabled = true;
-            setView('developer');
-        } else {
-            console.error("Dev PIN validation failed.");
-            showMessage('Incorrect PIN. Access Denied.', false);
-            elements.devPinEntryInput.value = '';
+        try {
+            const response = await fetch('/get-admin-pin');
+            const data = await response.json();
+
+            if (data.success && enteredPin === data.pin) {
+                console.log("Dev PIN validation successful.");
+                showMessage('Access Granted.', true);
+                elements.devPinEntryModal.classList.add('hidden');
+                elements.devPinEntryInput.value = '';
+                App.isDevModeEnabled = true;
+                setView('developer');
+            } else {
+                console.error("Dev PIN validation failed.");
+                showMessage('Incorrect PIN. Access Denied.', false);
+                elements.devPinEntryInput.value = '';
+            }
+        } catch (error) {
+            console.error("Error fetching admin PIN:", error);
+            showMessage("An error occurred while verifying the PIN.", false);
         }
     });
 

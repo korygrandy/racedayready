@@ -22,12 +22,12 @@ export const updateRacedayCountdown = () => {
 
                 elements.racedayCountdownDays.textContent = diffDays;
                 elements.racedayCountdownCircle.classList.remove('hidden');
-                elements.racedayCountdownLabel.classList.remove('hidden');
+                elements.racedayCountdownLabel.textContent = "Days Until Raceday:";
                 elements.noRacedayIcon.classList.add('hidden');
                 elements.racedayCountdownContainer.classList.remove('hidden');
             } else {
                 elements.racedayCountdownCircle.classList.add('hidden');
-                elements.racedayCountdownLabel.classList.add('hidden');
+                elements.racedayCountdownLabel.textContent = "No Raceday Scheduled";
                 elements.noRacedayIcon.classList.remove('hidden');
                 elements.racedayCountdownContainer.classList.remove('hidden');
             }
