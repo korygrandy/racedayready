@@ -132,10 +132,10 @@ const selectProfile = (profile) => {
         showMessage(data.message, data.success);
 
         if (data.success) {
+            App.setView('features');
             elements.featuresUsername.textContent = profile.username;
             elements.featuresHelmetDisplay.innerHTML = '';
             elements.featuresHelmetDisplay.appendChild(createHelmetIcon(profile.helmetColor, 'w-12 h-12'));
-            App.setView('features');
         }
     })
     .catch(error => {

@@ -11,7 +11,7 @@ export const updateRacedayCountdown = () => {
         return;
     }
 
-    fetch(`/get-next-raceday/${App.currentUser.id}`)
+    fetch(`/get-next-event/${App.currentUser.id}`)
         .then(res => res.json())
         .then(data => {
             if (data.success && data.event) {
@@ -110,7 +110,7 @@ const renderEvents = () => {
         if (event.vehicles && event.vehicles.length > 0) {
             vehicleHtml = '<div class="mt-2 flex flex-wrap gap-2">';
             event.vehicles.forEach(vehicle => {
-                const photoSrc = vehicle.photo || vehicle.photoURL || 'https://via.placeholder.com/100';
+                const photoSrc = vehicle.photo || vehicle.photoURL || 'static/stock-car.png';
                 vehicleHtml += `<img src="${photoSrc}" title="${vehicle.year} ${vehicle.make} ${vehicle.model}" class="w-12 h-12 object-cover rounded-md cursor-pointer hover:opacity-75" onclick="App.setView('vehicleManagement')">`;
             });
             vehicleHtml += '</div>';

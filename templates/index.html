@@ -137,7 +137,7 @@
                     <div class="mt-8 bg-card p-8 rounded-lg shadow-lg text-left">
                         <h2 class="text-2xl font-bold mb-4">My Checklist Templates</h2>
                         <div id="checklist-list" class="space-y-4">
-                            </div>
+                        </div>
                     </div>
                     <button id="back-to-prep-from-checklists-btn" class="mt-8 px-6 py-2 bg-gray-600 text-white font-semibold rounded-lg shadow-md hover:bg-gray-500">
                         Back to Prep & Logistics
@@ -320,32 +320,30 @@
                     <div id="changelog-section" class="mb-8">
                         <h3 id="changelog-heading" class="text-2xl font-semibold mb-3">Changelog</h3>
                         <div class="space-y-4">
-                             <div class="bg-card-darker p-4 rounded-lg shadow">
-                                <h4 class="font-bold text-lg">Version 1.8.4 (August 9, 2025)</h4>
+                            {% for entry in changelog %}
+                            <div class="bg-card-darker p-4 rounded-lg shadow">
+                                <h4 class="font-bold text-lg">Version {{ entry.version }} ({{ entry.date }})</h4>
                                 <ul class="list-disc list-inside mt-2 text-text-secondary space-y-1">
-                                    <li>Implemented the Advanced Race Day Checklists feature.</li>
-                                    <li>Added the ability to associate checklists with race events.</li>
+                                    {% for note in entry.notes %}
+                                    <li>{{ note }}</li>
+                                    {% endfor %}
                                 </ul>
                             </div>
-                             <div class="bg-card-darker p-4 rounded-lg shadow">
-                                <h4 class="font-bold text-lg">Version 1.8.3 (August 9, 2025)</h4>
-                                <ul class="list-disc list-inside mt-2 text-text-secondary space-y-1">
-                                    <li>Added a prominent, global countdown timer for the next "Raceday" event.</li>
-                                    <li>Made the countdown timer a clickable element that navigates to the Race Schedule.</li>
-                                </ul>
-                            </div>
+                            {% endfor %}
                         </div>
                     </div>
 
                     <div id="defect-resolutions-section" class="mb-8">
                         <h3 id="defect-resolutions-heading" class="text-2xl font-semibold mb-3">Defect Resolutions</h3>
                         <div class="space-y-4">
-                             <div id="defect-entry-countdown" class="bg-card-darker p-4 rounded-lg shadow">
-                                <h4 class="font-bold text-lg">Raceday Countdown Not Displaying (Fixed: Aug 9, 2025) - v1.8.3</h4>
+                            {% for defect in defects %}
+                            <div id="{{ defect.id }}" class="bg-card-darker p-4 rounded-lg shadow">
+                                <h4 class="font-bold text-lg">{{ defect.title }}</h4>
                                 <p class="mt-2 text-text-secondary">
-                                    <strong>Resolution:</strong> The countdown UI element was moved to a new global header in the HTML structure to ensure it is always visible after profile selection. The associated JavaScript was updated to correctly show the countdown or the "no event" icon based on whether a future Raceday is scheduled.
+                                    <strong>Resolution:</strong> {{ defect.resolution }}
                                 </p>
                             </div>
+                            {% endfor %}
                         </div>
                     </div>
 
