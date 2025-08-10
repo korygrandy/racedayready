@@ -63,6 +63,7 @@
                     <h1 class="text-4xl md:text-5xl font-bold mb-8">Race Day Preparation & Logistics</h1>
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                         <div id="race-schedule-card" class="bg-card p-6 rounded-lg shadow-lg hover:bg-interactive-hover cursor-pointer"><h2 class="text-xl font-bold mb-2">Race Schedule</h2></div>
+                        <div id="checklist-templates-card" class="bg-card p-6 rounded-lg shadow-lg hover:bg-interactive-hover cursor-pointer"><h2 class="text-xl font-bold mb-2">Checklist Templates</h2></div>
                         <div id="automated-tasks-card" class="bg-card p-6 rounded-lg shadow-lg inactive-card"><h2 class="text-xl font-bold mb-2">Automated Tasks & Schedules</h2></div>
                         <div id="track-info-card" class="bg-card p-6 rounded-lg shadow-lg inactive-card"><h2 class="text-xl font-bold mb-2">Track Information Management</h2></div>
                     </div>
@@ -95,6 +96,10 @@
                                     <label for="event-vehicles-select" class="block text-sm font-medium">Vehicles</label>
                                     <select id="event-vehicles-select" multiple class="mt-1 block w-full bg-input border border-border rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 h-32"></select>
                                 </div>
+                                <div>
+                                    <label for="event-checklists-select" class="block text-sm font-medium">Checklists</label>
+                                    <select id="event-checklists-select" multiple class="mt-1 block w-full bg-input border border-border rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 h-32"></select>
+                                </div>
                                 <div class="relative flex items-start">
                                     <div class="flex items-center h-5">
                                         <input id="is-raceday-checkbox" type="checkbox" class="focus:ring-blue-500 h-4 w-4 text-blue-600 border-border rounded">
@@ -113,6 +118,28 @@
                         </div>
                     </div>
                     <button id="back-to-prep-from-schedule-btn" class="mt-8 px-6 py-2 bg-gray-600 text-white font-semibold rounded-lg shadow-md hover:bg-gray-500">
+                        Back to Prep & Logistics
+                    </button>
+                </div>
+
+                <div id="checklist-management-view" class="w-full max-w-4xl mx-auto hidden text-center py-16">
+                    <h1 class="text-4xl md:text-5xl font-bold mb-8">Checklist Templates</h1>
+                    <div class="bg-card p-8 rounded-lg shadow-lg text-left">
+                        <h2 class="text-2xl font-bold mb-4">Add New Checklist Template</h2>
+                        <form id="add-checklist-form">
+                            <div>
+                                <label for="checklist-name-input" class="block text-sm font-medium">Template Name</label>
+                                <input type="text" id="checklist-name-input" maxlength="50" class="mt-1 block w-full bg-input border border-border rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500" required>
+                            </div>
+                            <button id="add-checklist-btn" type="submit" class="mt-4 w-full bg-blue-500 text-white font-semibold py-2 px-4 rounded-lg shadow-md hover:bg-blue-600">Create Template</button>
+                        </form>
+                    </div>
+                    <div class="mt-8 bg-card p-8 rounded-lg shadow-lg text-left">
+                        <h2 class="text-2xl font-bold mb-4">My Checklist Templates</h2>
+                        <div id="checklist-list" class="space-y-4">
+                            </div>
+                    </div>
+                    <button id="back-to-prep-from-checklists-btn" class="mt-8 px-6 py-2 bg-gray-600 text-white font-semibold rounded-lg shadow-md hover:bg-gray-500">
                         Back to Prep & Logistics
                     </button>
                 </div>
@@ -293,18 +320,18 @@
                     <div id="changelog-section" class="mb-8">
                         <h3 id="changelog-heading" class="text-2xl font-semibold mb-3">Changelog</h3>
                         <div class="space-y-4">
-                            <div class="bg-card-darker p-4 rounded-lg shadow">
-                                <h4 class="font-bold text-lg">Version 1.8.3 (August 9, 2025)</h4>
+                             <div class="bg-card-darker p-4 rounded-lg shadow">
+                                <h4 class="font-bold text-lg">Version 1.8.4 (August 9, 2025)</h4>
                                 <ul class="list-disc list-inside mt-2 text-text-secondary space-y-1">
-                                    <li>Added a prominent, global countdown timer for the next "Raceday" event.</li>
-                                    <li>Fixed a defect where the Race Event edit modal was not appearing.</li>
-                                    <li>Made the countdown timer a clickable element that navigates to the Race Schedule.</li>
+                                    <li>Implemented the Advanced Race Day Checklists feature.</li>
+                                    <li>Added the ability to associate checklists with race events.</li>
                                 </ul>
                             </div>
                              <div class="bg-card-darker p-4 rounded-lg shadow">
-                                <h4 class="font-bold text-lg">Version 1.8.2 (August 9, 2025)</h4>
+                                <h4 class="font-bold text-lg">Version 1.8.3 (August 9, 2025)</h4>
                                 <ul class="list-disc list-inside mt-2 text-text-secondary space-y-1">
-                                    <li>Fixed a defect where updating the theme would incorrectly trigger the profile selection modal.</li>
+                                    <li>Added a prominent, global countdown timer for the next "Raceday" event.</li>
+                                    <li>Made the countdown timer a clickable element that navigates to the Race Schedule.</li>
                                 </ul>
                             </div>
                         </div>
@@ -523,6 +550,41 @@
                 <div class="mt-6 flex justify-end space-x-4">
                     <button id="cancel-edit-event-btn" type="button" class="px-4 py-2 bg-gray-600 text-white font-semibold rounded-lg hover:bg-gray-500">Cancel</button>
                     <button id="save-event-btn" type="submit" class="px-4 py-2 bg-blue-500 text-white font-semibold rounded-lg shadow-md hover:bg-blue-600">Save Changes</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div id="edit-checklist-modal" class="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center hidden z-40">
+        <div class="bg-card p-8 rounded-lg shadow-2xl w-full max-w-2xl">
+            <h2 class="text-2xl font-bold mb-4" id="edit-checklist-title">Edit Checklist</h2>
+            <form id="edit-checklist-form">
+                <div class="space-y-4">
+                    <div>
+                        <label for="edit-checklist-name-input" class="block text-sm font-medium">Template Name</label>
+                        <input type="text" id="edit-checklist-name-input" maxlength="50" class="mt-1 block w-full bg-input border border-border rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500" required>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div>
+                            <h3 class="font-semibold mb-2">Pre-Race Tasks</h3>
+                            <div id="edit-pre-race-tasks" class="space-y-2"></div>
+                            <input type="text" id="add-pre-race-task-input" class="mt-2 w-full bg-input border border-border rounded-md shadow-sm py-1 px-2" placeholder="Add a new task...">
+                        </div>
+                        <div>
+                            <h3 class="font-semibold mb-2">Mid-Day Tasks</h3>
+                            <div id="edit-mid-day-tasks" class="space-y-2"></div>
+                            <input type="text" id="add-mid-day-task-input" class="mt-2 w-full bg-input border border-border rounded-md shadow-sm py-1 px-2" placeholder="Add a new task...">
+                        </div>
+                        <div>
+                            <h3 class="font-semibold mb-2">Post-Race Tasks</h3>
+                            <div id="edit-post-race-tasks" class="space-y-2"></div>
+                            <input type="text" id="add-post-race-task-input" class="mt-2 w-full bg-input border border-border rounded-md shadow-sm py-1 px-2" placeholder="Add a new task...">
+                        </div>
+                    </div>
+                </div>
+                <div class="mt-6 flex justify-end space-x-4">
+                    <button id="cancel-edit-checklist-btn" type="button" class="px-4 py-2 bg-gray-600 text-white font-semibold rounded-lg hover:bg-gray-500">Cancel</button>
+                    <button id="save-checklist-btn" type="submit" class="px-4 py-2 bg-blue-500 text-white font-semibold rounded-lg shadow-md hover:bg-blue-600">Save Changes</button>
                 </div>
             </form>
         </div>

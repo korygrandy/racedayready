@@ -35,7 +35,7 @@ print("✅ Firebase Initialized Successfully.")
 # This function fetches the version from Firestore, with a fallback.
 def get_app_version():
     # This version number will be incremented with each new set of changes.
-    default_version = '1.8.2'
+    default_version = '1.8.4'
     try:
         config_ref = db.collection('config').document('app_info')
         config_doc = config_ref.get()
@@ -273,7 +273,7 @@ def delete_profile(profile_id):
         profile_ref = db.collection('driver_profiles').document(profile_id)
 
         # Delete subcollections
-        for collection in ['garages', 'vehicles', 'events']:
+        for collection in ['garages', 'vehicles', 'events', 'checklists']:
             docs = profile_ref.collection(collection).stream()
             for doc in docs:
                 doc.reference.delete()
@@ -832,6 +832,69 @@ def get_next_raceday(profile_id):
     except Exception as e:
         print(f"❌ Error getting next raceday: {e}")
         return jsonify({'success': False, 'error': str(e)}), 500
+
+
+# NEW: Checklist Routes
+@app.route('/add-checklist/<profile_id>', methods=['POST'])
+def add_checklist(profile_id):
+    try:
+        data = request.get_json()
+        checklist_data = {
+            'name': data.get('name'),
+            'pre_race_tasks': data.get('pre_race_tasks', []),
+            'mid_day_tasks': data.get('mid_day_tasks', []),
+            'post_race_tasks': data.get('post_race_tasks', []),
+            'created_at': datetime.datetime.now(datetime.timezone.utc)
+        }
+        if not checklist_data['name']:
+            return jsonify({'success': False, 'message': 'Checklist name is required.'}), 400
+
+        doc_ref = db.collection('driver_profiles').document(profile_id).collection('checklists').document()
+        doc_ref.set(checklist_data)
+        return jsonify({'success': True, 'message': 'Checklist created successfully!', 'checklistId': doc_ref.id}), 201
+    except Exception as e:
+        return jsonify({'success': False, 'message': f'An error occurred: {e}'}), 500
+
+
+@app.route('/get-checklists/<profile_id>', methods=['GET'])
+def get_checklists(profile_id):
+    try:
+        checklists_ref = db.collection('driver_profiles').document(profile_id).collection('checklists').stream()
+        checklists = [doc.to_dict() for doc in checklists_ref]
+        for checklist, doc in zip(checklists, checklists_ref):
+            checklist['id'] = doc.id
+        return jsonify({'success': True, 'checklists': checklists}), 200
+    except Exception as e:
+        return jsonify({'success': False, 'error': str(e)}), 500
+
+
+@app.route('/update-checklist/<profile_id>/<checklist_id>', methods=['PUT'])
+def update_checklist(profile_id, checklist_id):
+    try:
+        data = request.get_json()
+        updates = {
+            'name': data.get('name'),
+            'pre_race_tasks': data.get('pre_race_tasks', []),
+            'mid_day_tasks': data.get('mid_day_tasks', []),
+            'post_race_tasks': data.get('post_race_tasks', []),
+        }
+        if not updates['name']:
+            return jsonify({'success': False, 'message': 'Checklist name is required.'}), 400
+
+        db.collection('driver_profiles').document(profile_id).collection('checklists').document(checklist_id).update(
+            updates)
+        return jsonify({'success': True, 'message': 'Checklist updated successfully!'}), 200
+    except Exception as e:
+        return jsonify({'success': False, 'message': f'An error occurred: {e}'}), 500
+
+
+@app.route('/delete-checklist/<profile_id>/<checklist_id>', methods=['DELETE'])
+def delete_checklist(profile_id, checklist_id):
+    try:
+        db.collection('driver_profiles').document(profile_id).collection('checklists').document(checklist_id).delete()
+        return jsonify({'success': True, 'message': 'Checklist deleted successfully!'}), 200
+    except Exception as e:
+        return jsonify({'success': False, 'message': f'An error occurred: {e}'}), 500
 
 
 if __name__ == '__main__':
