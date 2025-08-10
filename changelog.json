@@ -1,9 +1,30 @@
 [
     {
+        "version": "1.9.0",
+        "date": "August 10, 2025",
+        "notes": [
+            "Enhanced user experience by adding a direct link to the Garage Management page from the 'no garages' warning message."
+        ]
+    },
+    {
+        "version": "1.8.9",
+        "date": "August 10, 2025",
+        "notes": [
+            "Architectural Improvement: Separated changelog and defect resolution data into their own JSON files for easier maintenance."
+        ]
+    },
+    {
+        "version": "1.8.8",
+        "date": "August 9, 2025",
+        "notes": [
+            "Fixed a critical defect where the main 'Click to Get Ready' button was unresponsive due to a race condition."
+        ]
+    },
+    {
         "version": "1.8.7",
         "date": "August 9, 2025",
         "notes": [
-            "Architectural Improvement: Separated changelog and defect resolution data into their own JSON files for easier maintenance."
+            "Added a stock vehicle photo for vehicles without an uploaded image."
         ]
     },
     {
@@ -18,22 +39,6 @@
         "date": "August 9, 2025",
         "notes": [
             "Fixed a UI defect where the user's helmet icon was not centered above the username in the profile selection modal."
-        ]
-    },
-    {
-        "version": "1.8.4",
-        "date": "August 9, 2025",
-        "notes": [
-            "Implemented the Advanced Race Day Checklists feature.",
-            "Added the ability to associate checklists with race events."
-        ]
-    },
-    {
-        "version": "1.8.3",
-        "date": "August 9, 2025",
-        "notes": [
-            "Added a prominent, global countdown timer for the next event.",
-            "Made the countdown timer a clickable element that navigates to the Race Schedule."
         ]
     }
 ]
