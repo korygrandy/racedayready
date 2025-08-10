@@ -1,5 +1,10 @@
 [
     {
+        "id": "defect-entry-countdown-logic",
+        "title": "Countdown Timer Logic (Fixed: Aug 10, 2025) - v1.9.1",
+        "resolution": "The countdown timer was updated to only consider events explicitly marked as 'Raceday Events', rather than any upcoming event. The backend route was renamed to `/get-next-raceday` and its query was updated to filter for `is_raceday == True`."
+    },
+    {
         "id": "defect-entry-startup-error",
         "title": "Application Fails to Load on Startup (Fixed: Aug 9, 2025) - v1.8.8",
         "resolution": "Corrected a race condition in the `selectProfile` function. The function was attempting to update UI elements in the features view before the view was rendered. The code was reordered to set the view first, which makes the elements available in the DOM for manipulation, resolving the error."
@@ -8,10 +13,5 @@
         "id": "defect-entry-helmet-alignment",
         "title": "Profile Helmet Icon Misaligned (Fixed: Aug 9, 2025) - v1.8.5",
         "resolution": "Updated the JavaScript that generates the profile selection list to wrap the helmet and username in a flex-column container, ensuring they are visually centered with each other."
-    },
-    {
-        "id": "defect-entry-countdown",
-        "title": "Raceday Countdown Not Displaying (Fixed: Aug 9, 2025) - v1.8.3",
-        "resolution": "The countdown UI element was moved to a new global header in the HTML structure to ensure it is always visible after profile selection. The associated JavaScript was updated to correctly show the countdown or the 'no event' icon based on whether a future Raceday is scheduled."
     }
 ]
