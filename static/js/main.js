@@ -7,6 +7,7 @@ import { initAdmin } from './admin.js';
 import { initGarage } from './garage.js';
 import { initVehicle } from './vehicle.js';
 import { initSchedule, updateRacedayCountdown } from './schedule.js';
+import { initChecklists } from './checklist.js'; // NEW
 
 // --- Global App Object ---
 export const App = {
@@ -18,6 +19,7 @@ export const App = {
     loadGarages: null,
     loadVehicles: null,
     loadEvents: null,
+    loadChecklists: null, // NEW
 };
 
 // --- View Toggling Logic ---
@@ -31,6 +33,7 @@ const setView = (viewName) => {
     elements.garageManagementView.classList.add('hidden');
     elements.vehicleManagementView.classList.add('hidden');
     elements.raceScheduleView.classList.add('hidden');
+    elements.checklistManagementView.classList.add('hidden'); // NEW
     elements.profileHeaderBtn.classList.add('hidden'); // Hide by default
 
     const isDevMode = viewName === 'developer';
@@ -65,6 +68,9 @@ const setView = (viewName) => {
     } else if (viewName === 'raceSchedule') {
         elements.raceScheduleView.classList.remove('hidden');
         if (App.loadEvents) App.loadEvents();
+    } else if (viewName === 'checklistManagement') { // NEW
+        elements.checklistManagementView.classList.remove('hidden');
+        if (App.loadChecklists) App.loadChecklists();
     } else {
         elements.mainView.classList.remove('hidden');
     }
@@ -159,6 +165,11 @@ const initEventListeners = () => {
         setView('raceSchedule');
     });
 
+    elements.checklistTemplatesCard.addEventListener('click', () => { // NEW
+        console.log("Click Event: 'Checklist Templates' card clicked.");
+        setView('checklistManagement');
+    });
+
     elements.featureCard2.addEventListener('click', () => {
         console.log("Click Event: 'Vehicle Management' card clicked.");
         setView('vehicleManagement');
@@ -204,4 +215,5 @@ document.addEventListener('DOMContentLoaded', () => {
     initGarage();
     initVehicle();
     initSchedule();
+    initChecklists(); // NEW
 });

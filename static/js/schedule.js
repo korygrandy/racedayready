@@ -57,6 +57,29 @@ const populateVehicleMultiSelect = async (selectElement, selectedVehicleIds = []
     }
 };
 
+const populateChecklistMultiSelect = async (selectElement, selectedChecklistIds = []) => {
+    try {
+        const response = await fetch(`/get-checklists/${App.currentUser.id}`);
+        const data = await response.json();
+        selectElement.innerHTML = '';
+        if (data.success && data.checklists.length > 0) {
+            data.checklists.forEach(checklist => {
+                const option = document.createElement('option');
+                option.value = checklist.id;
+                option.textContent = checklist.name;
+                if (selectedChecklistIds.includes(checklist.id)) {
+                    option.selected = true;
+                }
+                selectElement.appendChild(option);
+            });
+        } else {
+            selectElement.innerHTML = '<option disabled>No checklists available</option>';
+        }
+    } catch (error) {
+        console.error("Error fetching checklists for event form:", error);
+    }
+};
+
 const showEditEventModal = (event) => {
     eventToEdit = event;
     console.log("Showing edit event modal for:", event);
@@ -65,6 +88,7 @@ const showEditEventModal = (event) => {
     elements.editEventEndInput.value = event.end_time;
     elements.editIsRacedayCheckbox.checked = event.is_raceday;
     populateVehicleMultiSelect(elements.editEventVehiclesSelect, event.vehicles.map(v => v.id));
+    populateChecklistMultiSelect(elements.editEventChecklistsSelect, event.checklists);
     elements.editEventModal.classList.remove('hidden');
 };
 
@@ -113,6 +137,7 @@ const renderEvents = () => {
 const loadEvents = () => {
     if (!App.currentUser || !App.currentUser.id) return;
     populateVehicleMultiSelect(elements.eventVehiclesSelect);
+    populateChecklistMultiSelect(elements.eventChecklistsSelect);
 
     fetch(`/get-events/${App.currentUser.id}`)
         .then(res => res.json())
@@ -128,11 +153,13 @@ export const initSchedule = () => {
     elements.addEventForm.addEventListener('submit', (e) => {
         e.preventDefault();
         const selectedVehicles = Array.from(elements.eventVehiclesSelect.selectedOptions).map(opt => opt.value);
+        const selectedChecklists = Array.from(elements.eventChecklistsSelect.selectedOptions).map(opt => opt.value);
         const eventData = {
             name: elements.eventNameInput.value,
             startTime: elements.eventStartInput.value,
             endTime: elements.eventEndInput.value,
             vehicles: selectedVehicles,
+            checklists: selectedChecklists,
             isRaceday: elements.isRacedayCheckbox.checked,
         };
 
@@ -155,11 +182,13 @@ export const initSchedule = () => {
     elements.editEventForm.addEventListener('submit', (e) => {
         e.preventDefault();
         const selectedVehicles = Array.from(elements.editEventVehiclesSelect.selectedOptions).map(opt => opt.value);
+        const selectedChecklists = Array.from(elements.editEventChecklistsSelect.selectedOptions).map(opt => opt.value);
         const eventData = {
             name: elements.editEventNameInput.value,
             startTime: elements.editEventStartInput.value,
             endTime: elements.editEventEndInput.value,
             vehicles: selectedVehicles,
+            checklists: selectedChecklists,
             isRaceday: elements.editIsRacedayCheckbox.checked,
         };
 

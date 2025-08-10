@@ -32,6 +32,7 @@ export const eventNameInput = document.getElementById('event-name-input');
 export const eventStartInput = document.getElementById('event-start-input');
 export const eventEndInput = document.getElementById('event-end-input');
 export const eventVehiclesSelect = document.getElementById('event-vehicles-select');
+export const eventChecklistsSelect = document.getElementById('event-checklists-select'); // NEW
 export const isRacedayCheckbox = document.getElementById('is-raceday-checkbox');
 export const addEventBtn = document.getElementById('add-event-btn');
 export const eventList = document.getElementById('event-list');
@@ -44,6 +45,7 @@ export const editEventNameInput = document.getElementById('edit-event-name-input
 export const editEventStartInput = document.getElementById('edit-event-start-input');
 export const editEventEndInput = document.getElementById('edit-event-end-input');
 export const editEventVehiclesSelect = document.getElementById('edit-event-vehicles-select');
+export const editEventChecklistsSelect = document.getElementById('edit-event-checklists-select'); // NEW
 export const editIsRacedayCheckbox = document.getElementById('edit-is-raceday-checkbox');
 export const cancelEditEventBtn = document.getElementById('cancel-edit-event-btn');
 export const saveEventBtn = document.getElementById('save-event-btn');
@@ -54,6 +56,29 @@ export const racedayCountdownCircle = document.getElementById('raceday-countdown
 export const racedayCountdownDays = document.getElementById('raceday-countdown-days');
 export const noRacedayIcon = document.getElementById('no-raceday-icon');
 export const racedayCountdownLabel = document.getElementById('raceday-countdown-label');
+
+// Checklist Management Elements
+export const checklistManagementView = document.getElementById('checklist-management-view');
+export const checklistTemplatesCard = document.getElementById('checklist-templates-card');
+export const addChecklistForm = document.getElementById('add-checklist-form');
+export const checklistNameInput = document.getElementById('checklist-name-input');
+export const addChecklistBtn = document.getElementById('add-checklist-btn');
+export const checklistList = document.getElementById('checklist-list');
+export const backToPrepFromChecklistsBtn = document.getElementById('back-to-prep-from-checklists-btn');
+
+// Edit Checklist Modal
+export const editChecklistModal = document.getElementById('edit-checklist-modal');
+export const editChecklistForm = document.getElementById('edit-checklist-form');
+export const editChecklistTitle = document.getElementById('edit-checklist-title');
+export const editChecklistNameInput = document.getElementById('edit-checklist-name-input');
+export const editPreRaceTasks = document.getElementById('edit-pre-race-tasks');
+export const addPreRaceTaskInput = document.getElementById('add-pre-race-task-input');
+export const editMidDayTasks = document.getElementById('edit-mid-day-tasks');
+export const addMidDayTaskInput = document.getElementById('add-mid-day-task-input');
+export const editPostRaceTasks = document.getElementById('edit-post-race-tasks');
+export const addPostRaceTaskInput = document.getElementById('add-post-race-task-input');
+export const cancelEditChecklistBtn = document.getElementById('cancel-edit-checklist-btn');
+export const saveChecklistBtn = document.getElementById('save-checklist-btn');
 
 // Garage Management Elements
 export const garageManagementView = document.getElementById('garage-management-view');
