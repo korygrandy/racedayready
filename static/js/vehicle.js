@@ -1,67 +1,12 @@
 import * as elements from './elements.js';
 import { showMessage, showConfirmationModal } from './ui.js';
 import { App } from './main.js';
+import { populateYearDropdown, populateMakeDropdown, populateModelDropdown } from './utils.js';
 
 let currentVehicles = [];
 let vehicleToEdit = null;
 let currentSortOrder = 'desc'; // 'desc' for newest first, 'asc' for oldest first
 let sortable = null;
-
-const populateYearDropdown = (selectElement) => {
-    const currentYear = new Date().getFullYear();
-    selectElement.innerHTML = '<option value="">Select Year</option>';
-    for (let year = currentYear; year >= 1980; year--) {
-        const option = document.createElement('option');
-        option.value = year;
-        option.textContent = year;
-        selectElement.appendChild(option);
-    }
-};
-
-const populateMakeDropdown = async (selectElement) => {
-    selectElement.disabled = true;
-    selectElement.innerHTML = '<option>Loading Makes...</option>';
-    try {
-        const response = await fetch('https://vpic.nhtsa.dot.gov/api/vehicles/getallmakes?format=json');
-        const data = await response.json();
-        selectElement.innerHTML = '<option value="">Select Make</option>';
-        data.Results.forEach(make => {
-            const option = document.createElement('option');
-            option.value = make.Make_Name;
-            option.textContent = make.Make_Name;
-            selectElement.appendChild(option);
-        });
-        selectElement.disabled = false;
-    } catch (error) {
-        console.error("Error fetching vehicle makes:", error);
-        showMessage("Could not load vehicle makes.", false);
-    }
-};
-
-const populateModelDropdown = async (make, selectElement) => {
-    if (!make) {
-        selectElement.innerHTML = '<option value="">Select Model</option>';
-        selectElement.disabled = true;
-        return;
-    }
-    selectElement.disabled = true;
-    selectElement.innerHTML = '<option>Loading Models...</option>';
-    try {
-        const response = await fetch(`https://vpic.nhtsa.dot.gov/api/vehicles/getmodelsformake/${make}?format=json`);
-        const data = await response.json();
-        selectElement.innerHTML = '<option value="">Select Model</option>';
-        data.Results.forEach(model => {
-            const option = document.createElement('option');
-            option.value = model.Model_Name;
-            option.textContent = model.Model_Name;
-            selectElement.appendChild(option);
-        });
-        selectElement.disabled = false;
-    } catch (error) {
-        console.error("Error fetching vehicle models:", error);
-        showMessage("Could not load vehicle models.", false);
-    }
-};
 
 const populateGarageDropdown = async (selectElement) => {
     try {
@@ -92,10 +37,8 @@ const showEditVehicleModal = async (vehicle) => {
 
     // Populate simple fields
     elements.editVehicleYearSelect.value = vehicle.year;
-    await populateMakeDropdown(elements.editVehicleMakeSelect);
-    elements.editVehicleMakeSelect.value = vehicle.make;
-    await populateModelDropdown(vehicle.make, elements.editVehicleModelSelect);
-    elements.editVehicleModelSelect.value = vehicle.model;
+    await populateMakeDropdown(elements.editVehicleMakeSelect, vehicle.make);
+    await populateModelDropdown(vehicle.make, elements.editVehicleModelSelect, vehicle.model);
     await populateGarageDropdown(elements.editVehicleGarageSelect);
     elements.editVehicleGarageSelect.value = vehicle.garageId;
 
@@ -128,7 +71,7 @@ const renderVehicles = () => {
         vehicleCard.className = 'bg-card-darker p-4 rounded-lg flex items-center justify-between';
         vehicleCard.dataset.id = vehicle.id; // For SortableJS
 
-        const photoSrc = vehicle.photo || vehicle.photoURL || 'https://via.placeholder.com/100';
+        const photoSrc = vehicle.photo || vehicle.photoURL || 'static/stock-car.png';
         const photo = `<img src="${photoSrc}" class="w-16 h-16 object-cover rounded-md mr-4">`;
 
         const details = `

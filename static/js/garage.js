@@ -116,7 +116,7 @@ const loadGarages = () => {
                         if (garage.vehicles && garage.vehicles.length > 0) {
                             garage.vehicles.forEach(vehicle => {
                                 const vehiclePhoto = document.createElement('img');
-                                vehiclePhoto.src = vehicle.photo || vehicle.photoURL || 'https://via.placeholder.com/100';
+                                vehiclePhoto.src = vehicle.photo || vehicle.photoURL || 'static/stock-car.png';
                                 vehiclePhoto.className = 'w-24 h-24 object-cover rounded-md cursor-pointer hover:opacity-75';
                                 vehiclePhoto.title = `${vehicle.year} ${vehicle.make} ${vehicle.model}`;
                                 vehiclePhoto.onclick = () => {

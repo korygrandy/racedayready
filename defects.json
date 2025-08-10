@@ -1,0 +1,17 @@
+[
+    {
+        "id": "defect-entry-profile-creation-flow",
+        "title": "Profile Creation Flow (Fixed: Aug 9, 2025) - v1.8.6",
+        "resolution": "Corrected an issue where creating a new profile would incorrectly redirect to the main landing page instead of the profile selection modal."
+    },
+    {
+        "id": "defect-entry-helmet-alignment",
+        "title": "Profile Helmet Icon Misaligned (Fixed: Aug 9, 2025) - v1.8.5",
+        "resolution": "Updated the JavaScript that generates the profile selection list to wrap the helmet and username in a flex-column container, ensuring they are visually centered with each other."
+    },
+    {
+        "id": "defect-entry-countdown",
+        "title": "Raceday Countdown Not Displaying (Fixed: Aug 9, 2025) - v1.8.3",
+        "resolution": "The countdown UI element was moved to a new global header in the HTML structure to ensure it is always visible after profile selection. The associated JavaScript was updated to correctly show the countdown or the 'no event' icon based on whether a future Raceday is scheduled."
+    }
+]
