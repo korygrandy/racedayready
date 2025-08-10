@@ -1,17 +1,17 @@
 [
     {
+        "id": "defect-entry-edit-event-save",
+        "title": "Edit Event Modal Save Button Inoperative (Fixed: Aug 10, 2025) - v1.9.3",
+        "resolution": "The JavaScript file for the schedule was missing the submit event listener for the edit event form. The logic has been added, and the save button now correctly updates the event details."
+    },
+    {
+        "id": "defect-entry-non-pin-delete",
+        "title": "Non-PIN Profiles Not Deleting with Admin PIN (Fixed: Aug 10, 2025) - v1.9.2",
+        "resolution": "The logic for handling the admin PIN confirmation was flawed. The `executeDelete` function has been updated to correctly handle the callback after a successful admin PIN entry, ensuring that profiles are now deleted as expected."
+    },
+    {
         "id": "defect-entry-countdown-logic",
         "title": "Countdown Timer Logic (Fixed: Aug 10, 2025) - v1.9.1",
         "resolution": "The countdown timer was updated to only consider events explicitly marked as 'Raceday Events', rather than any upcoming event. The backend route was renamed to `/get-next-raceday` and its query was updated to filter for `is_raceday == True`."
-    },
-    {
-        "id": "defect-entry-startup-error",
-        "title": "Application Fails to Load on Startup (Fixed: Aug 9, 2025) - v1.8.8",
-        "resolution": "Corrected a race condition in the `selectProfile` function. The function was attempting to update UI elements in the features view before the view was rendered. The code was reordered to set the view first, which makes the elements available in the DOM for manipulation, resolving the error."
-    },
-    {
-        "id": "defect-entry-helmet-alignment",
-        "title": "Profile Helmet Icon Misaligned (Fixed: Aug 9, 2025) - v1.8.5",
-        "resolution": "Updated the JavaScript that generates the profile selection list to wrap the helmet and username in a flex-column container, ensuring they are visually centered with each other."
     }
 ]
