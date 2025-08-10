@@ -10,6 +10,7 @@
 
 import os
 import datetime
+import json
 from flask import Flask, render_template, jsonify, request
 import firebase_admin
 from firebase_admin import credentials, firestore
@@ -116,7 +117,15 @@ def index():
     """
     app_version = get_app_version()
     last_updated_date = datetime.datetime.now().strftime("%B %d, %Y")
-    return render_template('index.html', app_version=app_version, last_updated=last_updated_date)
+
+    # Load changelog and defects from JSON files
+    with open('changelog.json', 'r') as f:
+        changelog_data = json.load(f)
+    with open('defects.json', 'r') as f:
+        defects_data = json.load(f)
+
+    return render_template('index.html', app_version=app_version, last_updated=last_updated_date,
+                           changelog=changelog_data, defects=defects_data)
 
 
 # --- Route to check for and retrieve driver profiles ---
