@@ -1,5 +1,12 @@
 [
     {
+        "version": "1.9.1",
+        "date": "August 10, 2025",
+        "notes": [
+            "Updated the Raceday Countdown logic to only display a countdown for events specifically marked as a 'Raceday Event'."
+        ]
+    },
+    {
         "version": "1.9.0",
         "date": "August 10, 2025",
         "notes": [
@@ -25,20 +32,6 @@
         "date": "August 9, 2025",
         "notes": [
             "Added a stock vehicle photo for vehicles without an uploaded image."
-        ]
-    },
-    {
-        "version": "1.8.6",
-        "date": "August 9, 2025",
-        "notes": [
-            "Architectural Improvement: Separated the app version into its own `version.py` file to simplify updates."
-        ]
-    },
-    {
-        "version": "1.8.5",
-        "date": "August 9, 2025",
-        "notes": [
-            "Fixed a UI defect where the user's helmet icon was not centered above the username in the profile selection modal."
         ]
     }
 ]

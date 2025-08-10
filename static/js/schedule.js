@@ -11,7 +11,7 @@ export const updateRacedayCountdown = () => {
         return;
     }
 
-    fetch(`/get-next-event/${App.currentUser.id}`)
+    fetch(`/get-next-raceday/${App.currentUser.id}`)
         .then(res => res.json())
         .then(data => {
             if (data.success && data.event) {
