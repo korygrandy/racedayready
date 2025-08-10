@@ -1,8 +1,8 @@
 [
     {
-        "id": "defect-entry-profile-creation-flow",
-        "title": "Profile Creation Flow (Fixed: Aug 9, 2025) - v1.8.6",
-        "resolution": "Corrected an issue where creating a new profile would incorrectly redirect to the main landing page instead of the profile selection modal."
+        "id": "defect-entry-startup-error",
+        "title": "Application Fails to Load on Startup (Fixed: Aug 9, 2025) - v1.8.8",
+        "resolution": "Corrected a race condition in the `selectProfile` function. The function was attempting to update UI elements in the features view before the view was rendered. The code was reordered to set the view first, which makes the elements available in the DOM for manipulation, resolving the error."
     },
     {
         "id": "defect-entry-helmet-alignment",

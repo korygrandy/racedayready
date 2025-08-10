@@ -4,9 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Raceday Ready</title>
+    <!-- Favicon -->
     <link rel="icon" href="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2050%2050'%3E%3Cpath%20fill='white'%20d='M25,5%20C10,5%205,20%205,30%20C5,45%2015,45%2025,45%20C35,45%2045,45%2045,30%20C45,20%2040,5%2025,5%20Z'%3E%3C/path%3E%3C/svg%3E">
+    <!-- Tailwind CSS for styling -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- SortableJS for drag-and-drop -->
     <script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>
+    <!-- Custom CSS -->
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body class="bg-body text-text-primary transition-colors duration-300">
@@ -33,11 +37,13 @@
             </div>
             <div id="theme-switcher-container">
                  <button id="theme-switcher-btn" class="p-2 rounded-full hover:bg-interactive-hover" title="Toggle Theme">
-                    </button>
+                    <!-- Icons will be injected by JS -->
+                </button>
             </div>
         </div>
         <main class="flex-grow w-full p-4 overflow-y-auto">
             <div class="w-full max-w-6xl mx-auto">
+                <!-- View container for toggling between app and dev mode -->
                 <div id="main-view" class="w-full text-center py-16">
                     <h1 id="main-heading" class="text-4xl md:text-5xl font-bold mb-4">Hello World!</h1>
                     <p id="main-subheading" class="text-xl md:text-2xl mb-8">Welcome to Raceday Ready!</p>
@@ -46,9 +52,11 @@
                     </button>
                 </div>
 
+                <!-- Features View -->
                 <div id="features-view" class="w-full max-w-6xl mx-auto hidden text-center py-16">
                     <h1 id="features-heading" class="text-4xl md:text-5xl font-bold mb-8">Raceday Ready Features</h1>
                     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                        <!-- Cards -->
                         <div id="feature-card-1" class="bg-card p-6 rounded-lg shadow-lg hover:bg-interactive-hover cursor-pointer"><h2 class="text-xl font-bold mb-2">Race Day Preparation & Logistics</h2></div>
                         <div id="feature-card-2" class="bg-card p-6 rounded-lg shadow-lg hover:bg-interactive-hover cursor-pointer"><h2 class="text-xl font-bold mb-2">Vehicle Management</h2></div>
                         <div id="feature-card-3" class="bg-card p-6 rounded-lg shadow-lg inactive-card"><h2 class="text-xl font-bold mb-2">Data Analysis & History</h2></div>
@@ -59,6 +67,7 @@
                     </div>
                 </div>
 
+                <!-- Race Day Prep View -->
                 <div id="race-day-prep-view" class="w-full max-w-6xl mx-auto hidden text-center py-16">
                     <h1 class="text-4xl md:text-5xl font-bold mb-8">Race Day Preparation & Logistics</h1>
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -72,6 +81,7 @@
                     </button>
                 </div>
 
+                <!-- Race Schedule View -->
                 <div id="race-schedule-view" class="w-full max-w-4xl mx-auto hidden text-center py-16">
                     <h1 class="text-4xl md:text-5xl font-bold mb-8">Race Schedule</h1>
                     <div class="bg-card p-8 rounded-lg shadow-lg text-left">
@@ -122,6 +132,7 @@
                     </button>
                 </div>
 
+                <!-- Checklist Management View -->
                 <div id="checklist-management-view" class="w-full max-w-4xl mx-auto hidden text-center py-16">
                     <h1 class="text-4xl md:text-5xl font-bold mb-8">Checklist Templates</h1>
                     <div class="bg-card p-8 rounded-lg shadow-lg text-left">
@@ -144,12 +155,13 @@
                     </button>
                 </div>
 
+                <!-- Vehicle Management View -->
                 <div id="vehicle-management-view" class="w-full max-w-4xl mx-auto hidden text-center py-16">
                     <h1 class="text-4xl md:text-5xl font-bold mb-8">Vehicle Management</h1>
                     <div id="add-vehicle-section" class="bg-card p-8 rounded-lg shadow-lg text-left">
                         <h2 class="text-2xl font-bold mb-4">Add a New Vehicle</h2>
                         <div id="no-garages-warning" class="hidden bg-yellow-900/30 border border-yellow-700 text-yellow-300 px-4 py-3 rounded-lg mb-4">
-                            You must create a garage before you can add a vehicle.
+                            You must create a garage before you can add a vehicle. <a href="#" id="go-to-garage-link" class="font-bold underline">Add one now.</a>
                         </div>
                         <form id="add-vehicle-form">
                             <fieldset id="add-vehicle-fieldset">
@@ -202,6 +214,7 @@
                     </button>
                 </div>
 
+                <!-- Garage Management View -->
                 <div id="garage-management-view" class="w-full max-w-4xl mx-auto hidden text-center py-16">
                     <h1 class="text-4xl md:text-5xl font-bold mb-8">Garage Management</h1>
                     <div class="bg-card p-8 rounded-lg shadow-lg text-left">
@@ -222,6 +235,7 @@
                     </button>
                 </div>
 
+                <!-- Upcoming Features View -->
                 <div id="upcoming-features-view" class="w-full max-w-4xl mx-auto hidden text-center py-16">
                     <h1 class="text-4xl md:text-5xl font-bold mb-8">Upcoming Features & Requests</h1>
 
@@ -366,6 +380,7 @@
 
     <div id="message-box" class="fixed bottom-24 right-4 bg-green-500 text-white py-2 px-4 rounded-lg shadow-lg opacity-0 transform translate-y-10 z-50"></div>
 
+    <!-- Modals -->
     <div id="profile-modal" class="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center hidden z-40">
         <div class="bg-card p-8 rounded-lg shadow-2xl w-full max-w-md">
             <h2 class="text-2xl font-bold mb-4">Create Driver Profile</h2>
@@ -562,17 +577,21 @@
                         <label for="edit-checklist-name-input" class="block text-sm font-medium">Template Name</label>
                         <input type="text" id="edit-checklist-name-input" maxlength="50" class="mt-1 block w-full bg-input border border-border rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500" required>
                     </div>
+                    <!-- Task Sections -->
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <!-- Pre-Race Tasks -->
                         <div>
                             <h3 class="font-semibold mb-2">Pre-Race Tasks</h3>
                             <div id="edit-pre-race-tasks" class="space-y-2"></div>
                             <input type="text" id="add-pre-race-task-input" class="mt-2 w-full bg-input border border-border rounded-md shadow-sm py-1 px-2" placeholder="Add a new task...">
                         </div>
+                        <!-- Mid-Day Tasks -->
                         <div>
                             <h3 class="font-semibold mb-2">Mid-Day Tasks</h3>
                             <div id="edit-mid-day-tasks" class="space-y-2"></div>
                             <input type="text" id="add-mid-day-task-input" class="mt-2 w-full bg-input border border-border rounded-md shadow-sm py-1 px-2" placeholder="Add a new task...">
                         </div>
+                        <!-- Post-Race Tasks -->
                         <div>
                             <h3 class="font-semibold mb-2">Post-Race Tasks</h3>
                             <div id="edit-post-race-tasks" class="space-y-2"></div>
@@ -588,6 +607,7 @@
         </div>
     </div>
 
+    <!-- Custom JavaScript -->
     <script type="module" src="{{ url_for('static', filename='js/main.js') }}"></script>
 
 </body>
