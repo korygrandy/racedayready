@@ -29,6 +29,7 @@ export const updateRacedayCountdown = () => {
             } else {
                 elements.racedayCountdownCircle.classList.add('hidden');
                 elements.racedayCountdownLabel.textContent = "No Raceday Scheduled";
+                elements.racedayCountdownLabel.classList.remove('hidden');
                 elements.noRacedayIcon.classList.remove('hidden');
                 elements.racedayCountdownContainer.classList.remove('hidden');
             }
@@ -188,7 +189,7 @@ export const initSchedule = () => {
             if (data.success) {
                 elements.addEventForm.reset();
                 loadEvents();
-                updateRacedayCountdown(); // THIS LINE WAS ADDED
+                updateRacedayCountdown();
             }
         });
     });

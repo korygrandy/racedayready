@@ -1,12 +1,12 @@
 [
     {
-        "id": "defect-entry-garage-link-broken",
-        "title": "Link in 'No Garages' Warning Inoperative (Fixed: Aug 11, 2025) - v2.0.7",
-        "resolution": "The JavaScript event listener for the 'Add one now' link in the Vehicle Management warning was missing. The listener has been restored in `vehicle.js`, and the link now correctly navigates users to the Garage Management page."
+        "id": "defect-entry-countdown-refresh",
+        "title": "Raceday Countdown Does Not Refresh After Event Creation (Fixed: Aug 11, 2025) - v2.0.8",
+        "resolution": "The `updateRacedayCountdown()` function was not being called after a new event was successfully created. This has been added to the 'Add Event' form's success handler in `schedule.js`. Additionally, a UI flicker was resolved by hiding the countdown elements by default in the HTML."
     },
     {
         "id": "defect-entry-edit-event-save",
-        "title": "Edit Event Modal Save Button and Countdown Refresh Inoperative (Fixed: Aug 11, 2025) - v2.0.6",
-        "resolution": "The 'Edit Event' modal was missing the multi-select dropdown for checklists, which caused the JavaScript to fail. The missing HTML element has been added. Additionally, the countdown was not refreshing on new event creation, which has been corrected by adding the appropriate function call in `schedule.js`. A UI flicker was also fixed by hiding countdown elements by default in the HTML."
+        "title": "Edit Event Modal Save Button Inoperative (Fixed: Aug 10, 2025) - v1.9.6",
+        "resolution": "The 'Edit Event' modal was missing the multi-select dropdown for checklists, which caused the JavaScript to fail. The missing HTML element has been added, and the associated event listeners in `schedule.js` now function correctly."
     }
 ]
