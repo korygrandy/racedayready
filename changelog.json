@@ -1,24 +1,23 @@
 [
     {
+        "version": "1.9.4",
+        "date": "August 10, 2025",
+        "notes": [
+            "Updated the Raceday Countdown logic to only display a countdown for events specifically marked as a 'Raceday Event'."
+        ]
+    },
+    {
         "version": "1.9.3",
         "date": "August 10, 2025",
         "notes": [
-            "Fixed a defect where the 'Save Changes' button in the Edit Event modal was not functional."
+            "Fixed a critical defect where the 'Save Changes' button in the Edit Event modal was not functional."
         ]
     },
     {
         "version": "1.9.2",
         "date": "August 10, 2025",
         "notes": [
-            "Enhanced security by moving the hardcoded admin PIN to a Firestore document.",
-            "Fixed a defect where non-PIN-protected profiles were not being deleted after admin PIN confirmation."
-        ]
-    },
-    {
-        "version": "1.9.1",
-        "date": "August 10, 2025",
-        "notes": [
-            "Updated the Raceday Countdown logic to only display a countdown for events specifically marked as a 'Raceday Event'."
+            "Enhanced security by requiring admin PIN confirmation to delete any user profile that is not PIN-protected."
         ]
     }
 ]
