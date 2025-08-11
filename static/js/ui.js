@@ -1,102 +1,89 @@
-import * as elements from './elements.js';
-
-let messageQueue = [];
-let isMessageVisible = false;
-
-const processMessageQueue = () => {
-    if (isMessageVisible || messageQueue.length === 0) {
-        return;
-    }
-
-    isMessageVisible = true;
-    const { message, isSuccess } = messageQueue.shift();
-
-    console.log(`Showing message: "${message}", Success: ${isSuccess}`);
-    elements.messageBox.textContent = message;
-    elements.messageBox.classList.remove('bg-green-500', 'bg-red-500');
-    elements.messageBox.classList.add(isSuccess ? 'bg-green-500' : 'bg-red-500');
-
-    elements.messageBox.classList.remove('opacity-0', 'translate-y-10');
-    elements.messageBox.classList.add('opacity-100', 'translate-y-0');
-
-    setTimeout(() => {
-        elements.messageBox.classList.remove('opacity-100', 'translate-y-0');
-        elements.messageBox.classList.add('opacity-0', 'translate-y-10');
-        isMessageVisible = false;
-        // Process the next message in the queue after the current one has faded out
-        setTimeout(processMessageQueue, 500); // 500ms matches transition duration
-    }, 1500); // NEW: Reduced display time
-};
-
 /**
- * Adds a message to the queue to be displayed to the user.
+ * Displays a message to the user.
  * @param {string} message - The message to display.
- * @param {boolean} isSuccess - Determines the message color (true for green, false for red).
+ * @param {boolean} isSuccess - Whether the message indicates success or failure.
  */
 export const showMessage = (message, isSuccess) => {
-    messageQueue.push({ message, isSuccess });
-    processMessageQueue();
+    const messageBox = document.getElementById('message-box');
+    messageBox.textContent = message;
+    messageBox.className = `fixed bottom-24 right-4 py-2 px-4 rounded-lg shadow-lg text-white z-50 ${isSuccess ? 'bg-green-500' : 'bg-red-500'}`;
+    messageBox.classList.remove('opacity-0', 'translate-y-10');
+
+    setTimeout(() => {
+        messageBox.classList.add('opacity-0', 'translate-y-10');
+    }, 3000);
 };
 
 /**
  * Creates an SVG helmet icon.
- * @param {string} color - The fill color of the helmet.
- * @param {string} [sizeClass='w-8 h-8'] - The Tailwind CSS size class.
- * @returns {SVGSVGElement} The SVG element for the helmet.
+ * @param {string} color - The hex color for the helmet.
+ * @param {string} sizeClasses - Tailwind CSS classes for width and height.
+ * @returns {SVGSVGElement} The SVG element.
  */
-export const createHelmetIcon = (color, sizeClass = 'w-8 h-8') => {
+export const createHelmetIcon = (color, sizeClasses = 'w-8 h-8') => {
     const svgNS = "http://www.w3.org/2000/svg";
     const svg = document.createElementNS(svgNS, "svg");
-    svg.setAttribute('class', sizeClass);
     svg.setAttribute('viewBox', '0 0 50 50');
+    svg.setAttribute('class', sizeClasses);
 
-    const helmetPath = document.createElementNS(svgNS, 'path');
-    helmetPath.setAttribute('d', 'M25,5 C10,5 5,20 5,30 C5,45 15,45 25,45 C35,45 45,45 45,30 C45,20 40,5 25,5 Z');
-    helmetPath.setAttribute('fill', color);
-    helmetPath.setAttribute('stroke', '#4A5568');
-    helmetPath.setAttribute('stroke-width', '2');
+    const path = document.createElementNS(svgNS, "path");
+    path.setAttribute('fill', color);
+    path.setAttribute('d', 'M25,5 C10,5 5,20 5,30 C5,45 15,45 25,45 C35,45 45,45 45,30 C45,20 40,5 25,5 Z');
 
-    const visor = document.createElementNS(svgNS, 'rect');
-    visor.setAttribute('x', '15');
-    visor.setAttribute('y', '20');
-    visor.setAttribute('width', '20');
-    visor.setAttribute('height', '10');
-    visor.setAttribute('fill', '#2D3748');
-    visor.setAttribute('rx', '2');
-
-    svg.appendChild(helmetPath);
-    svg.appendChild(visor);
-
+    svg.appendChild(path);
     return svg;
 };
 
 /**
- * Shows a generic confirmation modal.
- * @param {string} message - The confirmation message to display.
- * @param {function} onConfirm - The callback function to execute if the user confirms.
+ * Creates a default SVG vehicle icon.
+ * @param {string} sizeClasses - Tailwind CSS classes for width and height.
+ * @returns {SVGSVGElement} The SVG element.
  */
-export const showConfirmationModal = (message, onConfirm) => {
-    console.log(`Showing confirmation modal with message: "${message}"`);
-    elements.confirmationModalText.textContent = message;
-    elements.confirmationModal.classList.remove('hidden');
+export const createVehicleIcon = (sizeClasses = 'w-16 h-16') => {
+    const svgNS = "http://www.w3.org/2000/svg";
+    const svg = document.createElementNS(svgNS, "svg");
+    svg.setAttribute('viewBox', '0 0 24 24');
+    svg.setAttribute('class', `${sizeClasses} text-gray-500`);
+    svg.setAttribute('fill', 'currentColor');
+
+    const path = document.createElementNS(svgNS, "path");
+    path.setAttribute('d', 'M18.92 6.01C18.72 5.42 18.16 5 17.5 5h-11C5.84 5 5.28 5.42 5.08 6.01L3 12v8c0 .55.45 1 1 1h1c.55 0 1-.45 1-1v-1h12v1c0 .55.45 1 1 1h1c.55 0 1-.45 1-1v-8l-2.08-5.99zM6.5 16c-.83 0-1.5-.67-1.5-1.5S5.67 13 6.5 13s1.5.67 1.5 1.5S7.33 16 6.5 16zm11 0c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zM5 11l1.5-4.5h11L19 11H5z');
+
+    svg.appendChild(path);
+    return svg;
+};
+
+/**
+ * Shows a confirmation modal.
+ * @param {string} text - The confirmation message.
+ * @param {function} onConfirm - The callback to execute if confirmed.
+ */
+export const showConfirmationModal = (text, onConfirm) => {
+    const modal = document.getElementById('confirmation-modal');
+    const textElement = document.getElementById('confirmation-modal-text');
+    const confirmBtn = document.getElementById('confirmation-modal-confirm-btn');
+    const cancelBtn = document.getElementById('confirmation-modal-cancel-btn');
+
+    textElement.textContent = text;
 
     const confirmHandler = () => {
-        console.log("Confirmation accepted.");
         onConfirm();
-        hideConfirmationModal();
+        modal.classList.add('hidden');
+        cleanup();
     };
 
     const cancelHandler = () => {
-        console.log("Confirmation canceled.");
-        hideConfirmationModal();
+        modal.classList.add('hidden');
+        cleanup();
     };
 
-    const hideConfirmationModal = () => {
-        elements.confirmationModal.classList.add('hidden');
-        elements.confirmationModalConfirmBtn.removeEventListener('click', confirmHandler);
-        elements.confirmationModalCancelBtn.removeEventListener('click', cancelHandler);
+    const cleanup = () => {
+        confirmBtn.removeEventListener('click', confirmHandler);
+        cancelBtn.removeEventListener('click', cancelHandler);
     };
 
-    elements.confirmationModalConfirmBtn.addEventListener('click', confirmHandler);
-    elements.confirmationModalCancelBtn.addEventListener('click', cancelHandler);
+    confirmBtn.addEventListener('click', confirmHandler);
+    cancelBtn.addEventListener('click', cancelHandler);
+
+    modal.classList.remove('hidden');
 };
