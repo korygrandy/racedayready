@@ -23,6 +23,7 @@ export const updateRacedayCountdown = () => {
 
                 elements.racedayCountdownDays.textContent = diffDays;
                 elements.racedayCountdownCircle.classList.remove('hidden');
+                elements.racedayCountdownLabel.textContent = "Days Until Raceday:";
                 elements.racedayCountdownLabel.classList.remove('hidden');
                 elements.noRacedayIcon.classList.add('hidden');
                 elements.racedayCountdownContainer.classList.remove('hidden');
@@ -33,7 +34,8 @@ export const updateRacedayCountdown = () => {
                 elements.noRacedayIcon.classList.remove('hidden');
                 elements.racedayCountdownContainer.classList.remove('hidden');
             }
-        });
+        })
+        .catch(error => console.error('[ERROR] Error fetching next raceday:', error));
 };
 
 const populateVehicleMultiSelect = async (selectElement, selectedVehicleIds = []) => {
@@ -55,7 +57,7 @@ const populateVehicleMultiSelect = async (selectElement, selectedVehicleIds = []
             selectElement.innerHTML = '<option disabled>No vehicles available</option>';
         }
     } catch (error) {
-        console.error("Error fetching vehicles for event form:", error);
+        console.error("[ERROR] Error fetching vehicles for event form:", error);
     }
 };
 
@@ -78,13 +80,13 @@ const populateChecklistMultiSelect = async (selectElement, selectedChecklistIds 
             selectElement.innerHTML = '<option disabled>No checklists available</option>';
         }
     } catch (error) {
-        console.error("Error fetching checklists for event form:", error);
+        console.error("[ERROR] Error fetching checklists for event form:", error);
     }
 };
 
 const showEditEventModal = (event) => {
     eventToEdit = event;
-    console.log("Showing edit event modal for:", event);
+    console.log("[INFO] Showing edit event modal for:", event);
     elements.editEventNameInput.value = event.name;
     elements.editEventStartInput.value = event.start_time;
     elements.editEventEndInput.value = event.end_time;
@@ -161,7 +163,8 @@ const loadEvents = () => {
                 currentEvents = data.events;
                 renderEvents();
             }
-        });
+        })
+        .catch(error => console.error('[ERROR] Error loading events:', error));
 };
 
 export const initSchedule = () => {
@@ -191,6 +194,10 @@ export const initSchedule = () => {
                 loadEvents();
                 updateRacedayCountdown();
             }
+        })
+        .catch(error => {
+            console.error('[ERROR] Error adding event:', error);
+            showMessage('Failed to add event.', false);
         });
     });
 
@@ -220,6 +227,10 @@ export const initSchedule = () => {
                 loadEvents();
                 updateRacedayCountdown();
             }
+        })
+        .catch(error => {
+            console.error('[ERROR] Error updating event:', error);
+            showMessage('Failed to update event.', false);
         });
     });
 
@@ -239,6 +250,10 @@ export const initSchedule = () => {
                             showMessage(data.message, data.success);
                             loadEvents();
                             updateRacedayCountdown();
+                        })
+                        .catch(error => {
+                            console.error('[ERROR] Error deleting event:', error);
+                            showMessage('Failed to delete event.', false);
                         });
                 });
             } else if (button.classList.contains('edit-event-btn')) {
@@ -250,7 +265,7 @@ export const initSchedule = () => {
             const event = currentEvents.find(ev => ev.id === eventId);
             const vehicle = event.vehicles.find(v => v.id === vehicleId);
             if(vehicle) {
-                console.log("Vehicle icon clicked, showing edit modal for:", vehicle);
+                console.log("[INFO] Vehicle icon clicked, showing edit modal for:", vehicle);
                 showEditVehicleModal(vehicle);
             }
         }
@@ -265,7 +280,7 @@ export const initSchedule = () => {
     });
 
     elements.racedayCountdownContainer.addEventListener('click', () => {
-        console.log("Raceday countdown clicked, navigating to schedule.");
+        console.log("[INFO] Raceday countdown clicked, navigating to schedule.");
         App.setView('raceSchedule');
     });
 

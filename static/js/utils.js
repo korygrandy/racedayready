@@ -38,8 +38,9 @@ export const populateMakeDropdown = async (selectElement, selectedMake = null) =
         });
         selectElement.disabled = false;
     } catch (error) {
-        console.error("Error fetching vehicle makes:", error);
+        console.error("[ERROR] Error fetching vehicle makes:", error);
         showMessage("Could not load vehicle makes.", false);
+        selectElement.innerHTML = '<option value="">Error loading makes</option>';
     }
 };
 
@@ -72,7 +73,8 @@ export const populateModelDropdown = async (make, selectElement, selectedModel =
         });
         selectElement.disabled = false;
     } catch (error) {
-        console.error("Error fetching vehicle models:", error);
+        console.error("[ERROR] Error fetching vehicle models:", error);
         showMessage("Could not load vehicle models.", false);
+        selectElement.innerHTML = '<option value="">Error loading models</option>';
     }
 };

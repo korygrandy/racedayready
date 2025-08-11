@@ -54,7 +54,7 @@ export const saveEventBtn = document.getElementById('save-event-btn');
 export const racedayCountdownContainer = document.getElementById('raceday-countdown-container');
 export const racedayCountdownCircle = document.getElementById('raceday-countdown-circle');
 export const racedayCountdownDays = document.getElementById('raceday-countdown-days');
-export const noRacedayIcon = document.getElementById('no-raceday-icon');
+export const noRacedayIcon = document.getElementById('no-raceday-container'); // UPDATED ID
 export const racedayCountdownLabel = document.getElementById('raceday-countdown-label');
 
 // Checklist Management Elements
@@ -94,8 +94,11 @@ export const addVehicleForm = document.getElementById('add-vehicle-form');
 export const addVehicleFieldset = document.getElementById('add-vehicle-fieldset');
 export const noGaragesWarning = document.getElementById('no-garages-warning');
 export const goToGarageLink = document.getElementById('go-to-garage-link');
+export const vehicleYearSearch = document.getElementById('vehicle-year-search');
 export const vehicleYearSelect = document.getElementById('vehicle-year-select');
+export const vehicleMakeSearch = document.getElementById('vehicle-make-search');
 export const vehicleMakeSelect = document.getElementById('vehicle-make-select');
+export const vehicleModelSearch = document.getElementById('vehicle-model-search');
 export const vehicleModelSelect = document.getElementById('vehicle-model-select');
 export const vehicleGarageSelect = document.getElementById('vehicle-garage-select');
 export const vehiclePhotoInput = document.getElementById('vehicle-photo-input');
@@ -109,8 +112,11 @@ export const vehicleSortBtn = document.getElementById('vehicle-sort-btn');
 // Edit Vehicle Modal Elements
 export const editVehicleModal = document.getElementById('edit-vehicle-modal');
 export const editVehicleForm = document.getElementById('edit-vehicle-form');
+export const editVehicleYearSearch = document.getElementById('edit-vehicle-year-search');
 export const editVehicleYearSelect = document.getElementById('edit-vehicle-year-select');
+export const editVehicleMakeSearch = document.getElementById('edit-vehicle-make-search');
 export const editVehicleMakeSelect = document.getElementById('edit-vehicle-make-select');
+export const editVehicleModelSearch = document.getElementById('edit-vehicle-model-search');
 export const editVehicleModelSelect = document.getElementById('edit-vehicle-model-select');
 export const editVehicleGarageSelect = document.getElementById('edit-vehicle-garage-select');
 export const editVehiclePhotoInput = document.getElementById('edit-vehicle-photo-input');

@@ -24,7 +24,7 @@ export const App = {
 
 // --- View Toggling Logic ---
 const setView = (viewName) => {
-    console.log(`Setting view to: ${viewName}`);
+    console.log(`[INFO] Setting view to: ${viewName}`);
     elements.mainView.classList.add('hidden');
     elements.developerView.classList.add('hidden');
     elements.featuresView.classList.add('hidden');
@@ -67,7 +67,7 @@ const setView = (viewName) => {
         if (App.loadVehicles) App.loadVehicles();
     } else if (viewName === 'raceSchedule') {
         elements.raceScheduleView.classList.remove('hidden');
-        if (App.loadEvents) App.loadEvents(); // MOVED HERE
+        if (App.loadEvents) App.loadEvents();
     } else if (viewName === 'checklistManagement') {
         elements.checklistManagementView.classList.remove('hidden');
         if (App.loadChecklists) App.loadChecklists();
@@ -82,26 +82,26 @@ const initDevPinModal = () => {
     elements.devPinEntryForm.addEventListener('submit', async (e) => {
         e.preventDefault();
         const enteredPin = elements.devPinEntryInput.value;
-        console.log(`Dev PIN submitted: ${enteredPin}`);
+        console.log(`[DEBUG] Dev PIN submitted: ${enteredPin}`);
 
         try {
             const response = await fetch('/get-admin-pin');
             const data = await response.json();
 
             if (data.success && enteredPin === data.pin) {
-                console.log("Dev PIN validation successful.");
+                console.log("[INFO] Dev PIN validation successful.");
                 showMessage('Access Granted.', true);
                 elements.devPinEntryModal.classList.add('hidden');
                 elements.devPinEntryInput.value = '';
                 App.isDevModeEnabled = true;
                 setView('developer');
             } else {
-                console.error("Dev PIN validation failed.");
+                console.error("[ERROR] Dev PIN validation failed.");
                 showMessage('Incorrect PIN. Access Denied.', false);
                 elements.devPinEntryInput.value = '';
             }
         } catch (error) {
-            console.error("Error fetching admin PIN:", error);
+            console.error("[ERROR] Error fetching admin PIN:", error);
             showMessage("An error occurred while verifying the PIN.", false);
         }
     });
@@ -109,14 +109,14 @@ const initDevPinModal = () => {
     elements.cancelDevPinBtn.addEventListener('click', () => {
         elements.devPinEntryModal.classList.add('hidden');
         elements.devPinEntryInput.value = '';
-        console.log("Dev PIN entry canceled.");
+        console.log("[INFO] Dev PIN entry canceled.");
     });
 };
 
 // --- Main Event Listeners ---
 const initEventListeners = () => {
     elements.readyButton.addEventListener('click', () => {
-        console.log("Click Event: 'Get Ready' button clicked. Checking for profiles...");
+        console.log("[INFO] 'Get Ready' button clicked. Checking for profiles...");
         elements.readyButton.disabled = true;
         elements.readyButton.textContent = 'Checking...';
 
@@ -124,96 +124,83 @@ const initEventListeners = () => {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({}),
-        });
+        }).catch(error => console.error("[ERROR] Error on readiness check:", error));
 
-        fetch('/check-profiles')
-        .then(response => response.json())
-        .then(data => {
-            if (data.profiles_exist) {
-                checkProfiles();
-            } else {
-                checkProfiles();
-            }
-        })
-        .catch(error => {
-            console.error('Error on Get Ready:', error);
-            showMessage('An error occurred.', false);
-        })
-        .finally(() => {
-            elements.readyButton.disabled = false;
-            elements.readyButton.textContent = 'Click to get ready!';
-        });
+        checkProfiles();
+
+        elements.readyButton.disabled = false;
+        elements.readyButton.textContent = 'Click to get ready!';
     });
 
     elements.devModeBtn.addEventListener('click', () => {
-        console.log("Click Event: 'Developer Mode' button clicked. Showing PIN modal.");
+        console.log("[INFO] 'Developer Mode' button clicked. Showing PIN modal.");
         elements.devPinEntryModal.classList.remove('hidden');
         elements.devPinEntryInput.focus();
     });
 
     elements.backToAppBtn.addEventListener('click', () => {
-        console.log("Click Event: 'Back to App' button clicked.");
+        console.log("[INFO] 'Back to App' button clicked.");
         App.isDevModeEnabled = false;
         setView('main');
     });
 
     elements.profileHeaderBtn.addEventListener('click', () => {
-        console.log("Click Event: 'Profile Header' button clicked.");
+        console.log("[INFO] 'Profile Header' button clicked.");
         setView('main');
         checkProfiles();
     });
 
     elements.featureCard1.addEventListener('click', () => {
-        console.log("Click Event: 'Race Day Prep' card clicked.");
+        console.log("[INFO] 'Race Day Prep' card clicked.");
         setView('raceDayPrep');
     });
 
     elements.raceScheduleCard.addEventListener('click', () => {
-        console.log("Click Event: 'Race Schedule' card clicked.");
+        console.log("[INFO] 'Race Schedule' card clicked.");
         setView('raceSchedule');
     });
 
     elements.checklistTemplatesCard.addEventListener('click', () => {
-        console.log("Click Event: 'Checklist Templates' card clicked.");
+        console.log("[INFO] 'Checklist Templates' card clicked.");
         setView('checklistManagement');
     });
 
     elements.featureCard2.addEventListener('click', () => {
-        console.log("Click Event: 'Vehicle Management' card clicked.");
+        console.log("[INFO] 'Vehicle Management' card clicked.");
         setView('vehicleManagement');
     });
 
     elements.featureCard6.addEventListener('click', () => {
-        console.log("Click Event: 'Garage Management' card clicked.");
+        console.log("[INFO] 'Garage Management' card clicked.");
         setView('garageManagement');
     });
 
     elements.featureCard7.addEventListener('click', () => {
-        console.log("Click Event: 'Upcoming Features' card clicked.");
+        console.log("[INFO] 'Upcoming Features' card clicked.");
         setView('upcomingFeatures');
     });
 
     document.querySelectorAll('.inactive-card').forEach(card => {
         card.addEventListener('click', () => {
-            console.log(`Click Event: Inactive card clicked. ID: ${card.id}`);
+            console.log(`[DEBUG] Inactive card clicked. ID: ${card.id}`);
             showMessage('This feature is coming soon!', true);
         });
     });
 
     elements.backToFeaturesBtn.addEventListener('click', () => {
-        console.log("Click Event: 'Back to Features' button clicked.");
+        console.log("[INFO] 'Back to Features' button clicked.");
         setView('features');
     });
 
     elements.backToFeaturesFromUpcomingBtn.addEventListener('click', () => {
-        console.log("Click Event: 'Back to Features' button clicked.");
+        console.log("[INFO] 'Back to Features' button clicked.");
         setView('features');
     });
 };
 
 // --- Initial Load ---
 document.addEventListener('DOMContentLoaded', () => {
-    console.log("DOM fully loaded and parsed. Initializing application.");
+    console.log("[INFO] DOM fully loaded and parsed. Initializing application.");
     initEventListeners();
     initDevPinModal();
     initTheme();

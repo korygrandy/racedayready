@@ -1,24 +1,2 @@
-[
-    {
-        "version": "2.0.8",
-        "date": "August 11, 2025",
-        "notes": [
-            "Fixed a critical defect where the Raceday Countdown would not update after creating a new raceday event.",
-            "Resolved a UI flicker with the countdown timer on page load."
-        ]
-    },
-    {
-        "version": "2.0.7",
-        "date": "August 11, 2025",
-        "notes": [
-            "Fixed a defect where the 'Add one now' link in the Vehicle Management warning message was not functional."
-        ]
-    },
-    {
-        "version": "2.0.6",
-        "date": "August 11, 2025",
-        "notes": [
-            "Fixed multiple critical defects related to the 'Edit Event' modal and the Raceday Countdown not updating correctly after creating a new event."
-        ]
-    }
-]
+# version.py
+APP_VERSION = '2.1.3'

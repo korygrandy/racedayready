@@ -1,132 +1,110 @@
-import {
-    featureRequestForm,
-    featureRequestTextarea,
-    submitFeatureRequestBtn,
-    charCounter,
-    featureRequestList
-} from './elements.js';
+import * as elements from './elements.js';
 import { showMessage, showConfirmationModal } from './ui.js';
 import { App } from './main.js';
 
-/**
- * Deletes a feature request after user confirmation.
- * @param {string} requestId - The ID of the feature request to delete.
- */
-const deleteFeatureRequest = (requestId) => {
-    showConfirmationModal(
-        'Are you sure you want to permanently delete this feature request?',
-        () => {
-            console.log(`Confirmed deletion for feature request ID: ${requestId}`);
-            fetch(`/delete-feature-request/${requestId}`, {
-                method: 'DELETE',
-            })
-            .then(response => response.json())
-            .then(data => {
-                showMessage(data.message, data.success);
-                if (data.success) {
-                    loadFeatureRequests();
-                }
-            })
-            .catch(error => {
-                console.error('Error deleting feature request:', error);
-                showMessage('Failed to delete request.', false);
-            });
+let existingRequests = [];
+
+const renderFeatureRequests = (requests, deletionEnabled) => {
+    elements.featureRequestList.innerHTML = '';
+    if (requests.length === 0) {
+        elements.featureRequestList.innerHTML = '<p class="text-text-secondary">No feature requests submitted yet.</p>';
+        return;
+    }
+    requests.forEach(request => {
+        const requestEl = document.createElement('div');
+        requestEl.className = 'bg-card-darker p-4 rounded-lg';
+
+        let deleteButtonHtml = '';
+        if (deletionEnabled) {
+            deleteButtonHtml = `<button class="delete-request-btn text-red-500 hover:text-red-400 text-sm" data-id="${request.id}">Delete</button>`;
         }
-    );
+
+        requestEl.innerHTML = `
+            <div class="flex justify-between items-start">
+                <p class="text-text-primary">${request.requestText}</p>
+                ${deleteButtonHtml}
+            </div>
+            <p class="text-xs text-text-secondary mt-2">Submitted by: ${request.username}</p>
+        `;
+        elements.featureRequestList.appendChild(requestEl);
+    });
 };
 
-/**
- * Loads and displays all existing feature requests from the backend.
- */
 export const loadFeatureRequests = () => {
-    console.log("Loading feature requests...");
+    if (!App.currentUser) return;
+
     fetch('/get-feature-requests')
-        .then(response => response.json())
+        .then(res => res.json())
         .then(data => {
-            featureRequestList.innerHTML = '';
             if (data.success) {
-                // Handle submission form state
-                if (data.limit_reached) {
-                    featureRequestTextarea.disabled = true;
-                    submitFeatureRequestBtn.disabled = true;
-                    submitFeatureRequestBtn.textContent = 'Request Limit Reached';
-                    featureRequestTextarea.placeholder = 'The maximum number of feature requests has been submitted.';
-                } else {
-                    featureRequestTextarea.disabled = false;
-                    submitFeatureRequestBtn.disabled = false;
-                    submitFeatureRequestBtn.textContent = 'Submit Request';
-                    featureRequestTextarea.placeholder = 'Describe your feature idea...';
-                }
-
-                // Render list
-                if (data.requests.length > 0) {
-                    data.requests.forEach(req => {
-                        const reqElement = document.createElement('div');
-                        reqElement.className = 'bg-card-darker p-4 rounded-lg flex justify-between items-start';
-
-                        const textContainer = document.createElement('div');
-                        textContainer.innerHTML = `<p class="text-text-primary">${req.requestText}</p><p class="text-sm text-text-secondary mt-2">- ${req.username}</p>`;
-                        reqElement.appendChild(textContainer);
-
-                        if (App.isDevModeEnabled && data.deletion_enabled) {
-                            const deleteButton = document.createElement('button');
-                            deleteButton.innerHTML = '&times;';
-                            deleteButton.className = 'ml-4 text-red-500 hover:text-red-400 font-bold text-2xl px-2 leading-none';
-                            deleteButton.title = 'Delete Request';
-                            deleteButton.onclick = () => deleteFeatureRequest(req.id);
-                            reqElement.appendChild(deleteButton);
-                        }
-
-                        featureRequestList.appendChild(reqElement);
-                    });
-                } else {
-                    featureRequestList.innerHTML = '<p class="text-text-secondary">No feature requests submitted yet.</p>';
-                }
+                existingRequests = data.requests;
+                renderFeatureRequests(data.requests, data.deletion_enabled);
+                elements.submitFeatureRequestBtn.disabled = data.limit_reached;
+                elements.submitFeatureRequestBtn.textContent = data.limit_reached ? 'Request Limit Reached' : 'Submit Request';
+            } else {
+                showMessage('Could not load feature requests.', false);
             }
-        });
+        })
+        .catch(error => console.error('[ERROR] Error loading feature requests:', error));
 };
 
-/**
- * Initializes event listeners for the feature request form.
- */
 export const initFeatures = () => {
-    featureRequestTextarea.addEventListener('input', () => {
-        const currentLength = featureRequestTextarea.value.length;
-        charCounter.textContent = `${currentLength} / 500`;
+    elements.featureRequestTextarea.addEventListener('input', () => {
+        const count = elements.featureRequestTextarea.value.length;
+        elements.charCounter.textContent = `${count} / 500`;
     });
 
-    featureRequestForm.addEventListener('submit', (e) => {
+    elements.featureRequestForm.addEventListener('submit', (e) => {
         e.preventDefault();
-        console.log("Click Event: 'Submit Feature Request' button clicked.");
-        const requestText = featureRequestTextarea.value.trim();
-        if (!requestText || !App.currentUser) {
-            showMessage('Cannot submit an empty request.', false);
+        const requestText = elements.featureRequestTextarea.value.trim();
+        if (!requestText) {
+            showMessage('Please enter your feature request.', false);
             return;
         }
-
-        submitFeatureRequestBtn.disabled = true;
-        submitFeatureRequestBtn.textContent = 'Submitting...';
 
         fetch('/submit-feature-request', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ username: App.currentUser.username, requestText: requestText }),
+            body: JSON.stringify({
+                username: App.currentUser.username,
+                requestText: requestText,
+            }),
         })
-        .then(response => response.json())
+        .then(res => res.json())
         .then(data => {
             showMessage(data.message, data.success);
             if (data.success) {
-                featureRequestTextarea.value = '';
-                charCounter.textContent = '0 / 500';
+                elements.featureRequestTextarea.value = '';
+                elements.charCounter.textContent = '0 / 500';
                 loadFeatureRequests();
             }
         })
         .catch(error => {
-            console.error('Error submitting feature request:', error);
-            showMessage('Failed to submit request.', false);
-        })
-        .finally(() => {
-            // The button's state will be correctly set by the next loadFeatureRequests() call
+            console.error('[ERROR] Error submitting feature request:', error);
+            showMessage('Failed to submit feature request.', false);
         });
+    });
+
+    elements.featureRequestList.addEventListener('click', (e) => {
+        if (e.target.classList.contains('delete-request-btn')) {
+            const requestId = e.target.dataset.id;
+            const request = existingRequests.find(r => r.id === requestId);
+            showConfirmationModal(`Are you sure you want to delete the request from ${request.username}?`, () => {
+                fetch(`/delete-feature-request/${requestId}`, {
+                    method: 'DELETE',
+                })
+                .then(res => res.json())
+                .then(data => {
+                    showMessage(data.message, data.success);
+                    if (data.success) {
+                        loadFeatureRequests();
+                    }
+                })
+                .catch(error => {
+                    console.error('[ERROR] Error deleting feature request:', error);
+                    showMessage('Failed to delete feature request.', false);
+                });
+            });
+        }
     });
 };

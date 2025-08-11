@@ -1,5 +1,5 @@
 import * as elements from './elements.js';
-import { showMessage, showConfirmationModal } from './ui.js';
+import { showMessage, showConfirmationModal, createVehicleIcon } from './ui.js';
 import { App } from './main.js';
 
 const updateGarage = (garageId, newName) => {
@@ -14,6 +14,10 @@ const updateGarage = (garageId, newName) => {
         if (data.success) {
             loadGarages();
         }
+    })
+    .catch(error => {
+        console.error('[ERROR] Error updating garage:', error);
+        showMessage('Failed to update garage.', false);
     });
 };
 
@@ -21,7 +25,7 @@ const deleteGarage = (garageId, garageName) => {
     showConfirmationModal(
         `Are you sure you want to permanently delete the garage "${garageName}"?`,
         () => {
-            console.log(`Confirmed deletion for garage ID: ${garageId}`);
+            console.log(`[INFO] Confirmed deletion for garage ID: ${garageId}`);
             fetch(`/delete-garage/${App.currentUser.id}/${garageId}`, {
                 method: 'DELETE',
             })
@@ -31,6 +35,10 @@ const deleteGarage = (garageId, garageName) => {
                 if (data.success) {
                     loadGarages();
                 }
+            })
+            .catch(error => {
+                console.error('[ERROR] Error deleting garage:', error);
+                showMessage('Failed to delete garage.', false);
             });
         }
     );
@@ -38,7 +46,7 @@ const deleteGarage = (garageId, garageName) => {
 
 const loadGarages = () => {
     if (!App.currentUser || !App.currentUser.id) return;
-    console.log(`Loading garages for profile ID: ${App.currentUser.id}`);
+    console.log(`[INFO] Loading garages for profile ID: ${App.currentUser.id}`);
 
     fetch(`/get-garages/${App.currentUser.id}`)
         .then(response => response.json())
@@ -129,7 +137,7 @@ const loadGarages = () => {
                                 }
 
                                 photoContainer.onclick = () => {
-                                    console.log(`Navigating to Vehicle Management for vehicle ID: ${vehicle.id}`);
+                                    console.log(`[INFO] Navigating to Vehicle Management for vehicle ID: ${vehicle.id}`);
                                     App.setView('vehicleManagement');
                                 };
                                 vehicleContainer.appendChild(photoContainer);
@@ -154,7 +162,8 @@ const loadGarages = () => {
                     elements.garageList.innerHTML = '<p class="text-text-secondary">No garages created yet.</p>';
                 }
             }
-        });
+        })
+        .catch(error => console.error('[ERROR] Error loading garages:', error));
 };
 
 export const initGarage = () => {
@@ -170,7 +179,7 @@ export const initGarage = () => {
             return;
         }
 
-        console.log(`Adding new garage: ${garageName}`);
+        console.log(`[INFO] Adding new garage: ${garageName}`);
         fetch('/add-garage', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -186,6 +195,10 @@ export const initGarage = () => {
                 elements.garageNameInput.value = '';
                 loadGarages();
             }
+        })
+        .catch(error => {
+            console.error('[ERROR] Error adding garage:', error);
+            showMessage('Failed to add garage.', false);
         });
     });
 

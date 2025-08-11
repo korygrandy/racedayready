@@ -65,6 +65,7 @@ export const showConfirmationModal = (text, onConfirm) => {
     const cancelBtn = document.getElementById('confirmation-modal-cancel-btn');
 
     textElement.textContent = text;
+    console.log(`[UI] Confirmation modal shown with text: "${text}"`);
 
     const confirmHandler = () => {
         onConfirm();
