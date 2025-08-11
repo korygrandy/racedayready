@@ -1,23 +1,23 @@
 [
     {
+        "version": "2.1.4",
+        "date": "August 11, 2025",
+        "notes": [
+            "Replaced all 'Edit' and 'Delete' text buttons with icons for a cleaner and more consistent user interface across the application."
+        ]
+    },
+    {
+        "version": "2.1.3",
+        "date": "August 11, 2025",
+        "notes": [
+            "Made the backend more resilient to prevent crashes from malformed changelog or defect JSON files."
+        ]
+    },
+    {
         "version": "2.1.2",
         "date": "August 11, 2025",
         "notes": [
             "Performed a code cleanup on utility and UI modules, adding standardized logging and more robust error handling for external API calls."
-        ]
-    },
-    {
-        "version": "2.1.1",
-        "date": "August 11, 2025",
-        "notes": [
-            "Performed a major code cleanup and refactor, including standardizing console logs and implementing event delegation for better performance."
-        ]
-    },
-    {
-        "version": "2.1.0",
-        "date": "August 11, 2025",
-        "notes": [
-            "Added search/filter functionality to the Year, Make, and Model dropdowns in the vehicle forms to improve usability on mobile devices."
         ]
     }
 ]
