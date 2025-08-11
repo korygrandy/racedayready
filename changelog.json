@@ -1,5 +1,14 @@
 [
     {
+        "version": "1.9.6",
+        "date": "August 10, 2025",
+        "notes": [
+            "Fixed a critical defect where the 'Save Changes' button in the Edit Event modal was not functional due to a missing form element.",
+            "Resolved console errors related to the checklist feature on the Edit Event modal.",
+            "Corrected the Raceday Countdown logic to ensure it updates properly after adding a new raceday event."
+        ]
+    },
+    {
         "version": "1.9.5",
         "date": "August 10, 2025",
         "notes": [
@@ -10,15 +19,7 @@
         "version": "1.9.4",
         "date": "August 10, 2025",
         "notes": [
-            "Fixed a critical defect where the 'Save Changes' button in the Edit Event modal was not functional due to a missing form element.",
-            "Resolved console errors related to the checklist feature on the Edit Event modal."
-        ]
-    },
-    {
-        "version": "1.9.3",
-        "date": "August 10, 2025",
-        "notes": [
-            "Fixed a defect where the 'Save Changes' button in the Edit Event modal was not functional."
+            "Resolved a 500 Internal Server Error caused by the Raceday Countdown when a user had events, but none were marked as a Raceday."
         ]
     }
 ]

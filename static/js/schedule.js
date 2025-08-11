@@ -181,8 +181,12 @@ export const initSchedule = () => {
 
     elements.editEventForm.addEventListener('submit', (e) => {
         e.preventDefault();
+        console.log("Save Changes submit event listener fired.");
+
         const selectedVehicles = Array.from(elements.editEventVehiclesSelect.selectedOptions).map(opt => opt.value);
         const selectedChecklists = Array.from(elements.editEventChecklistsSelect.selectedOptions).map(opt => opt.value);
+        console.log("Updated event data gathered:", { selectedVehicles, selectedChecklists });
+
         const eventData = {
             name: elements.editEventNameInput.value,
             startTime: elements.editEventStartInput.value,
@@ -192,6 +196,7 @@ export const initSchedule = () => {
             isRaceday: elements.editIsRacedayCheckbox.checked,
         };
 
+        console.log("Sending updated event data to the backend...");
         fetch(`/update-event/${App.currentUser.id}/${eventToEdit.id}`, {
             method: 'PUT',
             headers: { 'Content-Type': 'application/json' },
@@ -199,11 +204,16 @@ export const initSchedule = () => {
         })
         .then(res => res.json())
         .then(data => {
+            console.log("Backend response received:", data);
             showMessage(data.message, data.success);
             if (data.success) {
                 elements.editEventModal.classList.add('hidden');
+                console.log("Edit event modal closed.");
+
+                console.log("Refreshing event list and countdown...");
                 loadEvents();
                 updateRacedayCountdown();
+                console.log("Event list and countdown refresh complete.");
             }
         });
     });
