@@ -3,14 +3,15 @@
         "version": "1.9.5",
         "date": "August 10, 2025",
         "notes": [
-            "Fixed a critical defect where the main 'Click to Get Ready' button was unresponsive due to a race condition."
+            "Replaced the 'no raceday' icon with a more intuitive '+ Add Race' text link to improve user experience."
         ]
     },
     {
         "version": "1.9.4",
         "date": "August 10, 2025",
         "notes": [
-            "Fixed a critical defect where the 'Save Changes' button in the Edit Event modal was not functional."
+            "Fixed a critical defect where the 'Save Changes' button in the Edit Event modal was not functional due to a missing form element.",
+            "Resolved console errors related to the checklist feature on the Edit Event modal."
         ]
     },
     {
@@ -18,13 +19,6 @@
         "date": "August 10, 2025",
         "notes": [
             "Fixed a defect where the 'Save Changes' button in the Edit Event modal was not functional."
-        ]
-    },
-    {
-        "version": "1.9.2",
-        "date": "August 10, 2025",
-        "notes": [
-            "Enhanced security by requiring admin PIN confirmation to delete any user profile that is not PIN-protected."
         ]
     }
 ]
