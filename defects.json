@@ -1,12 +1,12 @@
 [
     {
-        "id": "defect-entry-countdown-logic",
-        "title": "Countdown Timer Logic (Fixed: Aug 10, 2025) - v1.9.4",
-        "resolution": "The countdown timer was updated to only consider events explicitly marked as 'Raceday Events', rather than any upcoming event. The backend route was renamed to `/get-next-raceday` and its query was updated to filter for `is_raceday == True`."
+        "id": "defect-entry-startup-error",
+        "title": "Application Fails to Load on Startup (Fixed: Aug 10, 2025) - v1.9.5",
+        "resolution": "Corrected a race condition in the `selectProfile` function. The function was attempting to update UI elements in the features view before the view was rendered. The code was reordered to set the view first, which makes the elements available in the DOM for manipulation, resolving the error."
     },
     {
         "id": "defect-entry-edit-event-save",
-        "title": "Edit Event Modal Save Button Inoperative (Fixed: Aug 10, 2025) - v1.9.3",
+        "title": "Edit Event Modal Save Button Inoperative (Fixed: Aug 10, 2025) - v1.9.4",
         "resolution": "The JavaScript file for the schedule was missing the submit event listener for the edit event form. The logic has been added, and the save button now correctly updates the event details."
     }
 ]

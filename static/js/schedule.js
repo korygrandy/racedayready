@@ -11,7 +11,7 @@ export const updateRacedayCountdown = () => {
         return;
     }
 
-    fetch(`/get-next-event/${App.currentUser.id}`)
+    fetch(`/get-next-raceday/${App.currentUser.id}`)
         .then(res => res.json())
         .then(data => {
             if (data.success && data.event) {
@@ -22,12 +22,12 @@ export const updateRacedayCountdown = () => {
 
                 elements.racedayCountdownDays.textContent = diffDays;
                 elements.racedayCountdownCircle.classList.remove('hidden');
-                elements.racedayCountdownLabel.textContent = "Days Until Next Event:";
+                elements.racedayCountdownLabel.textContent = "Days Until Raceday:";
                 elements.noRacedayIcon.classList.add('hidden');
                 elements.racedayCountdownContainer.classList.remove('hidden');
             } else {
                 elements.racedayCountdownCircle.classList.add('hidden');
-                elements.racedayCountdownLabel.textContent = "No Events Scheduled";
+                elements.racedayCountdownLabel.textContent = "No Raceday Scheduled";
                 elements.noRacedayIcon.classList.remove('hidden');
                 elements.racedayCountdownContainer.classList.remove('hidden');
             }

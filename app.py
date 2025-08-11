@@ -841,11 +841,12 @@ def delete_event(profile_id, event_id):
         return jsonify({'success': False, 'message': f'An error occurred: {e}'}), 500
 
 
-@app.route('/get-next-event/<profile_id>', methods=['GET'])
-def get_next_event(profile_id):
+@app.route('/get-next-raceday/<profile_id>', methods=['GET'])
+def get_next_raceday(profile_id):
     try:
         now = datetime.datetime.now(datetime.timezone.utc)
         events_ref = db.collection('driver_profiles').document(profile_id).collection('events') \
+            .where('is_raceday', '==', True) \
             .where('start_time', '>=', now.isoformat()) \
             .order_by('start_time') \
             .limit(1) \
@@ -858,7 +859,7 @@ def get_next_event(profile_id):
         else:
             return jsonify({'success': True, 'event': None}), 200
     except Exception as e:
-        print(f"❌ Error getting next event: {e}")
+        print(f"❌ Error getting next raceday: {e}")
         return jsonify({'success': False, 'error': str(e)}), 500
 
 

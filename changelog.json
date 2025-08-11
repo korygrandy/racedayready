@@ -1,16 +1,23 @@
 [
     {
+        "version": "1.9.5",
+        "date": "August 10, 2025",
+        "notes": [
+            "Fixed a critical defect where the main 'Click to Get Ready' button was unresponsive due to a race condition."
+        ]
+    },
+    {
         "version": "1.9.4",
         "date": "August 10, 2025",
         "notes": [
-            "Updated the Raceday Countdown logic to only display a countdown for events specifically marked as a 'Raceday Event'."
+            "Fixed a critical defect where the 'Save Changes' button in the Edit Event modal was not functional."
         ]
     },
     {
         "version": "1.9.3",
         "date": "August 10, 2025",
         "notes": [
-            "Fixed a critical defect where the 'Save Changes' button in the Edit Event modal was not functional."
+            "Fixed a defect where the 'Save Changes' button in the Edit Event modal was not functional."
         ]
     },
     {
