@@ -1,7 +1,7 @@
 import * as elements from './elements.js';
 import { showMessage, showConfirmationModal, createVehicleIcon } from './ui.js';
 import { App } from './main.js';
-import { showEditVehicleModal } from './vehicle.js'; // NEW
+import { showEditVehicleModal } from './vehicle.js';
 
 let currentEvents = [];
 let eventToEdit = null;
@@ -23,7 +23,7 @@ export const updateRacedayCountdown = () => {
 
                 elements.racedayCountdownDays.textContent = diffDays;
                 elements.racedayCountdownCircle.classList.remove('hidden');
-                elements.racedayCountdownLabel.textContent = "Days Until Raceday:";
+                elements.racedayCountdownLabel.classList.remove('hidden');
                 elements.noRacedayIcon.classList.add('hidden');
                 elements.racedayCountdownContainer.classList.remove('hidden');
             } else {
@@ -112,21 +112,20 @@ const renderEvents = () => {
         if (event.vehicles && event.vehicles.length > 0) {
             vehicleHtml = '<div class="mt-2 flex flex-wrap gap-2">';
             event.vehicles.forEach(vehicle => {
-                const photoSrc = vehicle.photo || vehicle.photoURL;
-                const vehicleElement = document.createElement('div');
-                vehicleElement.className = 'event-vehicle-photo w-12 h-12 cursor-pointer hover:opacity-75';
-                vehicleElement.title = `${vehicle.year} ${vehicle.make} ${vehicle.model}`;
-                vehicleElement.dataset.vehicleId = vehicle.id;
+                const vehicleContainer = document.createElement('div');
+                vehicleContainer.className = 'event-vehicle-photo w-12 h-12 cursor-pointer hover:opacity-75';
+                vehicleContainer.title = `${vehicle.year} ${vehicle.make} ${vehicle.model}`;
+                vehicleContainer.dataset.vehicleId = vehicle.id;
 
-                if (photoSrc) {
+                if (vehicle.photo || vehicle.photoURL) {
                     const img = document.createElement('img');
-                    img.src = photoSrc;
+                    img.src = vehicle.photo || vehicle.photoURL;
                     img.className = 'w-full h-full object-cover rounded-md';
-                    vehicleElement.appendChild(img);
+                    vehicleContainer.appendChild(img);
                 } else {
-                    vehicleElement.appendChild(createVehicleIcon('w-12 h-12'));
+                    vehicleContainer.appendChild(createVehicleIcon('w-12 h-12'));
                 }
-                vehicleHtml += vehicleElement.outerHTML;
+                vehicleHtml += vehicleContainer.outerHTML;
             });
             vehicleHtml += '</div>';
         }
@@ -189,7 +188,7 @@ export const initSchedule = () => {
             if (data.success) {
                 elements.addEventForm.reset();
                 loadEvents();
-                updateRacedayCountdown();
+                updateRacedayCountdown(); // THIS LINE WAS ADDED
             }
         });
     });

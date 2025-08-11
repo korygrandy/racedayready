@@ -1,23 +1,23 @@
 [
     {
-        "version": "2.0.3",
+        "version": "2.0.7",
         "date": "August 11, 2025",
         "notes": [
-            "Fixed a critical 500 Internal Server Error by ensuring the backend gracefully handles cases where a new user has no events."
+            "Fixed a defect where the 'Add one now' link in the Vehicle Management warning message was not functional."
         ]
     },
     {
-        "version": "2.0.2",
+        "version": "2.0.6",
         "date": "August 11, 2025",
         "notes": [
-            "Fixed a 500 Internal Server Error on the backend that occurred when fetching the next raceday for a new user with no events."
+            "Fixed multiple critical defects related to the 'Edit Event' modal and the Raceday Countdown not updating correctly after creating a new event."
         ]
     },
     {
-        "version": "2.0.1",
-        "date": "August 11, 2025",
+        "version": "2.0.5",
+        "date": "August 10, 2025",
         "notes": [
-            "Refactored the application to 'lazy load' data for the Race Schedule, resolving a critical error on the features page."
+            "Replaced the 'no raceday' icon with a more intuitive '+ Add Race' text link to improve user experience."
         ]
     }
 ]

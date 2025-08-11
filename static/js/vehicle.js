@@ -232,6 +232,12 @@ export const initVehicle = () => {
         App.setView('features');
     });
 
+    elements.goToGarageLink.addEventListener('click', (e) => {
+        e.preventDefault();
+        console.log("Navigating to Garage Management from warning link.");
+        App.setView('garageManagement');
+    });
+
     elements.vehicleList.addEventListener('click', (e) => {
         const button = e.target.closest('button');
         if (!button) return;
