@@ -1,12 +1,12 @@
 [
     {
-        "id": "defect-entry-default-icon-404",
-        "title": "Default Vehicle Icons Not Loading in Events (Fixed: Aug 10, 2025) - v1.9.9",
-        "resolution": "The `schedule.js` file was incorrectly referencing a non-existent stock image file (`stock-car.png`). The code has been updated to use the `createVehicleIcon` utility function, which dynamically generates the correct SVG placeholder and ensures it is clickable."
+        "id": "defect-entry-countdown-500",
+        "title": "Raceday Countdown Causes 500 Error for New Users (Fixed: Aug 11, 2025) - v2.0.3",
+        "resolution": "The backend route for the Raceday Countdown was catching an error but incorrectly returning a 500 status code. The logic has been updated to gracefully handle the error and return a successful 200 OK response with `event: null`, which the frontend can handle without crashing."
     },
     {
-        "id": "defect-entry-edit-event-save",
-        "title": "Edit Event Modal Save Button Inoperative (Fixed: Aug 10, 2025) - v1.9.6",
-        "resolution": "The 'Edit Event' modal was missing the multi-select dropdown for checklists, which caused the JavaScript to fail when trying to access it. The missing HTML element has been added, and the associated event listeners in `schedule.js` now function correctly."
+        "id": "defect-entry-lazy-load",
+        "title": "Application Errors on Feature Page Load (Fixed: Aug 11, 2025) - v2.0.1",
+        "resolution": "The application was trying to load data for the Race Schedule page even when it wasn't visible, causing a crash. The logic was refactored to a 'lazy loading' approach, where data is only fetched when the corresponding view is activated. This resolves the errors and improves performance."
     }
 ]

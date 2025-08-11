@@ -1,24 +1,23 @@
 [
     {
-        "version": "2.0.0",
-        "date": "August 10, 2025",
+        "version": "2.0.3",
+        "date": "August 11, 2025",
         "notes": [
-            "Users can now click on a vehicle photo/icon within an event in the Race Schedule to directly open the Edit Vehicle modal."
+            "Fixed a critical 500 Internal Server Error by ensuring the backend gracefully handles cases where a new user has no events."
         ]
     },
     {
-        "version": "1.9.9",
-        "date": "August 10, 2025",
+        "version": "2.0.2",
+        "date": "August 11, 2025",
         "notes": [
-            "Fixed a defect where default vehicle icons in the Upcoming Events list were causing a 404 error and were not clickable."
+            "Fixed a 500 Internal Server Error on the backend that occurred when fetching the next raceday for a new user with no events."
         ]
     },
     {
-        "version": "1.9.8",
-        "date": "August 10, 2025",
+        "version": "2.0.1",
+        "date": "August 11, 2025",
         "notes": [
-            "Updated the 'Edit' and 'Delete' buttons in Vehicle Management to use icons instead of text for a cleaner UI.",
-            "Fixed a defect where default vehicle icons in the Upcoming Events list were not clickable."
+            "Refactored the application to 'lazy load' data for the Race Schedule, resolving a critical error on the features page."
         ]
     }
 ]

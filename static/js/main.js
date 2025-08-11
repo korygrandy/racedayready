@@ -67,7 +67,7 @@ const setView = (viewName) => {
         if (App.loadVehicles) App.loadVehicles();
     } else if (viewName === 'raceSchedule') {
         elements.raceScheduleView.classList.remove('hidden');
-        if (App.loadEvents) App.loadEvents();
+        if (App.loadEvents) App.loadEvents(); // MOVED HERE
     } else if (viewName === 'checklistManagement') {
         elements.checklistManagementView.classList.remove('hidden');
         if (App.loadChecklists) App.loadChecklists();

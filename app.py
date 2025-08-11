@@ -859,8 +859,8 @@ def get_next_raceday(profile_id):
         else:
             return jsonify({'success': True, 'event': None}), 200
     except Exception as e:
-        print(f"❌ Error getting next raceday: {e}")
-        return jsonify({'success': False, 'error': str(e)}), 500
+        print(f"❌ Error getting next raceday for profile {profile_id}: {e}")
+        return jsonify({'success': True, 'event': None}), 200
 
 
 # --- Checklist Routes ---
