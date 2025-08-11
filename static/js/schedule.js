@@ -1,6 +1,7 @@
 import * as elements from './elements.js';
 import { showMessage, showConfirmationModal, createVehicleIcon } from './ui.js';
 import { App } from './main.js';
+import { showEditVehicleModal } from './vehicle.js'; // NEW
 
 let currentEvents = [];
 let eventToEdit = null;
@@ -102,6 +103,7 @@ const renderEvents = () => {
     currentEvents.forEach(event => {
         const eventCard = document.createElement('div');
         eventCard.className = 'bg-card-darker p-4 rounded-lg';
+        eventCard.dataset.eventId = event.id; // Add event ID for delegation
 
         const startTime = new Date(event.start_time).toLocaleString();
         const endTime = event.end_time ? new Date(event.end_time).toLocaleString() : 'N/A';
@@ -110,20 +112,21 @@ const renderEvents = () => {
         if (event.vehicles && event.vehicles.length > 0) {
             vehicleHtml = '<div class="mt-2 flex flex-wrap gap-2">';
             event.vehicles.forEach(vehicle => {
-                const vehicleContainer = document.createElement('div');
-                vehicleContainer.className = 'w-12 h-12 cursor-pointer hover:opacity-75';
-                vehicleContainer.title = `${vehicle.year} ${vehicle.make} ${vehicle.model}`;
-                vehicleContainer.onclick = () => App.setView('vehicleManagement');
+                const photoSrc = vehicle.photo || vehicle.photoURL;
+                const vehicleElement = document.createElement('div');
+                vehicleElement.className = 'event-vehicle-photo w-12 h-12 cursor-pointer hover:opacity-75';
+                vehicleElement.title = `${vehicle.year} ${vehicle.make} ${vehicle.model}`;
+                vehicleElement.dataset.vehicleId = vehicle.id;
 
-                if (vehicle.photo || vehicle.photoURL) {
-                    const photoImg = document.createElement('img');
-                    photoImg.src = vehicle.photo || vehicle.photoURL;
-                    photoImg.className = 'w-full h-full object-cover rounded-md';
-                    vehicleContainer.appendChild(photoImg);
+                if (photoSrc) {
+                    const img = document.createElement('img');
+                    img.src = photoSrc;
+                    img.className = 'w-full h-full object-cover rounded-md';
+                    vehicleElement.appendChild(img);
                 } else {
-                    vehicleContainer.appendChild(createVehicleIcon('w-12 h-12'));
+                    vehicleElement.appendChild(createVehicleIcon('w-12 h-12'));
                 }
-                vehicleHtml += vehicleContainer.outerHTML;
+                vehicleHtml += vehicleElement.outerHTML;
             });
             vehicleHtml += '</div>';
         }
@@ -222,23 +225,34 @@ export const initSchedule = () => {
 
     elements.eventList.addEventListener('click', (e) => {
         const button = e.target.closest('button');
-        if (!button) return;
+        const vehiclePhoto = e.target.closest('.event-vehicle-photo');
 
-        const eventId = button.dataset.id;
-        const event = currentEvents.find(ev => ev.id === eventId);
+        if (button) {
+            const eventId = button.dataset.id;
+            const event = currentEvents.find(ev => ev.id === eventId);
 
-        if (button.classList.contains('delete-event-btn')) {
-            showConfirmationModal(`Are you sure you want to delete the event "${event.name}"?`, () => {
-                fetch(`/delete-event/${App.currentUser.id}/${eventId}`, { method: 'DELETE' })
-                    .then(res => res.json())
-                    .then(data => {
-                        showMessage(data.message, data.success);
-                        loadEvents();
-                        updateRacedayCountdown();
-                    });
-            });
-        } else if (button.classList.contains('edit-event-btn')) {
-            showEditEventModal(event);
+            if (button.classList.contains('delete-event-btn')) {
+                showConfirmationModal(`Are you sure you want to delete the event "${event.name}"?`, () => {
+                    fetch(`/delete-event/${App.currentUser.id}/${eventId}`, { method: 'DELETE' })
+                        .then(res => res.json())
+                        .then(data => {
+                            showMessage(data.message, data.success);
+                            loadEvents();
+                            updateRacedayCountdown();
+                        });
+                });
+            } else if (button.classList.contains('edit-event-btn')) {
+                showEditEventModal(event);
+            }
+        } else if (vehiclePhoto) {
+            const eventId = vehiclePhoto.closest('.bg-card-darker').dataset.eventId;
+            const vehicleId = vehiclePhoto.dataset.vehicleId;
+            const event = currentEvents.find(ev => ev.id === eventId);
+            const vehicle = event.vehicles.find(v => v.id === vehicleId);
+            if(vehicle) {
+                console.log("Vehicle icon clicked, showing edit modal for:", vehicle);
+                showEditVehicleModal(vehicle);
+            }
         }
     });
 

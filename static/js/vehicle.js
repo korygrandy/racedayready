@@ -31,7 +31,7 @@ const populateGarageDropdown = async (selectElement) => {
     }
 };
 
-const showEditVehicleModal = async (vehicle) => {
+export const showEditVehicleModal = async (vehicle) => {
     vehicleToEdit = vehicle;
     console.log("Showing edit vehicle modal for:", vehicle);
 

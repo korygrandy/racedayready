@@ -1,5 +1,12 @@
 [
     {
+        "version": "2.0.0",
+        "date": "August 10, 2025",
+        "notes": [
+            "Users can now click on a vehicle photo/icon within an event in the Race Schedule to directly open the Edit Vehicle modal."
+        ]
+    },
+    {
         "version": "1.9.9",
         "date": "August 10, 2025",
         "notes": [
@@ -12,13 +19,6 @@
         "notes": [
             "Updated the 'Edit' and 'Delete' buttons in Vehicle Management to use icons instead of text for a cleaner UI.",
             "Fixed a defect where default vehicle icons in the Upcoming Events list were not clickable."
-        ]
-    },
-    {
-        "version": "1.9.7",
-        "date": "August 10, 2025",
-        "notes": [
-            "Implemented a default SVG vehicle icon to display for vehicles that do not have an uploaded photo, improving UI consistency."
         ]
     }
 ]
