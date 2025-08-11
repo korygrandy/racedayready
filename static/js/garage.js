@@ -105,8 +105,8 @@ const loadGarages = () => {
                         });
 
                         const deleteBtn = document.createElement('button');
-                        deleteBtn.innerHTML = '&times;';
-                        deleteBtn.className = 'ml-4 text-red-500 hover:text-red-400 font-bold text-2xl px-2 leading-none';
+                        deleteBtn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>`;
+                        deleteBtn.className = 'ml-4 text-red-500 hover:text-red-400';
                         deleteBtn.title = 'Delete Garage';
                         deleteBtn.onclick = () => deleteGarage(garage.id, garage.name);
 
