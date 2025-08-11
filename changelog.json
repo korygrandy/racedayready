@@ -1,25 +1,24 @@
 [
     {
-        "version": "1.9.6",
+        "version": "1.9.9",
         "date": "August 10, 2025",
         "notes": [
-            "Fixed a critical defect where the 'Save Changes' button in the Edit Event modal was not functional due to a missing form element.",
-            "Resolved console errors related to the checklist feature on the Edit Event modal.",
-            "Corrected the Raceday Countdown logic to ensure it updates properly after adding a new raceday event."
+            "Fixed a defect where default vehicle icons in the Upcoming Events list were causing a 404 error and were not clickable."
         ]
     },
     {
-        "version": "1.9.5",
+        "version": "1.9.8",
         "date": "August 10, 2025",
         "notes": [
-            "Replaced the 'no raceday' icon with a more intuitive '+ Add Race' text link to improve user experience."
+            "Updated the 'Edit' and 'Delete' buttons in Vehicle Management to use icons instead of text for a cleaner UI.",
+            "Fixed a defect where default vehicle icons in the Upcoming Events list were not clickable."
         ]
     },
     {
-        "version": "1.9.4",
+        "version": "1.9.7",
         "date": "August 10, 2025",
         "notes": [
-            "Resolved a 500 Internal Server Error caused by the Raceday Countdown when a user had events, but none were marked as a Raceday."
+            "Implemented a default SVG vehicle icon to display for vehicles that do not have an uploaded photo, improving UI consistency."
         ]
     }
 ]

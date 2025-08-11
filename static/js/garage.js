@@ -115,15 +115,24 @@ const loadGarages = () => {
                         vehicleContainer.className = 'mt-4 flex flex-wrap gap-4';
                         if (garage.vehicles && garage.vehicles.length > 0) {
                             garage.vehicles.forEach(vehicle => {
-                                const vehiclePhoto = document.createElement('img');
-                                vehiclePhoto.src = vehicle.photo || vehicle.photoURL || 'static/stock-car.png';
-                                vehiclePhoto.className = 'w-24 h-24 object-cover rounded-md cursor-pointer hover:opacity-75';
-                                vehiclePhoto.title = `${vehicle.year} ${vehicle.make} ${vehicle.model}`;
-                                vehiclePhoto.onclick = () => {
+                                const photoContainer = document.createElement('div');
+                                photoContainer.className = 'w-24 h-24';
+
+                                if(vehicle.photo || vehicle.photoURL) {
+                                    const vehiclePhoto = document.createElement('img');
+                                    vehiclePhoto.src = vehicle.photo || vehicle.photoURL;
+                                    vehiclePhoto.className = 'w-full h-full object-cover rounded-md cursor-pointer hover:opacity-75';
+                                    vehiclePhoto.title = `${vehicle.year} ${vehicle.make} ${vehicle.model}`;
+                                    photoContainer.appendChild(vehiclePhoto);
+                                } else {
+                                    photoContainer.appendChild(createVehicleIcon('w-24 h-24'));
+                                }
+
+                                photoContainer.onclick = () => {
                                     console.log(`Navigating to Vehicle Management for vehicle ID: ${vehicle.id}`);
                                     App.setView('vehicleManagement');
                                 };
-                                vehicleContainer.appendChild(vehiclePhoto);
+                                vehicleContainer.appendChild(photoContainer);
                             });
                         } else {
                             const addVehicleLink = document.createElement('a');

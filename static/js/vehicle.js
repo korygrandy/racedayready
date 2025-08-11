@@ -1,5 +1,5 @@
 import * as elements from './elements.js';
-import { showMessage, showConfirmationModal } from './ui.js';
+import { showMessage, showConfirmationModal, createVehicleIcon } from './ui.js';
 import { App } from './main.js';
 import { populateYearDropdown, populateMakeDropdown, populateModelDropdown } from './utils.js';
 
@@ -71,8 +71,17 @@ const renderVehicles = () => {
         vehicleCard.className = 'bg-card-darker p-4 rounded-lg flex items-center justify-between';
         vehicleCard.dataset.id = vehicle.id; // For SortableJS
 
-        const photoSrc = vehicle.photo || vehicle.photoURL || 'static/stock-car.png';
-        const photo = `<img src="${photoSrc}" class="w-16 h-16 object-cover rounded-md mr-4">`;
+        const photoContainer = document.createElement('div');
+        photoContainer.className = 'w-16 h-16 mr-4';
+
+        if (vehicle.photo || vehicle.photoURL) {
+            const photoImg = document.createElement('img');
+            photoImg.src = vehicle.photo || vehicle.photoURL;
+            photoImg.className = 'w-full h-full object-cover rounded-md';
+            photoContainer.appendChild(photoImg);
+        } else {
+            photoContainer.appendChild(createVehicleIcon());
+        }
 
         const details = `
             <div>
@@ -82,14 +91,25 @@ const renderVehicles = () => {
         `;
 
         const buttons = `
-            <div class="flex items-center space-x-2">
-                <button class="edit-vehicle-btn px-3 py-1 bg-gray-600 text-white rounded-md hover:bg-gray-500 text-sm" data-id="${vehicle.id}">Edit</button>
-                <button class="delete-vehicle-btn px-3 py-1 bg-red-600 text-white rounded-md hover:bg-red-500 text-sm" data-id="${vehicle.id}">Delete</button>
+            <div class="flex items-center space-x-4">
+                <button class="edit-vehicle-btn text-text-secondary hover:text-white" data-id="${vehicle.id}" title="Edit Vehicle">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.5L16.732 3.732z" /></svg>
+                </button>
+                <button class="delete-vehicle-btn text-red-500 hover:text-red-400" data-id="${vehicle.id}" title="Delete Vehicle">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
+                </button>
                 <div class="drag-handle cursor-grab text-text-secondary">☰</div>
             </div>
         `;
 
-        vehicleCard.innerHTML = `<div class="flex items-center">${photo}${details}</div>${buttons}`;
+        const leftDiv = document.createElement('div');
+        leftDiv.className = 'flex items-center';
+        leftDiv.appendChild(photoContainer);
+        leftDiv.innerHTML += details;
+
+        vehicleCard.appendChild(leftDiv);
+        vehicleCard.innerHTML += buttons;
+
         elements.vehicleList.appendChild(vehicleCard);
     });
 };
@@ -210,12 +230,6 @@ export const initVehicle = () => {
 
     elements.backToFeaturesFromVehicleBtn.addEventListener('click', () => {
         App.setView('features');
-    });
-
-    elements.goToGarageLink.addEventListener('click', (e) => {
-        e.preventDefault();
-        console.log("Navigating to Garage Management from warning link.");
-        App.setView('garageManagement');
     });
 
     elements.vehicleList.addEventListener('click', (e) => {
