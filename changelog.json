@@ -1,24 +1,25 @@
 [
     {
-        "version": "1.9.3",
+        "version": "1.9.6",
         "date": "August 10, 2025",
         "notes": [
-            "Fixed a defect where the 'Save Changes' button in the Edit Event modal was not functional."
+            "Fixed a critical defect where the 'Save Changes' button in the Edit Event modal was not functional due to a missing form element.",
+            "Resolved console errors related to the checklist feature on the Edit Event modal.",
+            "Corrected the Raceday Countdown logic to ensure it updates properly after adding a new raceday event."
         ]
     },
     {
-        "version": "1.9.2",
+        "version": "1.9.5",
         "date": "August 10, 2025",
         "notes": [
-            "Enhanced security by moving the hardcoded admin PIN to a Firestore document.",
-            "Fixed a defect where non-PIN-protected profiles were not being deleted after admin PIN confirmation."
+            "Replaced the 'no raceday' icon with a more intuitive '+ Add Race' text link to improve user experience."
         ]
     },
     {
-        "version": "1.9.1",
+        "version": "1.9.4",
         "date": "August 10, 2025",
         "notes": [
-            "Updated the Raceday Countdown logic to only display a countdown for events specifically marked as a 'Raceday Event'."
+            "Resolved a 500 Internal Server Error caused by the Raceday Countdown when a user had events, but none were marked as a Raceday."
         ]
     }
 ]
