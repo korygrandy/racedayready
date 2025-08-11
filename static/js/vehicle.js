@@ -27,13 +27,13 @@ const populateGarageDropdown = async (selectElement) => {
             elements.noGaragesWarning.classList.remove('hidden');
         }
     } catch (error) {
-        console.error("Error fetching garages:", error);
+        console.error("[ERROR] Error fetching garages:", error);
     }
 };
 
 export const showEditVehicleModal = async (vehicle) => {
     vehicleToEdit = vehicle;
-    console.log("Showing edit vehicle modal for:", vehicle);
+    console.log("[INFO] Showing edit vehicle modal for:", vehicle);
 
     // Populate simple fields
     elements.editVehicleYearSelect.value = vehicle.year;
@@ -127,7 +127,21 @@ const loadVehicles = () => {
                     elements.addVehicleBtn.textContent = 'Vehicle Limit Reached';
                 }
             }
-        });
+        })
+        .catch(error => console.error('[ERROR] Error loading vehicles:', error));
+};
+
+const filterDropdown = (input, select) => {
+    const filter = input.value.toUpperCase();
+    const options = select.getElementsByTagName('option');
+    for (let i = 0; i < options.length; i++) {
+        const txtValue = options[i].textContent || options[i].innerText;
+        if (txtValue.toUpperCase().indexOf(filter) > -1) {
+            options[i].style.display = "";
+        } else {
+            options[i].style.display = "none";
+        }
+    }
 };
 
 export const initVehicle = () => {
@@ -195,6 +209,10 @@ export const initVehicle = () => {
                 elements.vehiclePhotoPreview.classList.add('hidden');
                 loadVehicles();
             }
+        })
+        .catch(error => {
+            console.error('[ERROR] Error adding vehicle:', error);
+            showMessage('Failed to add vehicle.', false);
         });
     });
 
@@ -221,6 +239,10 @@ export const initVehicle = () => {
                 elements.editVehicleModal.classList.add('hidden');
                 loadVehicles();
             }
+        })
+        .catch(error => {
+            console.error('[ERROR] Error updating vehicle:', error);
+            showMessage('Failed to update vehicle.', false);
         });
     });
 
@@ -230,6 +252,12 @@ export const initVehicle = () => {
 
     elements.backToFeaturesFromVehicleBtn.addEventListener('click', () => {
         App.setView('features');
+    });
+
+    elements.goToGarageLink.addEventListener('click', (e) => {
+        e.preventDefault();
+        console.log("[INFO] Navigating to Garage Management from warning link.");
+        App.setView('garageManagement');
     });
 
     elements.vehicleList.addEventListener('click', (e) => {
@@ -246,6 +274,10 @@ export const initVehicle = () => {
                     .then(data => {
                         showMessage(data.message, data.success);
                         loadVehicles();
+                    })
+                    .catch(error => {
+                        console.error('[ERROR] Error deleting vehicle:', error);
+                        showMessage('Failed to delete vehicle.', false);
                     });
             });
         } else if (button.classList.contains('edit-vehicle-btn')) {
@@ -255,7 +287,7 @@ export const initVehicle = () => {
 
     elements.vehicleSortBtn.addEventListener('click', () => {
         currentSortOrder = currentSortOrder === 'desc' ? 'asc' : 'desc';
-        console.log(`Vehicle sort order changed to: ${currentSortOrder}`);
+        console.log(`[DEBUG] Vehicle sort order changed to: ${currentSortOrder}`);
         elements.vehicleSortBtn.textContent = `Sort by Year (${currentSortOrder === 'desc' ? 'Newest' : 'Oldest'} First)`;
         renderVehicles();
     });
@@ -271,9 +303,21 @@ export const initVehicle = () => {
                 body: JSON.stringify({ order: orderedIds }),
             })
             .then(res => res.json())
-            .then(data => showMessage(data.message, data.success));
+            .then(data => showMessage(data.message, data.success))
+            .catch(error => {
+                console.error('[ERROR] Error updating vehicle order:', error);
+                showMessage('Failed to update vehicle order.', false);
+            });
         }
     });
+
+    // Search listeners
+    elements.vehicleYearSearch.addEventListener('keyup', () => filterDropdown(elements.vehicleYearSearch, elements.vehicleYearSelect));
+    elements.vehicleMakeSearch.addEventListener('keyup', () => filterDropdown(elements.vehicleMakeSearch, elements.vehicleMakeSelect));
+    elements.vehicleModelSearch.addEventListener('keyup', () => filterDropdown(elements.vehicleModelSearch, elements.vehicleModelSelect));
+    elements.editVehicleYearSearch.addEventListener('keyup', () => filterDropdown(elements.editVehicleYearSearch, elements.editVehicleYearSelect));
+    elements.editVehicleMakeSearch.addEventListener('keyup', () => filterDropdown(elements.editVehicleMakeSearch, elements.editVehicleMakeSelect));
+    elements.editVehicleModelSearch.addEventListener('keyup', () => filterDropdown(elements.editVehicleModelSearch, elements.editVehicleModelSelect));
 
     App.loadVehicles = () => {
         populateGarageDropdown(elements.vehicleGarageSelect);

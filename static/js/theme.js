@@ -6,7 +6,7 @@ import { App } from './main.js';
  * @param {string} theme - The theme to apply ('light' or 'dark').
  */
 export const applyTheme = (theme) => {
-    console.log(`Applying theme: ${theme}`);
+    console.log(`[INFO] Applying theme: ${theme}`);
     const html = document.documentElement;
     if (theme === 'light') {
         html.classList.add('light');
@@ -25,10 +25,14 @@ export const applyTheme = (theme) => {
 export const initTheme = () => {
     themeSwitcherBtn.addEventListener('click', () => {
         const newTheme = document.documentElement.classList.contains('light') ? 'dark' : 'light';
-        console.log(`Theme toggled to: ${newTheme}`);
+        console.log(`[INFO] Theme toggled to: ${newTheme}`);
         applyTheme(newTheme);
         if (App.currentUser && App.currentUser.id) {
-            App.updateProfile(App.currentUser.id, { theme: newTheme }, false); // Pass false to prevent list refresh
+            try {
+                App.updateProfile(App.currentUser.id, { theme: newTheme }, false);
+            } catch (error) {
+                console.error('[ERROR] Failed to save theme preference:', error);
+            }
         }
     });
 

@@ -20,11 +20,11 @@
                 </div>
             </div>
             <div id="raceday-countdown-container" class="hidden items-center">
-                <span id="raceday-countdown-label" class="text-lg font-bold mr-2">Days Until Raceday:</span>
-                <div id="raceday-countdown-circle" class="w-16 h-16 bg-orange-500 rounded-full flex items-center justify-center text-white shadow-lg">
+                <span id="raceday-countdown-label" class="text-lg font-bold mr-2 hidden">Days Until Raceday:</span>
+                <div id="raceday-countdown-circle" class="w-16 h-16 bg-orange-500 rounded-full flex items-center justify-center text-white shadow-lg hidden">
                     <span id="raceday-countdown-days" class="text-3xl font-bold"></span>
                 </div>
-                <div id="no-raceday-icon" class="hidden">
+                <div id="no-raceday-container" class="hidden">
                      <a href="#" id="add-raceday-link" class="text-blue-500 hover:underline text-lg">+ Add Race</a>
                 </div>
             </div>
@@ -152,15 +152,18 @@
                             <fieldset id="add-vehicle-fieldset">
                                 <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                                     <div>
-                                        <label for="vehicle-year-select" class="block text-sm font-medium">Year</label>
+                                        <label for="vehicle-year-search" class="block text-sm font-medium">Search Year</label>
+                                        <input type="text" id="vehicle-year-search" class="mt-1 block w-full bg-input border border-border rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500" placeholder="e.g., 2023">
                                         <select id="vehicle-year-select" class="mt-1 block w-full bg-input border border-border rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500" required></select>
                                     </div>
                                     <div>
-                                        <label for="vehicle-make-select" class="block text-sm font-medium">Make</label>
+                                        <label for="vehicle-make-search" class="block text-sm font-medium">Search Make</label>
+                                        <input type="text" id="vehicle-make-search" class="mt-1 block w-full bg-input border border-border rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500" placeholder="e.g., Ford">
                                         <select id="vehicle-make-select" class="mt-1 block w-full bg-input border border-border rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500" required disabled></select>
                                     </div>
                                     <div>
-                                        <label for="vehicle-model-select" class="block text-sm font-medium">Model</label>
+                                        <label for="vehicle-model-search" class="block text-sm font-medium">Search Model</label>
+                                        <input type="text" id="vehicle-model-search" class="mt-1 block w-full bg-input border border-border rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500" placeholder="e.g., Mustang">
                                         <select id="vehicle-model-select" class="mt-1 block w-full bg-input border border-border rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500" required disabled></select>
                                     </div>
                                 </div>
@@ -476,15 +479,18 @@
             <form id="edit-vehicle-form">
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                     <div>
-                        <label for="edit-vehicle-year-select" class="block text-sm font-medium">Year</label>
+                        <label for="edit-vehicle-year-search" class="block text-sm font-medium">Search Year</label>
+                        <input type="text" id="edit-vehicle-year-search" class="mt-1 block w-full bg-input border border-border rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500" placeholder="e.g., 2023">
                         <select id="edit-vehicle-year-select" class="mt-1 block w-full bg-input border border-border rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500" required></select>
                     </div>
                     <div>
-                        <label for="edit-vehicle-make-select" class="block text-sm font-medium">Make</label>
+                        <label for="edit-vehicle-make-search" class="block text-sm font-medium">Search Make</label>
+                        <input type="text" id="edit-vehicle-make-search" class="mt-1 block w-full bg-input border border-border rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500" placeholder="e.g., Ford">
                         <select id="edit-vehicle-make-select" class="mt-1 block w-full bg-input border border-border rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500" required></select>
                     </div>
                     <div>
-                        <label for="edit-vehicle-model-select" class="block text-sm font-medium">Model</label>
+                        <label for="edit-vehicle-model-search" class="block text-sm font-medium">Search Model</label>
+                        <input type="text" id="edit-vehicle-model-search" class="mt-1 block w-full bg-input border border-border rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500" placeholder="e.g., Mustang">
                         <select id="edit-vehicle-model-select" class="mt-1 block w-full bg-input border border-border rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500" required></select>
                     </div>
                 </div>

@@ -8,7 +8,7 @@ let currentProfileForPinSettings = null;
 export const checkProfileStatus = () => {
     if (!App.currentUser) return;
 
-    console.log("Checking profile status for garages and vehicles...");
+    console.log("[INFO] Checking profile status for garages and vehicles...");
 
     fetch(`/get-garages/${App.currentUser.id}`)
         .then(res => res.json())
@@ -23,16 +23,17 @@ export const checkProfileStatus = () => {
             if (vehicleData.success && vehicleData.vehicles.length === 0) {
                 showMessage('Reminder: No vehicles found. Please add a vehicle.', false);
             }
-        });
+        })
+        .catch(error => console.error("[ERROR] Error checking profile status:", error));
 };
 
 const hideProfileModal = () => {
-    console.log("Hiding create profile modal.");
+    console.log("[DEBUG] Hiding create profile modal.");
     elements.profileModal.classList.add('hidden');
 };
 
 const showProfileModal = () => {
-    console.log("Showing create profile modal.");
+    console.log("[DEBUG] Showing create profile modal.");
     hideSelectProfileModal();
     elements.profileForm.reset();
     elements.pinInput.disabled = true;
@@ -40,17 +41,17 @@ const showProfileModal = () => {
 };
 
 const hideSelectProfileModal = () => {
-    console.log("Hiding select profile modal.");
+    console.log("[DEBUG] Hiding select profile modal.");
     elements.selectProfileModal.classList.add('hidden');
 };
 
 const hidePinEntryModal = () => {
-    console.log("Hiding PIN entry modal.");
+    console.log("[DEBUG] Hiding PIN entry modal.");
     elements.pinEntryModal.classList.add('hidden');
 };
 
 const hidePinSettingsModal = () => {
-    console.log("Hiding PIN settings modal.");
+    console.log("[DEBUG] Hiding PIN settings modal.");
     elements.pinSettingsModal.classList.add('hidden');
 };
 
@@ -68,13 +69,13 @@ const executeDelete = (profileId) => {
         }
     })
     .catch(error => {
-        console.error('Error deleting profile:', error);
+        console.error('[ERROR] Error deleting profile:', error);
         showMessage('Failed to delete profile.', false);
     });
 };
 
 const showPinEntryModal = (profile, forDelete = false) => {
-    console.log(`Showing PIN entry modal for ${profile.username}. For delete: ${forDelete}`);
+    console.log(`[INFO] Showing PIN entry modal for ${profile.username}. For delete: ${forDelete}`);
     elements.pinEntryText.textContent = forDelete ? `Enter PIN to delete ${profile.username}` : `Enter PIN for ${profile.username}`;
     elements.pinEntryInput.value = '';
     elements.pinEntryModal.classList.remove('hidden');
@@ -99,12 +100,16 @@ const showPinEntryModal = (profile, forDelete = false) => {
             } else {
                 showMessage(data.message, false);
             }
+        })
+        .catch(error => {
+            console.error('[ERROR] Error verifying PIN:', error);
+            showMessage('Failed to verify PIN.', false);
         });
     };
 };
 
 const showAdminPinForDelete = (profile) => {
-    console.log(`Showing admin PIN modal for deleting ${profile.username}`);
+    console.log(`[INFO] Showing admin PIN modal for deleting ${profile.username}`);
     elements.devPinEntryModal.classList.remove('hidden');
     elements.devPinEntryInput.focus();
 
@@ -117,13 +122,13 @@ const showAdminPinForDelete = (profile) => {
             const data = await response.json();
 
             if (data.success && enteredPin === data.pin) {
-                console.log("Admin PIN correct. Executing delete.");
+                console.log("[INFO] Admin PIN correct. Executing delete.");
                 executeDelete(profile.id);
             } else {
                 showMessage('Incorrect Admin PIN.', false);
             }
         } catch (error) {
-            console.error("Error verifying admin PIN:", error);
+            console.error("[ERROR] Error verifying admin PIN:", error);
             showMessage("An error occurred during verification.", false);
         } finally {
             elements.devPinEntryInput.value = '';
@@ -136,7 +141,7 @@ const showPinEntryForDelete = (profile) => {
 };
 
 const showPinSettingsModal = (profile) => {
-    console.log(`Showing PIN settings modal for ${profile.username}`);
+    console.log(`[INFO] Showing PIN settings modal for ${profile.username}`);
     currentProfileForPinSettings = profile;
     elements.pinSettingsHeading.textContent = `PIN Settings for ${profile.username}`;
     elements.editEnablePinCheckbox.checked = profile.pinEnabled;
@@ -168,7 +173,7 @@ const selectProfile = (profile) => {
         }
     })
     .catch(error => {
-        console.error('Error selecting profile:', error);
+        console.error('[ERROR] Error selecting profile:', error);
         showMessage('An error occurred while selecting the profile.', false);
     });
 };
@@ -187,13 +192,13 @@ export const updateProfile = (profileId, updates, refreshList = true) => {
         }
     })
     .catch(error => {
-        console.error('Error updating profile:', error);
+        console.error('[ERROR] Error updating profile:', error);
         showMessage('Failed to update profile.', false);
     });
 };
 
 const showSelectProfileModal = (profiles, limitReached) => {
-    console.log(`Showing select profile modal. Profiles: ${profiles.length}, Limit Reached: ${limitReached}`);
+    console.log(`[DEBUG] Showing select profile modal. Profiles: ${profiles.length}, Limit Reached: ${limitReached}`);
     elements.profileList.innerHTML = '';
     profiles.forEach(profile => {
         const container = document.createElement('div');
@@ -214,7 +219,7 @@ const showSelectProfileModal = (profiles, limitReached) => {
             helmetIcon.querySelector('path').setAttribute('fill', e.target.value);
         });
         colorInput.addEventListener('change', (e) => {
-            console.log(`Profile color changed for ${profile.username}`);
+            console.log(`[DEBUG] Profile color changed for ${profile.username}`);
             updateProfile(profile.id, { helmetColor: e.target.value });
         });
         const nameSpan = document.createElement('span');
@@ -234,7 +239,7 @@ const showSelectProfileModal = (profiles, limitReached) => {
         const saveEdit = () => {
             const newUsername = nameInput.value.trim();
             if (newUsername && newUsername !== profile.username) {
-                console.log(`Profile username updated for ${profile.id}`);
+                console.log(`[DEBUG] Profile username updated for ${profile.id}`);
                 updateProfile(profile.id, { username: newUsername });
             } else {
                 nameInput.classList.add('hidden');
@@ -257,14 +262,14 @@ const showSelectProfileModal = (profiles, limitReached) => {
         pinButton.className = 'ml-4 text-text-secondary hover:text-text-primary';
         pinButton.title = 'Edit PIN Settings';
         pinButton.onclick = () => {
-            console.log(`Click Event: Edit PIN for profile '${profile.username}'.`);
+            console.log(`[INFO] Click Event: Edit PIN for profile '${profile.username}'.`);
             showPinSettingsModal(profile);
         };
         const selectButton = document.createElement('button');
         selectButton.textContent = 'Select';
         selectButton.className = 'ml-4 px-3 py-1 bg-blue-500 hover:bg-blue-600 rounded-md text-sm text-white';
         selectButton.onclick = () => {
-            console.log(`Click Event: Selected profile '${profile.username}'.`);
+            console.log(`[INFO] Click Event: Selected profile '${profile.username}'.`);
             if (profile.pinEnabled) {
                 showPinEntryModal(profile);
             } else {
@@ -275,7 +280,7 @@ const showSelectProfileModal = (profiles, limitReached) => {
         deleteButton.innerHTML = '&times;';
         deleteButton.className = 'ml-2 text-red-500 hover:text-red-400 font-bold text-2xl px-2';
         deleteButton.onclick = () => {
-            console.log(`Click Event: Delete initiated for profile '${profile.username}'.`);
+            console.log(`[INFO] Click Event: Delete initiated for profile '${profile.username}'.`);
             showConfirmationModal(
                 `Are you sure you want to delete the profile for "${profile.username}"? This action cannot be undone.`,
                 () => {
@@ -312,7 +317,7 @@ const showSelectProfileModal = (profiles, limitReached) => {
 };
 
 export const checkProfiles = () => {
-    console.log("Checking for existing profiles...");
+    console.log("[INFO] Checking for existing profiles...");
     return fetch('/check-profiles')
         .then(response => response.json())
         .then(data => {
@@ -323,7 +328,7 @@ export const checkProfiles = () => {
             }
         })
         .catch(error => {
-            console.error('Error checking profiles:', error);
+            console.error('[ERROR] Error checking profiles:', error);
             showMessage('An error occurred while checking profiles.', false);
         });
 };
@@ -331,7 +336,7 @@ export const checkProfiles = () => {
 export const initProfiles = () => {
     elements.enablePinCheckbox.addEventListener('change', (e) => {
         elements.pinInput.disabled = !e.target.checked;
-        console.log(`PIN input enabled state changed to: ${!elements.pinInput.disabled}`);
+        console.log(`[DEBUG] PIN input enabled state changed to: ${!elements.pinInput.disabled}`);
         if (!e.target.checked) {
             elements.pinInput.value = '';
         }
@@ -339,7 +344,7 @@ export const initProfiles = () => {
 
     elements.profileForm.addEventListener('submit', (e) => {
         e.preventDefault();
-        console.log("Click Event: 'Save Profile' button clicked.");
+        console.log("[INFO] Click Event: 'Save Profile' button clicked.");
         const username = elements.usernameInput.value.trim();
         const helmetColor = elements.helmetColorInput.value;
         const pinEnabled = elements.enablePinCheckbox.checked;
@@ -372,7 +377,7 @@ export const initProfiles = () => {
             }
         })
         .catch(error => {
-            console.error('Error creating profile:', error);
+            console.error('[ERROR] Error creating profile:', error);
             showMessage('Failed to create profile.', false);
         })
         .finally(() => {
@@ -382,13 +387,13 @@ export const initProfiles = () => {
     });
 
     elements.cancelCreateBtn.addEventListener('click', () => {
-        console.log("Click Event: 'Cancel Create Profile' button clicked.");
+        console.log("[INFO] Click Event: 'Cancel Create Profile' button clicked.");
         hideProfileModal();
         checkProfiles();
     });
 
     elements.addNewProfileBtn.addEventListener('click', () => {
-        console.log("Click Event: 'Add New Profile' button clicked.");
+        console.log("[INFO] Click Event: 'Add New Profile' button clicked.");
         showProfileModal();
     });
 

@@ -11,20 +11,27 @@ const renderChecklists = () => {
         elements.checklistList.innerHTML = '<p class="text-text-secondary">No checklist templates created yet.</p>';
         return;
     }
-
     currentChecklists.forEach(checklist => {
-        const checklistCard = document.createElement('div');
-        checklistCard.className = 'bg-card-darker p-4 rounded-lg';
-        checklistCard.innerHTML = `
-            <div class="flex justify-between items-center">
-                <h3 class="font-bold text-lg">${checklist.name}</h3>
+        const preRaceTasks = checklist.pre_race_tasks.length;
+        const midDayTasks = checklist.mid_day_tasks.length;
+        const postRaceTasks = checklist.post_race_tasks.length;
+        const totalTasks = preRaceTasks + midDayTasks + postRaceTasks;
+
+        const card = document.createElement('div');
+        card.className = 'bg-card-darker p-4 rounded-lg';
+        card.innerHTML = `
+            <div class="flex justify-between items-start">
+                <div>
+                    <h3 class="font-bold text-lg">${checklist.name}</h3>
+                    <p class="text-sm text-text-secondary">${totalTasks} total tasks</p>
+                </div>
                 <div class="flex space-x-2">
                     <button class="edit-checklist-btn text-sm" data-id="${checklist.id}">Edit</button>
                     <button class="delete-checklist-btn text-sm text-red-500" data-id="${checklist.id}">Delete</button>
                 </div>
             </div>
         `;
-        elements.checklistList.appendChild(checklistCard);
+        elements.checklistList.appendChild(card);
     });
 };
 
@@ -36,31 +43,35 @@ const loadChecklists = () => {
             if (data.success) {
                 currentChecklists = data.checklists;
                 renderChecklists();
+            } else {
+                showMessage('Could not load checklists.', false);
             }
-        });
+        })
+        .catch(error => console.error('[ERROR] Error loading checklists:', error));
 };
 
-const renderTasks = (container, tasks) => {
+const renderTaskItems = (container, tasks) => {
     container.innerHTML = '';
     tasks.forEach((task, index) => {
-        const taskElement = document.createElement('div');
-        taskElement.className = 'flex items-center justify-between bg-input p-2 rounded';
-        taskElement.innerHTML = `
+        const taskEl = document.createElement('div');
+        taskEl.className = 'flex items-center justify-between bg-input p-2 rounded';
+        taskEl.innerHTML = `
             <span>${task}</span>
-            <button type="button" class="delete-task-btn text-red-500" data-index="${index}">&times;</button>
+            <button type="button" class="delete-task-btn text-red-500 hover:text-red-400" data-index="${index}">&times;</button>
         `;
-        container.appendChild(taskElement);
+        container.appendChild(taskEl);
     });
 };
 
 const showEditChecklistModal = (checklist) => {
     checklistToEdit = checklist;
-    elements.editChecklistTitle.textContent = `Edit: ${checklist.name}`;
+    console.log("[INFO] Showing edit checklist modal for:", checklist.name);
+    elements.editChecklistTitle.textContent = `Edit "${checklist.name}"`;
     elements.editChecklistNameInput.value = checklist.name;
 
-    renderTasks(elements.editPreRaceTasks, checklist.pre_race_tasks || []);
-    renderTasks(elements.editMidDayTasks, checklist.mid_day_tasks || []);
-    renderTasks(elements.editPostRaceTasks, checklist.post_race_tasks || []);
+    renderTaskItems(elements.editPreRaceTasks, checklist.pre_race_tasks);
+    renderTaskItems(elements.editMidDayTasks, checklist.mid_day_tasks);
+    renderTaskItems(elements.editPostRaceTasks, checklist.post_race_tasks);
 
     elements.editChecklistModal.classList.remove('hidden');
 };
@@ -68,19 +79,28 @@ const showEditChecklistModal = (checklist) => {
 export const initChecklists = () => {
     elements.addChecklistForm.addEventListener('submit', (e) => {
         e.preventDefault();
-        const checklistData = { name: elements.checklistNameInput.value };
+        const name = elements.checklistNameInput.value;
+        if (!name) {
+            showMessage('Checklist name is required.', false);
+            return;
+        }
+
         fetch(`/add-checklist/${App.currentUser.id}`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(checklistData)
+            body: JSON.stringify({ name }),
         })
         .then(res => res.json())
         .then(data => {
             showMessage(data.message, data.success);
-            if(data.success) {
+            if (data.success) {
                 elements.addChecklistForm.reset();
                 loadChecklists();
             }
+        })
+        .catch(error => {
+            console.error('[ERROR] Error adding checklist:', error);
+            showMessage('Failed to add checklist.', false);
         });
     });
 
@@ -97,7 +117,11 @@ export const initChecklists = () => {
                     .then(res => res.json())
                     .then(data => {
                         showMessage(data.message, data.success);
-                        loadChecklists();
+                        if(data.success) loadChecklists();
+                    })
+                    .catch(error => {
+                        console.error('[ERROR] Error deleting checklist:', error);
+                        showMessage('Failed to delete checklist.', false);
                     });
             });
         } else if (button.classList.contains('edit-checklist-btn')) {
@@ -105,59 +129,20 @@ export const initChecklists = () => {
         }
     });
 
-    elements.backToPrepFromChecklistsBtn.addEventListener('click', () => {
-        App.setView('raceDayPrep');
-    });
-
-    elements.cancelEditChecklistBtn.addEventListener('click', () => {
-        elements.editChecklistModal.classList.add('hidden');
-    });
-
-    const addTaskHandler = (input, container, key) => {
-        const taskText = input.value.trim();
-        if (taskText) {
-            checklistToEdit[key].push(taskText);
-            renderTasks(container, checklistToEdit[key]);
-            input.value = '';
-        }
-    };
-
-    elements.addPreRaceTaskInput.addEventListener('keydown', (e) => {
-        if (e.key === 'Enter') {
-            e.preventDefault();
-            addTaskHandler(elements.addPreRaceTaskInput, elements.editPreRaceTasks, 'pre_race_tasks');
-        }
-    });
-    elements.addMidDayTaskInput.addEventListener('keydown', (e) => {
-        if (e.key === 'Enter') {
-            e.preventDefault();
-            addTaskHandler(elements.addMidDayTaskInput, elements.editMidDayTasks, 'mid_day_tasks');
-        }
-    });
-    elements.addPostRaceTaskInput.addEventListener('keydown', (e) => {
-        if (e.key === 'Enter') {
-            e.preventDefault();
-            addTaskHandler(elements.addPostRaceTaskInput, elements.editPostRaceTasks, 'post_race_tasks');
-        }
-    });
-
-    elements.editChecklistModal.addEventListener('click', (e) => {
-        if(e.target.classList.contains('delete-task-btn')) {
-            const index = parseInt(e.target.dataset.index, 10);
-            const container = e.target.parentElement.parentElement;
-            const key = container.id.replace('edit-', '').replace('-tasks', '_tasks');
-            checklistToEdit[key].splice(index, 1);
-            renderTasks(container, checklistToEdit[key]);
-        }
-    });
-
     elements.editChecklistForm.addEventListener('submit', (e) => {
         e.preventDefault();
-        checklistToEdit.name = elements.editChecklistNameInput.value;
+
+        const updatedChecklist = {
+            name: elements.editChecklistNameInput.value,
+            pre_race_tasks: Array.from(elements.editPreRaceTasks.querySelectorAll('span')).map(span => span.textContent),
+            mid_day_tasks: Array.from(elements.editMidDayTasks.querySelectorAll('span')).map(span => span.textContent),
+            post_race_tasks: Array.from(elements.editPostRaceTasks.querySelectorAll('span')).map(span => span.textContent),
+        };
+
         fetch(`/update-checklist/${App.currentUser.id}/${checklistToEdit.id}`, {
             method: 'PUT',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(checklistToEdit),
+            body: JSON.stringify(updatedChecklist),
         })
         .then(res => res.json())
         .then(data => {
@@ -166,7 +151,51 @@ export const initChecklists = () => {
                 elements.editChecklistModal.classList.add('hidden');
                 loadChecklists();
             }
+        })
+        .catch(error => {
+            console.error('[ERROR] Error updating checklist:', error);
+            showMessage('Failed to update checklist.', false);
         });
+    });
+
+    const setupTaskInputs = (input, container, taskArray) => {
+        input.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                const taskText = input.value.trim();
+                if (taskText) {
+                    taskArray.push(taskText);
+                    renderTaskItems(container, taskArray);
+                    input.value = '';
+                }
+            }
+        });
+    };
+
+    setupTaskInputs(elements.addPreRaceTaskInput, elements.editPreRaceTasks, checklistToEdit ? checklistToEdit.pre_race_tasks : []);
+    setupTaskInputs(elements.addMidDayTaskInput, elements.editMidDayTasks, checklistToEdit ? checklistToEdit.mid_day_tasks : []);
+    setupTaskInputs(elements.addPostRaceTaskInput, elements.editPostRaceTasks, checklistToEdit ? checklistToEdit.post_race_tasks : []);
+
+    elements.editChecklistModal.addEventListener('click', (e) => {
+        if (e.target.classList.contains('delete-task-btn')) {
+            const index = parseInt(e.target.dataset.index, 10);
+            const container = e.target.closest('div.space-y-2');
+            let taskArray;
+            if (container.id === 'edit-pre-race-tasks') taskArray = checklistToEdit.pre_race_tasks;
+            if (container.id === 'edit-mid-day-tasks') taskArray = checklistToEdit.mid_day_tasks;
+            if (container.id === 'edit-post-race-tasks') taskArray = checklistToEdit.post_race_tasks;
+
+            taskArray.splice(index, 1);
+            renderTaskItems(container, taskArray);
+        }
+    });
+
+    elements.cancelEditChecklistBtn.addEventListener('click', () => {
+        elements.editChecklistModal.classList.add('hidden');
+    });
+
+    elements.backToPrepFromChecklistsBtn.addEventListener('click', () => {
+        App.setView('raceDayPrep');
     });
 
     App.loadChecklists = loadChecklists;

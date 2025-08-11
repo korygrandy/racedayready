@@ -1,7 +1,7 @@
 import * as elements from './elements.js';
 import { showMessage, showConfirmationModal, createVehicleIcon } from './ui.js';
 import { App } from './main.js';
-import { showEditVehicleModal } from './vehicle.js'; // NEW
+import { showEditVehicleModal } from './vehicle.js';
 
 let currentEvents = [];
 let eventToEdit = null;
@@ -24,15 +24,18 @@ export const updateRacedayCountdown = () => {
                 elements.racedayCountdownDays.textContent = diffDays;
                 elements.racedayCountdownCircle.classList.remove('hidden');
                 elements.racedayCountdownLabel.textContent = "Days Until Raceday:";
+                elements.racedayCountdownLabel.classList.remove('hidden');
                 elements.noRacedayIcon.classList.add('hidden');
                 elements.racedayCountdownContainer.classList.remove('hidden');
             } else {
                 elements.racedayCountdownCircle.classList.add('hidden');
                 elements.racedayCountdownLabel.textContent = "No Raceday Scheduled";
+                elements.racedayCountdownLabel.classList.remove('hidden');
                 elements.noRacedayIcon.classList.remove('hidden');
                 elements.racedayCountdownContainer.classList.remove('hidden');
             }
-        });
+        })
+        .catch(error => console.error('[ERROR] Error fetching next raceday:', error));
 };
 
 const populateVehicleMultiSelect = async (selectElement, selectedVehicleIds = []) => {
@@ -54,7 +57,7 @@ const populateVehicleMultiSelect = async (selectElement, selectedVehicleIds = []
             selectElement.innerHTML = '<option disabled>No vehicles available</option>';
         }
     } catch (error) {
-        console.error("Error fetching vehicles for event form:", error);
+        console.error("[ERROR] Error fetching vehicles for event form:", error);
     }
 };
 
@@ -77,13 +80,13 @@ const populateChecklistMultiSelect = async (selectElement, selectedChecklistIds 
             selectElement.innerHTML = '<option disabled>No checklists available</option>';
         }
     } catch (error) {
-        console.error("Error fetching checklists for event form:", error);
+        console.error("[ERROR] Error fetching checklists for event form:", error);
     }
 };
 
 const showEditEventModal = (event) => {
     eventToEdit = event;
-    console.log("Showing edit event modal for:", event);
+    console.log("[INFO] Showing edit event modal for:", event);
     elements.editEventNameInput.value = event.name;
     elements.editEventStartInput.value = event.start_time;
     elements.editEventEndInput.value = event.end_time;
@@ -112,21 +115,20 @@ const renderEvents = () => {
         if (event.vehicles && event.vehicles.length > 0) {
             vehicleHtml = '<div class="mt-2 flex flex-wrap gap-2">';
             event.vehicles.forEach(vehicle => {
-                const photoSrc = vehicle.photo || vehicle.photoURL;
-                const vehicleElement = document.createElement('div');
-                vehicleElement.className = 'event-vehicle-photo w-12 h-12 cursor-pointer hover:opacity-75';
-                vehicleElement.title = `${vehicle.year} ${vehicle.make} ${vehicle.model}`;
-                vehicleElement.dataset.vehicleId = vehicle.id;
+                const vehicleContainer = document.createElement('div');
+                vehicleContainer.className = 'event-vehicle-photo w-12 h-12 cursor-pointer hover:opacity-75';
+                vehicleContainer.title = `${vehicle.year} ${vehicle.make} ${vehicle.model}`;
+                vehicleContainer.dataset.vehicleId = vehicle.id;
 
-                if (photoSrc) {
+                if (vehicle.photo || vehicle.photoURL) {
                     const img = document.createElement('img');
-                    img.src = photoSrc;
+                    img.src = vehicle.photo || vehicle.photoURL;
                     img.className = 'w-full h-full object-cover rounded-md';
-                    vehicleElement.appendChild(img);
+                    vehicleContainer.appendChild(img);
                 } else {
-                    vehicleElement.appendChild(createVehicleIcon('w-12 h-12'));
+                    vehicleContainer.appendChild(createVehicleIcon('w-12 h-12'));
                 }
-                vehicleHtml += vehicleElement.outerHTML;
+                vehicleHtml += vehicleContainer.outerHTML;
             });
             vehicleHtml += '</div>';
         }
@@ -161,7 +163,8 @@ const loadEvents = () => {
                 currentEvents = data.events;
                 renderEvents();
             }
-        });
+        })
+        .catch(error => console.error('[ERROR] Error loading events:', error));
 };
 
 export const initSchedule = () => {
@@ -191,6 +194,10 @@ export const initSchedule = () => {
                 loadEvents();
                 updateRacedayCountdown();
             }
+        })
+        .catch(error => {
+            console.error('[ERROR] Error adding event:', error);
+            showMessage('Failed to add event.', false);
         });
     });
 
@@ -220,6 +227,10 @@ export const initSchedule = () => {
                 loadEvents();
                 updateRacedayCountdown();
             }
+        })
+        .catch(error => {
+            console.error('[ERROR] Error updating event:', error);
+            showMessage('Failed to update event.', false);
         });
     });
 
@@ -239,6 +250,10 @@ export const initSchedule = () => {
                             showMessage(data.message, data.success);
                             loadEvents();
                             updateRacedayCountdown();
+                        })
+                        .catch(error => {
+                            console.error('[ERROR] Error deleting event:', error);
+                            showMessage('Failed to delete event.', false);
                         });
                 });
             } else if (button.classList.contains('edit-event-btn')) {
@@ -250,7 +265,7 @@ export const initSchedule = () => {
             const event = currentEvents.find(ev => ev.id === eventId);
             const vehicle = event.vehicles.find(v => v.id === vehicleId);
             if(vehicle) {
-                console.log("Vehicle icon clicked, showing edit modal for:", vehicle);
+                console.log("[INFO] Vehicle icon clicked, showing edit modal for:", vehicle);
                 showEditVehicleModal(vehicle);
             }
         }
@@ -265,7 +280,7 @@ export const initSchedule = () => {
     });
 
     elements.racedayCountdownContainer.addEventListener('click', () => {
-        console.log("Raceday countdown clicked, navigating to schedule.");
+        console.log("[INFO] Raceday countdown clicked, navigating to schedule.");
         App.setView('raceSchedule');
     });
 
