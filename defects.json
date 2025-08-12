@@ -1,22 +1,22 @@
 [
     {
-        "id": "defect-garage-card-listener",
-        "title": "Garage Management Card is Non-Functional (Fixed: Aug 12, 2025) - v2.4.2",
-        "resolution": "The event listener for the 'Garage Management' card (`feature-card-6`) was inadvertently removed from `main.js` during a previous refactor. The listener has been restored, fixing the navigation."
+        "id": "feature-track-photo-on-event",
+        "title": "Event Cards Do Not Display Associated Track Photo (Enhanced: Aug 12, 2025) - v2.4.7",
+        "resolution": "The `/get-events` endpoint in `app.py` was updated to fetch and include track photo URLs with the event data. The `renderEvents` function in `schedule.js` was then modified to display this image on the event card, similar to how vehicle photos are displayed."
     },
     {
-        "id": "defect-edit-event-vehicle-selector",
-        "title": "Vehicle Selector Missing from Edit Event Modal (Fixed: Aug 12, 2025) - v2.4.1",
-        "resolution": "A regression was introduced in v2.4.0 where the element ID for the 'Edit Event' modal's vehicle container was not added to `elements.js`. This caused the `populateVehicleSelector` function to fail silently. The missing element reference has been added, restoring the feature."
+        "id": "defect-my-tracks-label",
+        "title": "'My Tracks' Label is Confusing for a Global Feature (Fixed: Aug 12, 2025) - v2.4.6",
+        "resolution": "The heading for the track list in `index.html` was changed from 'My Tracks' to 'All Tracks' to better reflect that the list is a global resource shared by all users. The underlying logic for ownership (editing/deleting) remains correct."
     },
     {
-        "id": "feature-visual-vehicle-selection",
-        "title": "Vehicle Selection for Events is Text-Based (Enhanced: Aug 12, 2025) - v2.4.0",
-        "resolution": "Replaced the `<select>` dropdown for vehicles in the event modals in `index.html` with a `<div>`. Updated `schedule.js` to populate this div with selectable vehicle images. Added CSS in `style.css` to handle the visual states (grayed-out/selected) of the images."
+        "id": "feature-global-and-associated-tracks",
+        "title": "Tracks are User-Specific and Not Linkable to Events (Enhanced: Aug 12, 2025) - v2.4.5",
+        "resolution": "Migrated tracks to a top-level global collection in Firestore. Updated all backend endpoints in `app.py` to handle global fetching and ownership checks for edits/deletes. Added a track selection dropdown to the event modals in `index.html` and updated `schedule.js` and `track.js` to manage the new association logic."
     },
     {
-        "id": "defect-complex-query-failure",
-        "title": "Raceday Countdown Fails Due to Complex Firestore Query (Fixed: Aug 12, 2025) - v2.3.9",
-        "resolution": "The `get_next_raceday` function in `app.py` used a query that required a composite index. The function was refactored to fetch all race day events for a user and then perform the date filtering and sorting in Python, removing the need for the index and fixing the bug."
+        "id": "defect-edit-track-modal-scroll",
+        "title": "Edit Track Modal is Not Scrollable (Fixed: Aug 12, 2025) - v2.4.5",
+        "resolution": "The HTML structure for the 'Edit Track' modal in `index.html` was refactored to create a scrollable container for the form content, making it usable on smaller screens."
     }
 ]

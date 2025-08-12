@@ -61,6 +61,7 @@
                         <div id="feature-card-1" class="bg-card p-6 rounded-lg shadow-lg hover:bg-interactive-hover cursor-pointer"><h2 class="text-xl font-bold mb-2">Race Day Preparation & Logistics</h2></div>
                         <div id="feature-card-2" class="bg-card p-6 rounded-lg shadow-lg hover:bg-interactive-hover cursor-pointer"><h2 class="text-xl font-bold mb-2">Vehicle Management</h2></div>
                         <div id="feature-card-6" class="bg-card p-6 rounded-lg shadow-lg hover:bg-interactive-hover cursor-pointer"><h2 class="text-xl font-bold mb-2">Garage Management</h2></div>
+                        <div id="feature-card-9" class="bg-card p-6 rounded-lg shadow-lg hover:bg-interactive-hover cursor-pointer"><h2 class="text-xl font-bold mb-2">Track Management</h2></div>
                         <div id="feature-card-8" class="bg-card p-6 rounded-lg shadow-lg hover:bg-interactive-hover cursor-pointer"><h2 class="text-xl font-bold mb-2">Winner's Circle</h2></div>
                         <div id="feature-card-7" class="bg-card p-6 rounded-lg shadow-lg hover:bg-interactive-hover cursor-pointer"><h2 class="text-xl font-bold mb-2">Upcoming Features</h2></div>
                     </div>
@@ -100,6 +101,10 @@
                                     </div>
                                 </div>
                                 <div>
+                                    <label for="event-track-select" class="block text-sm font-medium">Track</label>
+                                    <select id="event-track-select" class="mt-1 block w-full bg-input border border-border rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500"></select>
+                                </div>
+                                <div>
                                     <label class="block text-sm font-medium">Vehicles</label>
                                     <div id="event-vehicles-container" class="mt-1 grid grid-cols-3 md:grid-cols-5 gap-2 bg-input border border-border rounded-md p-2 h-32 overflow-y-auto"></div>
                                 </div>
@@ -126,6 +131,70 @@
                     </div>
                     <button id="back-to-prep-from-schedule-btn" class="mt-8 px-6 py-2 bg-gray-600 text-white font-semibold rounded-lg shadow-md hover:bg-gray-500">
                         Back to Prep & Logistics
+                    </button>
+                </div>
+
+                <div id="track-management-view" class="w-full max-w-4xl mx-auto hidden text-center py-16">
+                    <h1 class="text-4xl md:text-5xl font-bold mb-8">Track Management</h1>
+                    <div class="bg-card p-8 rounded-lg shadow-lg text-left">
+                        <h2 class="text-2xl font-bold mb-4">Add a New Track</h2>
+                        <form id="add-track-form">
+                            <div class="space-y-4">
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                    <div>
+                                        <label for="track-name-input" class="block text-sm font-medium">Track Name</label>
+                                        <input type="text" id="track-name-input" class="mt-1 block w-full bg-input border border-border rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500" required>
+                                    </div>
+                                    <div>
+                                        <label for="track-location-input" class="block text-sm font-medium">Location (e.g., City, State)</label>
+                                        <input type="text" id="track-location-input" class="mt-1 block w-full bg-input border border-border rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500" required>
+                                    </div>
+                                </div>
+                                <div>
+                                    <label for="track-type-select" class="block text-sm font-medium">Track Type</label>
+                                    <select id="track-type-select" class="mt-1 block w-full bg-input border border-border rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                                        <option>Circuit</option>
+                                        <option>Oval</option>
+                                        <option>Drag Strip</option>
+                                        <option>Rally Stage</option>
+                                        <option>Other</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label for="track-google-url-input" class="block text-sm font-medium">Google Maps URL</label>
+                                    <input type="url" id="track-google-url-input" class="mt-1 block w-full bg-input border border-border rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500" placeholder="https://maps.app.goo.gl/...">
+                                </div>
+                                <div>
+                                    <label for="track-photo-input" class="block text-sm font-medium">Track Photo</label>
+                                    <input type="file" id="track-photo-input" accept="image/*" class="mt-1 block w-full text-sm text-text-secondary file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"/>
+                                    <div class="relative mt-2">
+                                        <div class="absolute inset-0 flex items-center" aria-hidden="true"><div class="w-full border-t border-border"></div></div>
+                                        <div class="relative flex justify-center"><span class="px-2 bg-card text-sm text-text-secondary">OR</span></div>
+                                    </div>
+                                    <input type="text" id="track-photo-url-input" class="mt-2 block w-full bg-input border border-border rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500" placeholder="Enter Image URL">
+                                    <img id="track-photo-preview" class="hidden mt-4 rounded-lg max-h-48 w-auto"/>
+                                </div>
+                                <div>
+                                    <label for="track-layout-photo-input" class="block text-sm font-medium">Track Layout Photo</label>
+                                    <input type="file" id="track-layout-photo-input" accept="image/*" class="mt-1 block w-full text-sm text-text-secondary file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"/>
+                                    <div class="relative mt-2">
+                                        <div class="absolute inset-0 flex items-center" aria-hidden="true"><div class="w-full border-t border-border"></div></div>
+                                        <div class="relative flex justify-center"><span class="px-2 bg-card text-sm text-text-secondary">OR</span></div>
+                                    </div>
+                                    <input type="text" id="track-layout-photo-url-input" class="mt-2 block w-full bg-input border border-border rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500" placeholder="Enter Image URL">
+                                    <img id="track-layout-photo-preview" class="hidden mt-4 rounded-lg max-h-48 w-auto"/>
+                                </div>
+                            </div>
+                            <button id="add-track-btn" type="submit" class="mt-6 w-full bg-blue-500 text-white font-semibold py-2 px-4 rounded-lg shadow-md hover:bg-blue-600">Add Track</button>
+                        </form>
+                    </div>
+                    <div class="mt-8 bg-card p-8 rounded-lg shadow-lg text-left">
+                        <h2 class="text-2xl font-bold mb-4">All Tracks</h2>
+                        <div id="track-list" class="space-y-4">
+                        </div>
+                    </div>
+                    <button id="back-to-features-from-track-btn" class="mt-8 px-6 py-2 bg-gray-600 text-white font-semibold rounded-lg shadow-md hover:bg-gray-500">
+                        Back to Features
                     </button>
                 </div>
 
@@ -591,6 +660,10 @@
                         </div>
                     </div>
                     <div>
+                        <label for="edit-event-track-select" class="block text-sm font-medium">Track</label>
+                        <select id="edit-event-track-select" class="mt-1 block w-full bg-input border border-border rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500"></select>
+                    </div>
+                    <div>
                         <label class="block text-sm font-medium">Vehicles</label>
                         <div id="edit-event-vehicles-container" class="mt-1 grid grid-cols-3 md:grid-cols-5 gap-2 bg-input border border-border rounded-md p-2 h-32 overflow-y-auto"></div>
                     </div>
@@ -645,6 +718,56 @@
                 <div class="mt-6 flex justify-end space-x-4">
                     <button id="cancel-edit-checklist-btn" type="button" class="px-4 py-2 bg-gray-600 text-white font-semibold rounded-lg hover:bg-gray-500">Cancel</button>
                     <button id="save-checklist-btn" type="submit" class="px-4 py-2 bg-blue-500 text-white font-semibold rounded-lg shadow-md hover:bg-blue-600">Save Changes</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div id="edit-track-modal" class="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center hidden z-40 p-4">
+        <div class="bg-card p-8 rounded-lg shadow-2xl w-full max-w-md max-h-full overflow-y-auto">
+            <h2 class="text-2xl font-bold mb-4">Edit Track</h2>
+            <form id="edit-track-form">
+                <div class="space-y-4">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label for="edit-track-name-input" class="block text-sm font-medium">Track Name</label>
+                            <input type="text" id="edit-track-name-input" class="mt-1 block w-full bg-input border border-border rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500" required>
+                        </div>
+                        <div>
+                            <label for="edit-track-location-input" class="block text-sm font-medium">Location</label>
+                            <input type="text" id="edit-track-location-input" class="mt-1 block w-full bg-input border border-border rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500" required>
+                        </div>
+                    </div>
+                    <div>
+                        <label for="edit-track-type-select" class="block text-sm font-medium">Track Type</label>
+                        <select id="edit-track-type-select" class="mt-1 block w-full bg-input border border-border rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                            <option>Circuit</option>
+                            <option>Oval</option>
+                            <option>Drag Strip</option>
+                            <option>Rally Stage</option>
+                            <option>Other</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label for="edit-track-google-url-input" class="block text-sm font-medium">Google Maps URL</label>
+                        <input type="url" id="edit-track-google-url-input" class="mt-1 block w-full bg-input border border-border rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500" placeholder="https://maps.app.goo.gl/...">
+                    </div>
+                    <div>
+                        <label for="edit-track-photo-input" class="block text-sm font-medium">Track Photo</label>
+                        <input type="file" id="edit-track-photo-input" accept="image/*" class="mt-1 block w-full text-sm text-text-secondary file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"/>
+                        <input type="text" id="edit-track-photo-url-input" class="mt-2 block w-full bg-input border border-border rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500" placeholder="Enter Image URL">
+                        <img id="edit-track-photo-preview" class="hidden mt-4 rounded-lg max-h-48 w-auto"/>
+                    </div>
+                    <div>
+                        <label for="edit-track-layout-photo-input" class="block text-sm font-medium">Track Layout Photo</label>
+                        <input type="file" id="edit-track-layout-photo-input" accept="image/*" class="mt-1 block w-full text-sm text-text-secondary file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"/>
+                        <input type="text" id="edit-track-layout-photo-url-input" class="mt-2 block w-full bg-input border border-border rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500" placeholder="Enter Image URL">
+                        <img id="edit-track-layout-photo-preview" class="hidden mt-4 rounded-lg max-h-48 w-auto"/>
+                    </div>
+                </div>
+                <div class="mt-6 flex justify-end space-x-4">
+                    <button id="cancel-edit-track-btn" type="button" class="px-4 py-2 bg-gray-600 text-white font-semibold rounded-lg hover:bg-gray-500">Cancel</button>
+                    <button id="save-track-btn" type="submit" class="px-4 py-2 bg-blue-500 text-white font-semibold rounded-lg shadow-md hover:bg-blue-600">Save Changes</button>
                 </div>
             </form>
         </div>

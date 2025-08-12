@@ -9,6 +9,7 @@ import { initVehicle } from './vehicle.js';
 import { initSchedule, updateRacedayCountdown } from './schedule.js';
 import { initChecklists } from './checklist.js';
 import { initLapTimes } from './laptimes.js';
+import { initTrack } from './track.js';
 
 // --- Global App Object ---
 export const App = {
@@ -22,6 +23,7 @@ export const App = {
     loadEvents: null,
     loadChecklists: null,
     loadLapTimes: null,
+    loadTracks: null,
 };
 
 // --- View Toggling Logic ---
@@ -37,12 +39,12 @@ const setView = (viewName) => {
     elements.raceScheduleView.classList.add('hidden');
     elements.checklistManagementView.classList.add('hidden');
     elements.lapTimeView.classList.add('hidden');
-    elements.profileHeaderBtn.classList.add('hidden'); // Hide by default
+    elements.trackManagementView.classList.add('hidden');
+    elements.profileHeaderBtn.classList.add('hidden');
 
     const isDevMode = viewName === 'developer';
     elements.devModeBtn.classList.toggle('hidden', isDevMode);
 
-    // Show/hide global elements
     if (viewName !== 'main' && App.currentUser) {
         elements.profileHeaderBtn.classList.remove('hidden');
         elements.racedayCountdownContainer.classList.remove('hidden');
@@ -77,6 +79,9 @@ const setView = (viewName) => {
     } else if (viewName === 'lapTime') {
         elements.lapTimeView.classList.remove('hidden');
         if (App.loadLapTimes) App.loadLapTimes();
+    } else if (viewName === 'trackManagement') {
+        elements.trackManagementView.classList.remove('hidden');
+        if (App.loadTracks) App.loadTracks();
     } else {
         elements.mainView.classList.remove('hidden');
     }
@@ -176,7 +181,6 @@ const initEventListeners = () => {
         setView('vehicleManagement');
     });
 
-    // FIX: Restored the missing event listener for the Garage Management card.
     elements.featureCard6.addEventListener('click', () => {
         console.log("[INFO] 'Garage Management' card clicked.");
         setView('garageManagement');
@@ -190,6 +194,11 @@ const initEventListeners = () => {
     elements.featureCard8.addEventListener('click', () => {
         console.log("[INFO] 'Winner's Circle' card clicked.");
         setView('lapTime');
+    });
+
+    elements.featureCard9.addEventListener('click', () => {
+        console.log("[INFO] 'Track Management' card clicked.");
+        setView('trackManagement');
     });
 
     document.querySelectorAll('.inactive-card').forEach(card => {
@@ -224,4 +233,5 @@ document.addEventListener('DOMContentLoaded', () => {
     initSchedule();
     initChecklists();
     initLapTimes();
+    initTrack();
 });

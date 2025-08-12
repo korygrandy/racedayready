@@ -115,6 +115,29 @@ const populateChecklistMultiSelect = async (selectElement, selectedChecklistIds 
     }
 };
 
+const populateTrackDropdown = async (selectElement, selectedTrackId = null) => {
+    try {
+        const response = await fetch('/get-all-tracks');
+        const data = await response.json();
+        selectElement.innerHTML = '<option value="">Select a Track</option>';
+        if (data.success && data.tracks.length > 0) {
+            data.tracks.forEach(track => {
+                const option = document.createElement('option');
+                option.value = track.id;
+                option.textContent = track.name;
+                if (selectedTrackId && track.id === selectedTrackId) {
+                    option.selected = true;
+                }
+                selectElement.appendChild(option);
+            });
+        } else {
+            selectElement.innerHTML = '<option disabled>No tracks available</option>';
+        }
+    } catch (error) {
+        console.error("[ERROR] Error fetching tracks for event form:", error);
+    }
+};
+
 const showEditEventModal = (event) => {
     eventToEdit = event;
     console.log("[INFO] Showing edit event modal for:", event);
@@ -130,6 +153,7 @@ const showEditEventModal = (event) => {
     elements.editIsRacedayCheckbox.checked = event.is_raceday;
     populateVehicleSelector(elements.editEventVehiclesContainer, event.vehicles.map(v => v.id));
     populateChecklistMultiSelect(elements.editEventChecklistsSelect, event.checklists);
+    populateTrackDropdown(elements.editEventTrackSelect, event.trackId);
     elements.editEventModal.classList.remove('hidden');
 };
 
@@ -147,6 +171,11 @@ const renderEvents = () => {
 
         const startTime = new Date(event.start_time).toLocaleString();
         const endTime = event.end_time ? new Date(event.end_time).toLocaleString() : 'N/A';
+        const trackName = event.trackName ? `at ${event.trackName}` : '';
+
+        const trackPhotoHtml = (event.trackPhoto || event.trackPhotoURL)
+            ? `<img src="${event.trackPhoto || event.trackPhotoURL}" class="w-16 h-16 object-cover rounded-md mr-4">`
+            : '';
 
         let vehicleHtml = '<p class="text-sm text-text-secondary mt-2">No vehicles assigned.</p>';
         if (event.vehicles && event.vehicles.length > 0) {
@@ -172,10 +201,13 @@ const renderEvents = () => {
 
         eventCard.innerHTML = `
             <div class="flex justify-between items-start">
-                <div>
-                    <h3 class="font-bold text-lg">${event.name} ${event.is_raceday ? '🏁' : ''}</h3>
-                    <p class="text-sm text-text-secondary">Starts: ${startTime}</p>
-                    <p class="text-sm text-text-secondary">Ends: ${endTime}</p>
+                <div class="flex">
+                    ${trackPhotoHtml}
+                    <div>
+                        <h3 class="font-bold text-lg">${event.name} ${trackName} ${event.is_raceday ? '🏁' : ''}</h3>
+                        <p class="text-sm text-text-secondary">Starts: ${startTime}</p>
+                        <p class="text-sm text-text-secondary">Ends: ${endTime}</p>
+                    </div>
                 </div>
                 <div class="flex items-center space-x-4">
                     <button class="edit-event-btn text-text-secondary hover:text-white" data-id="${event.id}" title="Edit Event">
@@ -196,6 +228,7 @@ const loadEvents = () => {
     if (!App.currentUser || !App.currentUser.id) return;
     populateVehicleSelector(elements.eventVehiclesContainer);
     populateChecklistMultiSelect(elements.eventChecklistsSelect);
+    populateTrackDropdown(elements.eventTrackSelect);
 
     fetch(`/get-events/${App.currentUser.id}`)
         .then(res => res.json())
@@ -233,6 +266,7 @@ export const initSchedule = () => {
             endTime: endTimeStr ? new Date(endTimeStr).toISOString() : null,
             vehicles: selectedVehicles,
             checklists: selectedChecklists,
+            trackId: elements.eventTrackSelect.value,
             isRaceday: elements.isRacedayCheckbox.checked,
         };
 
@@ -280,6 +314,7 @@ export const initSchedule = () => {
             endTime: endTimeStr ? new Date(endTimeStr).toISOString() : null,
             vehicles: selectedVehicles,
             checklists: selectedChecklists,
+            trackId: elements.editEventTrackSelect.value,
             isRaceday: elements.editIsRacedayCheckbox.checked,
         };
 

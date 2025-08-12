@@ -1,39 +1,35 @@
 [
     {
-        "version": "2.4.2",
+        "version": "2.4.7",
         "date": "August 12, 2025",
         "notes": [
-            "FIX: Resolved a regression defect by restoring the missing event listener for the 'Garage Management' feature card."
+            "FEATURE: The photo of a track is now displayed on its associated event card in the 'Upcoming Events' list."
         ]
     },
     {
-        "version": "2.4.1",
+        "version": "2.4.6",
         "date": "August 12, 2025",
         "notes": [
-            "FIX: Resolved a regression defect where the visual vehicle selector would not appear in the 'Edit Event' modal."
+            "ENHANCEMENT: Renamed the 'My Tracks' section to 'All Tracks' to clarify that tracks are a global, shared resource."
         ]
     },
     {
-        "version": "2.4.0",
+        "version": "2.4.5",
         "date": "August 12, 2025",
         "notes": [
-            "FEATURE: Implemented a visual vehicle selector for events, allowing users to click vehicle photos to add them to an event.",
-            "ENHANCEMENT: The event creation and editing modals now display vehicles in a grid instead of a dropdown."
+            "FEATURE: Tracks are now a global resource, visible to all users.",
+            "FEATURE: Added the ability to associate a track with an event from the event creation/editing modals.",
+            "ENHANCEMENT: The 'Edit Track' modal is now scrollable to accommodate all fields on smaller screens.",
+            "SECURITY: Only the user who created a track can edit or delete it."
         ]
     },
     {
-        "version": "2.3.9",
+        "version": "2.4.4",
         "date": "August 12, 2025",
         "notes": [
-            "FIX: Resolved a persistent issue where the Raceday Countdown would not display by simplifying the backend database query and handling date filtering in the Python code."
-        ]
-    },
-    {
-        "version": "2.3.8",
-        "date": "August 12, 2025",
-        "notes": [
-            "FIX: The admin setting for lap time deletion is now correctly checked on initial load of the Winner's Circle.",
-            "ENHANCEMENT: The lap times for the first available event are now loaded automatically."
+            "FEATURE: Implemented full edit functionality for the Track Management feature.",
+            "FEATURE: Added the ability to upload or link a track layout image.",
+            "ENHANCEMENT: Track cards now include a link to view the track layout image directly on the page."
         ]
     }
 ]
