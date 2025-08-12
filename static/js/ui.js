@@ -1,17 +1,44 @@
+let messageQueue = [];
+let isMessageVisible = false;
+
 /**
- * Displays a message to the user.
+ * Processes the next message in the queue if the message box is not currently visible.
+ */
+const processMessageQueue = () => {
+    if (isMessageVisible || messageQueue.length === 0) {
+        return; // Don't show a new message if one is already visible or queue is empty
+    }
+
+    isMessageVisible = true;
+    const { message, isSuccess } = messageQueue.shift(); // Get the next message
+    const messageBox = document.getElementById('message-box');
+
+    messageBox.textContent = message;
+    messageBox.className = `fixed bottom-24 right-4 py-2 px-4 rounded-lg shadow-lg text-white z-50 ${isSuccess ? 'bg-green-500' : 'bg-red-500'}`;
+
+    // Make it visible
+    messageBox.classList.remove('opacity-0', 'translate-y-10');
+
+    // Set a timer to hide the message
+    setTimeout(() => {
+        messageBox.classList.add('opacity-0', 'translate-y-10');
+
+        // Set another timer to process the next message after the fade-out transition completes
+        setTimeout(() => {
+            isMessageVisible = false;
+            processMessageQueue();
+        }, 1000); // This duration should match the CSS transition duration
+    }, 1800); // How long the message stays visible before fading
+};
+
+/**
+ * Adds a message to the queue to be displayed to the user.
  * @param {string} message - The message to display.
  * @param {boolean} isSuccess - Whether the message indicates success or failure.
  */
 export const showMessage = (message, isSuccess) => {
-    const messageBox = document.getElementById('message-box');
-    messageBox.textContent = message;
-    messageBox.className = `fixed bottom-24 right-4 py-2 px-4 rounded-lg shadow-lg text-white z-50 ${isSuccess ? 'bg-green-500' : 'bg-red-500'}`;
-    messageBox.classList.remove('opacity-0', 'translate-y-10');
-
-    setTimeout(() => {
-        messageBox.classList.add('opacity-0', 'translate-y-10');
-    }, 6000);
+    messageQueue.push({ message, isSuccess });
+    processMessageQueue();
 };
 
 /**

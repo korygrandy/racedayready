@@ -2,8 +2,33 @@ import * as elements from './elements.js';
 import { showMessage, createHelmetIcon, showConfirmationModal } from './ui.js';
 import { applyTheme } from './theme.js';
 import { App } from './main.js';
+import { updateRacedayCountdown } from './schedule.js';
 
 let currentProfileForPinSettings = null;
+
+/**
+ * Logs all of a user's events that are flagged as a Raceday for debugging.
+ * @param {object} profile - The user profile object.
+ */
+const logRacedayEvents = async (profile) => {
+    console.log(`[DEBUG] Checking for all Raceday events for user: ${profile.username}`);
+    try {
+        const response = await fetch(`/get-events/${profile.id}`);
+        const data = await response.json();
+        if (data.success && data.events) {
+            const racedayEvents = data.events.filter(event => event.is_raceday === true);
+            if (racedayEvents.length > 0) {
+                console.log(`[DEBUG] Found ${racedayEvents.length} event(s) flagged as a Raceday:`, racedayEvents);
+            } else {
+                console.log("[DEBUG] No events flagged as a Raceday found for this user.");
+            }
+        } else {
+            console.warn("[DEBUG] Could not fetch event list for logging.");
+        }
+    } catch (error) {
+        console.error("[DEBUG] Error fetching event list for logging:", error);
+    }
+};
 
 export const checkProfileStatus = () => {
     if (!App.currentUser) return;
@@ -155,6 +180,10 @@ const selectProfile = (profile) => {
     applyTheme(profile.theme);
     hideSelectProfileModal();
     hidePinEntryModal();
+
+    // Run both the UI update and the debug logging
+    updateRacedayCountdown();
+    logRacedayEvents(profile);
 
     fetch('/get-ready', {
         method: 'POST',

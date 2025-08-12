@@ -13,6 +13,7 @@ const loadAdminSettings = () => {
                 elements.vehicleLimitInput.value = data.vehicle_limit;
                 elements.featureRequestLimitInput.value = data.feature_request_settings.limit;
                 elements.enableDeletionCheckbox.checked = data.feature_request_settings.deletion_enabled;
+                elements.enableLapTimeDeletionCheckbox.checked = data.lap_time_settings.deletion_enabled;
             } else {
                 showMessage("Failed to load admin settings.", false);
             }
@@ -20,7 +21,7 @@ const loadAdminSettings = () => {
         .catch(error => console.error('[ERROR] Failed to fetch admin settings:', error));
 };
 
-const updateLimits = (url, payload) => {
+const updateSettings = (url, payload) => {
     fetch(url, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -29,7 +30,7 @@ const updateLimits = (url, payload) => {
     .then(res => res.json())
     .then(data => showMessage(data.message, data.success))
     .catch(error => {
-        console.error(`[ERROR] Failed to update limit at ${url}:`, error);
+        console.error(`[ERROR] Failed to update settings at ${url}:`, error);
         showMessage('Failed to update settings.', false);
     });
 };
@@ -37,25 +38,35 @@ const updateLimits = (url, payload) => {
 export const initAdmin = () => {
     elements.updateProfileLimitBtn.addEventListener('click', () => {
         const limit = parseInt(elements.profileLimitInput.value, 10);
-        updateLimits('/update-profile-limit', { limit });
+        updateSettings('/update-profile-limit', { limit });
     });
 
     elements.updateGarageVehicleLimitsBtn.addEventListener('click', () => {
         const garageLimit = parseInt(elements.garageLimitInput.value, 10);
         const vehicleLimit = parseInt(elements.vehicleLimitInput.value, 10);
-        updateLimits('/update-garage-limit', { limit: garageLimit });
-        updateLimits('/update-vehicle-limit', { limit: vehicleLimit });
+        updateSettings('/update-garage-limit', { limit: garageLimit });
+        updateSettings('/update-vehicle-limit', { limit: vehicleLimit });
     });
 
     elements.updateFeatureSettingsBtn.addEventListener('click', () => {
         const limit = parseInt(elements.featureRequestLimitInput.value, 10);
         const deletion_enabled = elements.enableDeletionCheckbox.checked;
-        updateLimits('/update-feature-request-settings', { limit, deletion_enabled });
+        updateSettings('/update-feature-request-settings', { limit, deletion_enabled });
+    });
+
+    elements.updateLapTimeSettingsBtn.addEventListener('click', () => {
+        const deletion_enabled = elements.enableLapTimeDeletionCheckbox.checked;
+        updateSettings('/update-lap-time-settings', { deletion_enabled });
     });
 
     elements.manageFeatureRequestsLink.addEventListener('click', (e) => {
         e.preventDefault();
         App.setView('upcomingFeatures');
+    });
+
+    elements.goToWinnersCircleLink.addEventListener('click', (e) => {
+        e.preventDefault();
+        App.setView('lapTime');
     });
 
     App.loadAdminSettings = loadAdminSettings;

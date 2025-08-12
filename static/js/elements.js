@@ -177,6 +177,9 @@ export const featureRequestLimitInput = document.getElementById('feature-request
 export const enableDeletionCheckbox = document.getElementById('enable-deletion-checkbox');
 export const updateFeatureSettingsBtn = document.getElementById('update-feature-settings-btn');
 export const manageFeatureRequestsLink = document.getElementById('manage-feature-requests-link');
+export const enableLapTimeDeletionCheckbox = document.getElementById('enable-lap-time-deletion-checkbox');
+export const updateLapTimeSettingsBtn = document.getElementById('update-lap-time-settings-btn');
+export const goToWinnersCircleLink = document.getElementById('go-to-winners-circle-link');
 
 // Lap Time Elements
 export const lapTimeView = document.getElementById('lap-time-view');

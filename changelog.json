@@ -1,49 +1,41 @@
 [
     {
-        "version": "2.2.0",
-        "date": "August 11, 2025",
+        "version": "2.3.8",
+        "date": "August 12, 2025",
         "notes": [
-            "FIX: Resolved a TypeError on application load by adding a defensive null check in `vehicle.js`, improving script stability."
+            "FIX: The admin setting for lap time deletion is now correctly checked on initial load of the Winner's Circle.",
+            "ENHANCEMENT: The lap times for the first available event are now loaded automatically."
         ]
     },
     {
-        "version": "2.1.9",
+        "version": "2.3.7",
         "date": "August 11, 2025",
         "notes": [
-            "FEATURE: Implemented real-time filtering for vehicle Year, Make, and Model dropdowns to improve search usability.",
-            "FIX: The '+ Add Race' link in the header now correctly navigates to the Race Schedule view.",
-            "FIX: Corrected a missing utility function that prevented vehicle search filters from working."
+            "FEATURE: Admins can now delete any lap time when deletion is enabled, regardless of ownership.",
+            "FEATURE: Added a 'Manage Lap Times' link in Developer Mode for easier administration."
         ]
     },
     {
-        "version": "2.1.7",
+        "version": "2.3.6",
         "date": "August 11, 2025",
         "notes": [
-            "FIX: Resolved critical JavaScript TypeError that prevented event listeners from initializing correctly.",
-            "FIX: Restored functionality to the 'Winner's Circle' and 'Upcoming Features' cards.",
-            "FEATURE: Added a 'Manage Garages' button to the Vehicle Management screen for more intuitive access."
+            "FIX: Resolved a critical SyntaxError on load by correctly exporting the 'initLapTimes' function from its module."
         ]
     },
     {
-        "version": "2.1.6",
+        "version": "2.3.5",
         "date": "August 11, 2025",
         "notes": [
-            "Fixed a critical defect caused by a typo in an HTML element ID that prevented the application from loading correctly."
+            "FEATURE: Added a new admin setting in Developer Mode to enable or disable the deletion of lap times.",
+            "SECURITY: The backend now checks if lap time deletion is enabled before processing a delete request."
         ]
     },
     {
-        "version": "2.1.5",
+        "version": "2.3.4",
         "date": "August 11, 2025",
         "notes": [
-            "Added a new 'Winner's Circle' feature to record and display lap times for raceday events.",
-            "Redesigned the SVG helmet icon to include a visor for a more distinct and polished look."
-        ]
-    },
-    {
-        "version": "2.1.4",
-        "date": "August 11, 2025",
-        "notes": [
-            "Replaced all 'Edit' and 'Delete' text buttons with icons for a cleaner and more consistent user interface across the application."
+            "FIX: Resolved a 500 Internal Server Error when fetching all events for the Winner's Circle.",
+            "ENHANCEMENT: Moved event sorting from the database query to the Python backend to avoid the need for a composite index in Firestore."
         ]
     }
 ]
