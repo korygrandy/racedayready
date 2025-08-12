@@ -287,5 +287,11 @@ export const initSchedule = () => {
         App.setView('raceSchedule');
     });
 
+    elements.addRacedayLink.addEventListener('click', (e) => {
+        e.preventDefault();
+        console.log("[INFO] '+ Add Race' link clicked, navigating to schedule.");
+        App.setView('raceSchedule');
+    });
+
     App.loadEvents = loadEvents;
 };

@@ -8,6 +8,7 @@ import { initGarage } from './garage.js';
 import { initVehicle } from './vehicle.js';
 import { initSchedule, updateRacedayCountdown } from './schedule.js';
 import { initChecklists } from './checklist.js';
+import { initLapTimes } from './laptimes.js';
 
 // --- Global App Object ---
 export const App = {
@@ -20,6 +21,7 @@ export const App = {
     loadVehicles: null,
     loadEvents: null,
     loadChecklists: null,
+    loadLapTimes: null,
 };
 
 // --- View Toggling Logic ---
@@ -34,6 +36,7 @@ const setView = (viewName) => {
     elements.vehicleManagementView.classList.add('hidden');
     elements.raceScheduleView.classList.add('hidden');
     elements.checklistManagementView.classList.add('hidden');
+    elements.lapTimeView.classList.add('hidden');
     elements.profileHeaderBtn.classList.add('hidden'); // Hide by default
 
     const isDevMode = viewName === 'developer';
@@ -71,6 +74,9 @@ const setView = (viewName) => {
     } else if (viewName === 'checklistManagement') {
         elements.checklistManagementView.classList.remove('hidden');
         if (App.loadChecklists) App.loadChecklists();
+    } else if (viewName === 'lapTime') {
+        elements.lapTimeView.classList.remove('hidden');
+        if (App.loadLapTimes) App.loadLapTimes();
     } else {
         elements.mainView.classList.remove('hidden');
     }
@@ -180,6 +186,11 @@ const initEventListeners = () => {
         setView('upcomingFeatures');
     });
 
+    elements.featureCard8.addEventListener('click', () => {
+        console.log("[INFO] 'Winner's Circle' card clicked.");
+        setView('lapTime');
+    });
+
     document.querySelectorAll('.inactive-card').forEach(card => {
         card.addEventListener('click', () => {
             console.log(`[DEBUG] Inactive card clicked. ID: ${card.id}`);
@@ -211,4 +222,5 @@ document.addEventListener('DOMContentLoaded', () => {
     initVehicle();
     initSchedule();
     initChecklists();
+    initLapTimes();
 });

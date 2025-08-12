@@ -926,6 +926,42 @@ def delete_checklist(profile_id, checklist_id):
         return jsonify({'success': False, 'message': f'An error occurred: {e}'}), 500
 
 
+# --- Lap Time Routes ---
+@app.route('/add-lap-time', methods=['POST'])
+def add_lap_time():
+    try:
+        data = request.get_json()
+        event_id = data.get('eventId')
+        lap_time = data.get('lapTime')
+        username = data.get('username')
+
+        if not all([event_id, lap_time, username]):
+            return jsonify({'success': False, 'message': 'Missing data.'}), 400
+
+        doc_ref = db.collection('lap_times').document()
+        doc_ref.set({
+            'eventId': event_id,
+            'lapTime': lap_time,
+            'username': username,
+            'timestamp': datetime.datetime.now(datetime.timezone.utc)
+        })
+        return jsonify({'success': True, 'message': 'Lap time recorded!'}), 201
+    except Exception as e:
+        return jsonify({'success': False, 'message': str(e)}), 500
+
+
+@app.route('/get-lap-times/<event_id>', methods=['GET'])
+def get_lap_times(event_id):
+    try:
+        times_ref = db.collection('lap_times').where('eventId', '==', event_id).stream()
+        lap_times = [doc.to_dict() for doc in times_ref]
+        # Sort by lap time, ascending
+        lap_times.sort(key=lambda x: x['lapTime'])
+        return jsonify({'success': True, 'lap_times': lap_times}), 200
+    except Exception as e:
+        return jsonify({'success': False, 'error': str(e)}), 500
+
+
 if __name__ == '__main__':
     # This block allows the script to be run directly.
     # debug=True allows for auto-reloading when you save changes.
