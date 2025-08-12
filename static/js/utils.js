@@ -1,6 +1,20 @@
 import { showMessage } from './ui.js';
 
 /**
+ * Debounce function to limit the rate at which a function gets called.
+ * @param {function} func - The function to debounce.
+ * @param {number} delay - The delay in milliseconds.
+ * @returns {function} The debounced function.
+ */
+export const debounce = (func, delay) => {
+    let timeout;
+    return (...args) => {
+        clearTimeout(timeout);
+        timeout = setTimeout(() => func.apply(this, args), delay);
+    };
+};
+
+/**
  * Filters the options in a select dropdown based on user input.
  * @param {HTMLInputElement} input - The text input element for searching.
  * @param {HTMLSelectElement} select - The select dropdown to filter.

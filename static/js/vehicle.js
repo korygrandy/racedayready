@@ -1,7 +1,8 @@
 import * as elements from './elements.js';
 import { showMessage, showConfirmationModal, createVehicleIcon } from './ui.js';
 import { App } from './main.js';
-import { populateYearDropdown, populateMakeDropdown, populateModelDropdown, filterDropdown } from './utils.js';
+import { populateYearDropdown, populateMakeDropdown, populateModelDropdown, filterDropdown, debounce } from './utils.js';
+import { MOCK_VEHICLES } from './mock-data.js';
 
 let currentVehicles = [];
 let vehicleToEdit = null;
@@ -115,11 +116,27 @@ const renderVehicles = () => {
 };
 
 const loadVehicles = () => {
-    if (!App.currentUser || !App.currentUser.id) return;
+    if (!App.currentUser) return;
+
+    if (App.dev_mode) {
+        console.log("[MOCK] Using mock vehicle data.");
+        currentVehicles = MOCK_VEHICLES;
+        renderVehicles();
+        return;
+    }
+
+    if (App.cache.vehicles) {
+        console.log("[CACHE] Using cached vehicles.");
+        currentVehicles = App.cache.vehicles;
+        renderVehicles();
+        return;
+    }
+
     fetch(`/get-vehicles/${App.currentUser.id}`)
         .then(response => response.json())
         .then(data => {
             if (data.success) {
+                App.cache.vehicles = data.vehicles;
                 currentVehicles = data.vehicles;
                 renderVehicles();
                 if (data.limit_reached) {
@@ -194,6 +211,7 @@ export const initVehicle = () => {
             if (data.success) {
                 elements.addVehicleForm.reset();
                 elements.vehiclePhotoPreview.classList.add('hidden');
+                App.cache.vehicles = null; // Invalidate cache
                 loadVehicles();
             }
         })
@@ -224,6 +242,7 @@ export const initVehicle = () => {
             showMessage(data.message, data.success);
             if (data.success) {
                 elements.editVehicleModal.classList.add('hidden');
+                App.cache.vehicles = null; // Invalidate cache
                 loadVehicles();
             }
         })
@@ -247,7 +266,6 @@ export const initVehicle = () => {
         App.setView('garageManagement');
     });
 
-    // FIX: Added null check to prevent crash on load
     if (elements.manageGaragesLinkBtn) {
         elements.manageGaragesLinkBtn.addEventListener('click', () => {
             App.setView('garageManagement');
@@ -269,6 +287,7 @@ export const initVehicle = () => {
                     .then(res => res.json())
                     .then(data => {
                         showMessage(data.message, data.success);
+                        App.cache.vehicles = null; // Invalidate cache
                         loadVehicles();
                     })
                     .catch(error => {
@@ -307,13 +326,14 @@ export const initVehicle = () => {
         }
     });
 
-    // Search listeners
-    elements.vehicleYearSearch.addEventListener('keyup', () => filterDropdown(elements.vehicleYearSearch, elements.vehicleYearSelect));
-    elements.vehicleMakeSearch.addEventListener('keyup', () => filterDropdown(elements.vehicleMakeSearch, elements.vehicleMakeSelect));
-    elements.vehicleModelSearch.addEventListener('keyup', () => filterDropdown(elements.vehicleModelSearch, elements.vehicleModelSelect));
-    elements.editVehicleYearSearch.addEventListener('keyup', () => filterDropdown(elements.editVehicleYearSearch, elements.editVehicleYearSelect));
-    elements.editVehicleMakeSearch.addEventListener('keyup', () => filterDropdown(elements.editVehicleMakeSearch, elements.editVehicleMakeSelect));
-    elements.editVehicleModelSearch.addEventListener('keyup', () => filterDropdown(elements.editVehicleModelSearch, elements.editVehicleModelSelect));
+    // Debounced search listeners
+    const debouncedFilter = debounce((input, select) => filterDropdown(input, select), 300);
+    elements.vehicleYearSearch.addEventListener('keyup', () => debouncedFilter(elements.vehicleYearSearch, elements.vehicleYearSelect));
+    elements.vehicleMakeSearch.addEventListener('keyup', () => debouncedFilter(elements.vehicleMakeSearch, elements.vehicleMakeSelect));
+    elements.vehicleModelSearch.addEventListener('keyup', () => debouncedFilter(elements.vehicleModelSearch, elements.vehicleModelSelect));
+    elements.editVehicleYearSearch.addEventListener('keyup', () => debouncedFilter(elements.editVehicleYearSearch, elements.editVehicleYearSelect));
+    elements.editVehicleMakeSearch.addEventListener('keyup', () => debouncedFilter(elements.editVehicleMakeSearch, elements.editVehicleMakeSelect));
+    elements.editVehicleModelSearch.addEventListener('keyup', () => debouncedFilter(elements.editVehicleModelSearch, elements.editVehicleModelSelect));
 
     App.loadVehicles = () => {
         populateGarageDropdown(elements.vehicleGarageSelect);

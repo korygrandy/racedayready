@@ -1,34 +1,34 @@
 [
     {
-        "version": "2.4.8",
+        "version": "2.5.8",
         "date": "August 12, 2025",
         "notes": [
-            "FEATURE: Added a 'Maintenance Mode' toggle to Developer Mode.",
-            "FEATURE: Added a 'Default New User Theme' selector to Developer Mode."
+            "ENHANCEMENT: Replaced the animated racecar and CSS flag with a single animated checkered flag GIF on the main page.",
+            "OPTIMIZATION: Removed unused CSS and JavaScript related to the previous animations."
         ]
     },
     {
-        "version": "2.4.7",
+        "version": "2.5.7",
         "date": "August 12, 2025",
         "notes": [
-            "FEATURE: The photo of a track is now displayed on its associated event card in the 'Upcoming Events' list."
+            "ENHANCEMENT: Replaced the animated racecar SVG with an animated GIF on the main landing page.",
+            "FIX: Removed sound effect from playing on initial page load."
         ]
     },
     {
-        "version": "2.4.6",
+        "version": "2.5.6",
         "date": "August 12, 2025",
         "notes": [
-            "ENHANCEMENT: Renamed the 'My Tracks' section to 'All Tracks' to clarify that tracks are a global, shared resource."
+            "FEATURE: Added an animated racecar icon that slides in on page load and races off on button click.",
+            "ENHANCEMENT: The racecar sound effect now also plays automatically when the main page loads."
         ]
     },
     {
-        "version": "2.4.5",
+        "version": "2.5.5",
         "date": "August 12, 2025",
         "notes": [
-            "FEATURE: Tracks are now a global resource, visible to all users.",
-            "FEATURE: Added the ability to associate a track with an event from the event creation/editing modals.",
-            "ENHANCEMENT: The 'Edit Track' modal is now scrollable to accommodate all fields on smaller screens.",
-            "SECURITY: Only the user who created a track can edit or delete it."
+            "ENHANCEMENT: Replaced the synthesized racecar sound with an MP3 file for a more realistic effect.",
+            "OPTIMIZATION: Removed the unused Tone.js library."
         ]
     }
 ]

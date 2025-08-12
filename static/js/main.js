@@ -15,7 +15,11 @@ import { initTrack } from './track.js';
 export const App = {
     currentUser: null,
     isDevModeEnabled: false,
-    defaultTheme: 'dark',
+    dev_mode: false, // Toggle for using mock data
+    cache: {
+        tracks: null,
+        vehicles: null,
+    },
     setView: null,
     updateProfile: updateProfile,
     loadAdminSettings: null,
@@ -44,7 +48,6 @@ const setView = (viewName) => {
     elements.profileHeaderBtn.classList.add('hidden');
 
     const isDevMode = viewName === 'developer';
-    elements.devModeBtn.classList.toggle('hidden', isDevMode);
 
     if (viewName !== 'main' && App.currentUser) {
         elements.profileHeaderBtn.classList.remove('hidden');
@@ -125,24 +128,49 @@ const initDevPinModal = () => {
     });
 };
 
+const playRacecarSound = () => {
+    const audio = new Audio('/static/fx/racecar.mp3');
+    audio.play().catch(error => console.error("Audio playback failed:", error));
+};
+
+const injectFeatureCardIcons = () => {
+    const icons = {
+        'feature-card-icon-1': `<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75m-18 0h18M12 12.75h.008v.008H12v-.008z" /></svg>`,
+        'feature-card-icon-2': `<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M8.25 18.75a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m3 0h6m-9 0H3.375a1.125 1.125 0 01-1.125-1.125V14.25m17.25 4.5a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m3 0h1.125c.621 0 1.125-.504 1.125-1.125V14.25m-17.25 4.5v-1.875a3.375 3.375 0 003.375-3.375h1.5a1.125 1.125 0 011.125 1.125v-1.5a3.375 3.375 0 00-3.375-3.375H9.75" /></svg>`,
+        'feature-card-icon-6': `<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 21h16.5M4.5 3h15M5.25 3v18m13.5-18v18M9 6.75h6M9 11.25h6M9 15.75h6" /></svg>`,
+        'feature-card-icon-9': `<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9 6.75V15m6-8.25v8.25m-6-4.5h6m-6 4.5h6m-6-8.25H7.5a2.25 2.25 0 00-2.25 2.25v7.5a2.25 2.25 0 002.25 2.25h7.5a2.25 2.25 0 002.25-2.25v-7.5a2.25 2.25 0 00-2.25-2.25H15M3 12h18" /></svg>`,
+        'feature-card-icon-8': `<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M16.5 18.75h-9a9.75 9.75 0 011.036-4.825 9.75 9.75 0 019.714 0A9.75 9.75 0 0116.5 18.75z" /><path stroke-linecap="round" stroke-linejoin="round" d="M12 12.75a4.125 4.125 0 110-8.25 4.125 4.125 0 010 8.25zM12 12.75v6.75" /></svg>`,
+        'feature-card-icon-7': `<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6m0 0v6m0-6h6m-6 0H6" /></svg>`
+    };
+    for (const id in icons) {
+        const el = document.getElementById(id);
+        if (el) {
+            el.innerHTML = icons[id];
+        }
+    }
+};
+
 // --- Main Event Listeners ---
 const initEventListeners = () => {
-    elements.readyButton.addEventListener('click', () => {
-        console.log("[INFO] 'Get Ready' button clicked. Checking for profiles...");
-        elements.readyButton.disabled = true;
-        elements.readyButton.textContent = 'Checking...';
+    if (elements.readyButton) {
+        elements.readyButton.addEventListener('click', () => {
+            playRacecarSound();
+            console.log("[INFO] 'Get Ready' button clicked. Checking for profiles...");
+            elements.readyButton.disabled = true;
+            elements.readyButton.textContent = 'Checking...';
 
-        fetch('/get-ready', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({}),
-        }).catch(error => console.error("[ERROR] Error on readiness check:", error));
+            fetch('/get-ready', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({}),
+            }).catch(error => console.error("[ERROR] Error on readiness check:", error));
 
-        checkProfiles();
+            checkProfiles();
 
-        elements.readyButton.disabled = false;
-        elements.readyButton.textContent = 'Click to get ready!';
-    });
+            elements.readyButton.disabled = false;
+            elements.readyButton.textContent = 'Get Ready!';
+        });
+    }
 
     elements.devModeBtn.addEventListener('click', () => {
         if(document.getElementById('main-view').querySelector('h1').textContent.includes('Maintenance')) {
@@ -226,6 +254,7 @@ const initEventListeners = () => {
 // --- Initial Load ---
 document.addEventListener('DOMContentLoaded', () => {
     console.log("[INFO] DOM fully loaded and parsed. Initializing application.");
+    injectFeatureCardIcons();
     initEventListeners();
     initDevPinModal();
     initTheme();

@@ -62,7 +62,7 @@ const showProfileModal = () => {
     hideSelectProfileModal();
     elements.profileForm.reset();
     elements.pinInput.disabled = true;
-    elements.themeSelect.value = App.defaultTheme;
+    elements.themeSelect.value = 'dark'; // Default to dark
     elements.profileModal.classList.remove('hidden');
 };
 

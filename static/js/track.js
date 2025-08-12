@@ -1,6 +1,7 @@
 import * as elements from './elements.js';
 import { showMessage, showConfirmationModal } from './ui.js';
 import { App } from './main.js';
+import { MOCK_TRACKS } from './mock-data.js';
 
 let currentTracks = [];
 let trackToEdit = null;
@@ -59,10 +60,26 @@ const renderTracks = () => {
 
 const loadTracks = () => {
     if (!App.currentUser) return;
+
+    if (App.dev_mode) {
+        console.log("[MOCK] Using mock track data.");
+        currentTracks = MOCK_TRACKS;
+        renderTracks();
+        return;
+    }
+
+    if (App.cache.tracks) {
+        console.log("[CACHE] Using cached tracks.");
+        currentTracks = App.cache.tracks;
+        renderTracks();
+        return;
+    }
+
     fetch('/get-all-tracks')
         .then(res => res.json())
         .then(data => {
             if (data.success) {
+                App.cache.tracks = data.tracks;
                 currentTracks = data.tracks;
                 renderTracks();
             }
@@ -144,6 +161,7 @@ export const initTrack = () => {
                 elements.addTrackForm.reset();
                 elements.trackPhotoPreview.classList.add('hidden');
                 elements.trackLayoutPhotoPreview.classList.add('hidden');
+                App.cache.tracks = null; // Invalidate cache
                 loadTracks();
             }
         })
@@ -174,6 +192,7 @@ export const initTrack = () => {
             showMessage(data.message, data.success);
             if (data.success) {
                 elements.editTrackModal.classList.add('hidden');
+                App.cache.tracks = null; // Invalidate cache
                 loadTracks();
             }
         })
@@ -205,7 +224,10 @@ export const initTrack = () => {
                     .then(res => res.json())
                     .then(data => {
                         showMessage(data.message, data.success);
-                        if(data.success) loadTracks();
+                        if(data.success) {
+                            App.cache.tracks = null; // Invalidate cache
+                            loadTracks();
+                        }
                     })
                     .catch(error => console.error('[ERROR] Error deleting track:', error));
             });

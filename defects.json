@@ -1,22 +1,22 @@
 [
     {
-        "id": "feature-app-config-settings",
-        "title": "Application Lacks Global Configuration Options (Enhanced: Aug 12, 2025) - v2.4.8",
-        "resolution": "Added new UI elements to `index.html` and `elements.js` for Maintenance Mode and Default Theme. Created new backend functions and endpoints in `app.py` to manage these settings in Firestore. The main page route now checks for maintenance mode, and `profile.js` uses the new default theme setting."
+        "id": "feature-flag-gif-enhancement",
+        "title": "Main Page Animation Updated to GIF (Enhanced: Aug 12, 2025) - v2.5.8",
+        "resolution": "The CSS-animated flag and racecar SVG were removed from `index.html` and `style.css`. They were replaced with a single `<img>` tag pointing to `waving-flag.gif` to simplify the main page's visual elements."
     },
     {
-        "id": "defect-my-tracks-label",
-        "title": "'My Tracks' Label is Confusing for a Global Feature (Fixed: Aug 12, 2025) - v2.4.6",
-        "resolution": "The heading for the track list in `index.html` was changed from 'My Tracks' to 'All Tracks' to better reflect that the list is a global resource shared by all users. The underlying logic for ownership (editing/deleting) remains correct."
+        "id": "feature-animated-racecar",
+        "title": "Main Page is Static (Enhanced: Aug 12, 2025) - v2.5.6",
+        "resolution": "Added a racecar SVG to `index.html` and created CSS keyframe animations in `style.css` for its entrance and exit. The `main.js` file was updated to trigger these animations on page load and on the 'Get Ready!' button click, and to play the racecar sound on page load."
     },
     {
-        "id": "feature-global-and-associated-tracks",
-        "title": "Tracks are User-Specific and Not Linkable to Events (Enhanced: Aug 12, 2025) - v2.4.5",
-        "resolution": "Migrated tracks to a top-level global collection in Firestore. Updated all backend endpoints in `app.py` to handle global fetching and ownership checks for edits/deletes. Added a track selection dropdown to the event modals in `index.html` and updated `schedule.js` and `track.js` to manage the new association logic."
+        "id": "feature-mp3-sound-effect",
+        "title": "Synthesized Sound Effect is Not Ideal (Enhanced: Aug 12, 2025) - v2.5.5",
+        "resolution": "The `playRacecarSound` function in `main.js` was updated to use the native `Audio` object to play an MP3 file. The unused `Tone.js` library was removed from `index.html`."
     },
     {
-        "id": "defect-edit-track-modal-scroll",
-        "title": "Edit Track Modal is Not Scrollable (Fixed: Aug 12, 2025) - v2.4.5",
-        "resolution": "The HTML structure for the 'Edit Track' modal in `index.html` was refactored to create a scrollable container for the form content, making it usable on smaller screens."
+        "id": "feature-main-page-ux-enhancements",
+        "title": "Main Page UI/UX Enhancements (Enhanced: Aug 12, 2025) - v2.5.4",
+        "resolution": "Updated `index.html` to change the main heading and button text. Added a `div` for a new animated flag, with corresponding animation styles in `style.css`. The `playRacecarSound` function in `main.js` was completely refactored to use `Tone.js` to synthesize a Formula 1 car sound."
     }
 ]
