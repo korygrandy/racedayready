@@ -1,41 +1,39 @@
 [
     {
+        "version": "2.4.2",
+        "date": "August 12, 2025",
+        "notes": [
+            "FIX: Resolved a regression defect by restoring the missing event listener for the 'Garage Management' feature card."
+        ]
+    },
+    {
+        "version": "2.4.1",
+        "date": "August 12, 2025",
+        "notes": [
+            "FIX: Resolved a regression defect where the visual vehicle selector would not appear in the 'Edit Event' modal."
+        ]
+    },
+    {
+        "version": "2.4.0",
+        "date": "August 12, 2025",
+        "notes": [
+            "FEATURE: Implemented a visual vehicle selector for events, allowing users to click vehicle photos to add them to an event.",
+            "ENHANCEMENT: The event creation and editing modals now display vehicles in a grid instead of a dropdown."
+        ]
+    },
+    {
+        "version": "2.3.9",
+        "date": "August 12, 2025",
+        "notes": [
+            "FIX: Resolved a persistent issue where the Raceday Countdown would not display by simplifying the backend database query and handling date filtering in the Python code."
+        ]
+    },
+    {
         "version": "2.3.8",
         "date": "August 12, 2025",
         "notes": [
             "FIX: The admin setting for lap time deletion is now correctly checked on initial load of the Winner's Circle.",
             "ENHANCEMENT: The lap times for the first available event are now loaded automatically."
-        ]
-    },
-    {
-        "version": "2.3.7",
-        "date": "August 11, 2025",
-        "notes": [
-            "FEATURE: Admins can now delete any lap time when deletion is enabled, regardless of ownership.",
-            "FEATURE: Added a 'Manage Lap Times' link in Developer Mode for easier administration."
-        ]
-    },
-    {
-        "version": "2.3.6",
-        "date": "August 11, 2025",
-        "notes": [
-            "FIX: Resolved a critical SyntaxError on load by correctly exporting the 'initLapTimes' function from its module."
-        ]
-    },
-    {
-        "version": "2.3.5",
-        "date": "August 11, 2025",
-        "notes": [
-            "FEATURE: Added a new admin setting in Developer Mode to enable or disable the deletion of lap times.",
-            "SECURITY: The backend now checks if lap time deletion is enabled before processing a delete request."
-        ]
-    },
-    {
-        "version": "2.3.4",
-        "date": "August 11, 2025",
-        "notes": [
-            "FIX: Resolved a 500 Internal Server Error when fetching all events for the Winner's Circle.",
-            "ENHANCEMENT: Moved event sorting from the database query to the Python backend to avoid the need for a composite index in Firestore."
         ]
     }
 ]

@@ -53,23 +53,39 @@ export const updateRacedayCountdown = () => {
 };
 
 
-const populateVehicleMultiSelect = async (selectElement, selectedVehicleIds = []) => {
+const populateVehicleSelector = async (container, selectedVehicleIds = []) => {
     try {
         const response = await fetch(`/get-vehicles/${App.currentUser.id}`);
         const data = await response.json();
-        selectElement.innerHTML = '';
+        container.innerHTML = '';
         if (data.success && data.vehicles.length > 0) {
             data.vehicles.forEach(vehicle => {
-                const option = document.createElement('option');
-                option.value = vehicle.id;
-                option.textContent = `${vehicle.year} ${vehicle.make} ${vehicle.model}`;
-                if (selectedVehicleIds.includes(vehicle.id)) {
-                    option.selected = true;
+                const vehicleEl = document.createElement('div');
+                vehicleEl.className = 'vehicle-selector-item';
+                vehicleEl.dataset.vehicleId = vehicle.id;
+
+                const isSelected = selectedVehicleIds.includes(vehicle.id);
+                if (isSelected) {
+                    vehicleEl.classList.add('selected');
                 }
-                selectElement.appendChild(option);
+
+                if (vehicle.photo || vehicle.photoURL) {
+                    const img = document.createElement('img');
+                    img.src = vehicle.photo || vehicle.photoURL;
+                    img.className = 'w-full h-full object-cover rounded-md';
+                    vehicleEl.appendChild(img);
+                } else {
+                    vehicleEl.appendChild(createVehicleIcon('w-full h-full'));
+                }
+
+                vehicleEl.addEventListener('click', () => {
+                    vehicleEl.classList.toggle('selected');
+                });
+
+                container.appendChild(vehicleEl);
             });
         } else {
-            selectElement.innerHTML = '<option disabled>No vehicles available</option>';
+            container.innerHTML = '<p class="text-text-secondary text-sm col-span-full">No vehicles available. Please add one in Vehicle Management.</p>';
         }
     } catch (error) {
         console.error("[ERROR] Error fetching vehicles for event form:", error);
@@ -104,7 +120,6 @@ const showEditEventModal = (event) => {
     console.log("[INFO] Showing edit event modal for:", event);
     elements.editEventNameInput.value = event.name;
 
-    // Convert UTC ISO string from DB back to local format for the input field
     if (event.start_time) {
         elements.editEventStartInput.value = event.start_time.slice(0, 16);
     }
@@ -113,7 +128,7 @@ const showEditEventModal = (event) => {
     }
 
     elements.editIsRacedayCheckbox.checked = event.is_raceday;
-    populateVehicleMultiSelect(elements.editEventVehiclesSelect, event.vehicles.map(v => v.id));
+    populateVehicleSelector(elements.editEventVehiclesContainer, event.vehicles.map(v => v.id));
     populateChecklistMultiSelect(elements.editEventChecklistsSelect, event.checklists);
     elements.editEventModal.classList.remove('hidden');
 };
@@ -179,7 +194,7 @@ const renderEvents = () => {
 
 const loadEvents = () => {
     if (!App.currentUser || !App.currentUser.id) return;
-    populateVehicleMultiSelect(elements.eventVehiclesSelect);
+    populateVehicleSelector(elements.eventVehiclesContainer);
     populateChecklistMultiSelect(elements.eventChecklistsSelect);
 
     fetch(`/get-events/${App.currentUser.id}`)
@@ -199,19 +214,17 @@ export const initSchedule = () => {
         const startTimeStr = elements.eventStartInput.value;
         const endTimeStr = elements.eventEndInput.value;
 
-        // --- Date Validation ---
         if (endTimeStr) {
             const startDate = new Date(startTimeStr);
             const endDate = new Date(endTimeStr);
             if (endDate < startDate) {
                 console.warn("[VALIDATION] End time cannot be earlier than start time.");
                 showMessage("End time cannot be earlier than start time.", false);
-                return; // Stop the submission
+                return;
             }
         }
-        // --- End Validation ---
 
-        const selectedVehicles = Array.from(elements.eventVehiclesSelect.selectedOptions).map(opt => opt.value);
+        const selectedVehicles = Array.from(elements.eventVehiclesContainer.querySelectorAll('.vehicle-selector-item.selected')).map(el => el.dataset.vehicleId);
         const selectedChecklists = Array.from(elements.eventChecklistsSelect.selectedOptions).map(opt => opt.value);
 
         const eventData = {
@@ -248,19 +261,17 @@ export const initSchedule = () => {
         const startTimeStr = elements.editEventStartInput.value;
         const endTimeStr = elements.editEventEndInput.value;
 
-        // --- Date Validation ---
         if (endTimeStr) {
             const startDate = new Date(startTimeStr);
             const endDate = new Date(endTimeStr);
             if (endDate < startDate) {
                 console.warn("[VALIDATION] End time cannot be earlier than start time.");
                 showMessage("End time cannot be earlier than start time.", false);
-                return; // Stop the submission
+                return;
             }
         }
-        // --- End Validation ---
 
-        const selectedVehicles = Array.from(elements.editEventVehiclesSelect.selectedOptions).map(opt => opt.value);
+        const selectedVehicles = Array.from(elements.editEventVehiclesContainer.querySelectorAll('.vehicle-selector-item.selected')).map(el => el.dataset.vehicleId);
         const selectedChecklists = Array.from(elements.editEventChecklistsSelect.selectedOptions).map(opt => opt.value);
 
         const eventData = {

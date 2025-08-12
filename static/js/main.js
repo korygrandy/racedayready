@@ -176,6 +176,12 @@ const initEventListeners = () => {
         setView('vehicleManagement');
     });
 
+    // FIX: Restored the missing event listener for the Garage Management card.
+    elements.featureCard6.addEventListener('click', () => {
+        console.log("[INFO] 'Garage Management' card clicked.");
+        setView('garageManagement');
+    });
+
     elements.featureCard7.addEventListener('click', () => {
         console.log("[INFO] 'Upcoming Features' card clicked.");
         setView('upcomingFeatures');

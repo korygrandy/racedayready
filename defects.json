@@ -1,22 +1,22 @@
 [
     {
-        "id": "defect-lap-time-delete-initial-state",
-        "title": "Lap Time Deletion State Incorrect on Initial Load (Fixed: Aug 12, 2025) - v2.3.8",
-        "resolution": "The admin setting for lap time deletion was only checked after a manual event selection. The `loadAllEvents` function in `laptimes.js` was updated to automatically load the first event's data, which correctly initializes the deletion UI state."
+        "id": "defect-garage-card-listener",
+        "title": "Garage Management Card is Non-Functional (Fixed: Aug 12, 2025) - v2.4.2",
+        "resolution": "The event listener for the 'Garage Management' card (`feature-card-6`) was inadvertently removed from `main.js` during a previous refactor. The listener has been restored, fixing the navigation."
     },
     {
-        "id": "feature-admin-lap-time-deletion",
-        "title": "Admin Deletion of Lap Times is Restricted (Enhanced: Aug 11, 2025) - v2.3.7",
-        "resolution": "Updated the UI logic in `laptimes.js` to show the delete button for all entries when the admin deletion setting is active, regardless of ownership. Added a convenience link in `index.html` and `admin.js` for navigation."
+        "id": "defect-edit-event-vehicle-selector",
+        "title": "Vehicle Selector Missing from Edit Event Modal (Fixed: Aug 12, 2025) - v2.4.1",
+        "resolution": "A regression was introduced in v2.4.0 where the element ID for the 'Edit Event' modal's vehicle container was not added to `elements.js`. This caused the `populateVehicleSelector` function to fail silently. The missing element reference has been added, restoring the feature."
     },
     {
-        "id": "defect-missing-export",
-        "title": "Application Fails to Load Due to Missing Module Export (Fixed: Aug 11, 2025) - v2.3.6",
-        "resolution": "The `initLapTimes` function in `laptimes.js` was not being exported, causing a SyntaxError in `main.js` that halted script execution. The `export` keyword was added to the function definition to resolve the error."
+        "id": "feature-visual-vehicle-selection",
+        "title": "Vehicle Selection for Events is Text-Based (Enhanced: Aug 12, 2025) - v2.4.0",
+        "resolution": "Replaced the `<select>` dropdown for vehicles in the event modals in `index.html` with a `<div>`. Updated `schedule.js` to populate this div with selectable vehicle images. Added CSS in `style.css` to handle the visual states (grayed-out/selected) of the images."
     },
     {
-        "id": "feature-lap-time-deletion-toggle",
-        "title": "Admin Cannot Control Lap Time Deletion (Enhanced: Aug 11, 2025) - v2.3.5",
-        "resolution": "Added a new admin setting for lap time deletion, including a UI toggle in `index.html` and `admin.js`, and backend logic in `app.py` to save the setting and enforce it on the new `/delete-lap-time` endpoint. The UI in `laptimes.js` now conditionally shows the delete button based on this setting."
+        "id": "defect-complex-query-failure",
+        "title": "Raceday Countdown Fails Due to Complex Firestore Query (Fixed: Aug 12, 2025) - v2.3.9",
+        "resolution": "The `get_next_raceday` function in `app.py` used a query that required a composite index. The function was refactored to fetch all race day events for a user and then perform the date filtering and sorting in Python, removing the need for the index and fixing the bug."
     }
 ]
