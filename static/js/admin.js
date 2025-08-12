@@ -14,6 +14,8 @@ const loadAdminSettings = () => {
                 elements.featureRequestLimitInput.value = data.feature_request_settings.limit;
                 elements.enableDeletionCheckbox.checked = data.feature_request_settings.deletion_enabled;
                 elements.enableLapTimeDeletionCheckbox.checked = data.lap_time_settings.deletion_enabled;
+                elements.maintenanceModeCheckbox.checked = data.maintenance_settings.enabled;
+                elements.defaultThemeSelect.value = data.default_theme;
             } else {
                 showMessage("Failed to load admin settings.", false);
             }
@@ -57,6 +59,13 @@ export const initAdmin = () => {
     elements.updateLapTimeSettingsBtn.addEventListener('click', () => {
         const deletion_enabled = elements.enableLapTimeDeletionCheckbox.checked;
         updateSettings('/update-lap-time-settings', { deletion_enabled });
+    });
+
+    elements.updateAppSettingsBtn.addEventListener('click', () => {
+        const maintenance_enabled = elements.maintenanceModeCheckbox.checked;
+        const default_theme = elements.defaultThemeSelect.value;
+        updateSettings('/update-maintenance-mode', { enabled: maintenance_enabled });
+        updateSettings('/update-default-theme', { theme: default_theme });
     });
 
     elements.manageFeatureRequestsLink.addEventListener('click', (e) => {

@@ -1,5 +1,13 @@
 [
     {
+        "version": "2.4.8",
+        "date": "August 12, 2025",
+        "notes": [
+            "FEATURE: Added a 'Maintenance Mode' toggle to Developer Mode.",
+            "FEATURE: Added a 'Default New User Theme' selector to Developer Mode."
+        ]
+    },
+    {
         "version": "2.4.7",
         "date": "August 12, 2025",
         "notes": [
@@ -21,15 +29,6 @@
             "FEATURE: Added the ability to associate a track with an event from the event creation/editing modals.",
             "ENHANCEMENT: The 'Edit Track' modal is now scrollable to accommodate all fields on smaller screens.",
             "SECURITY: Only the user who created a track can edit or delete it."
-        ]
-    },
-    {
-        "version": "2.4.4",
-        "date": "August 12, 2025",
-        "notes": [
-            "FEATURE: Implemented full edit functionality for the Track Management feature.",
-            "FEATURE: Added the ability to upload or link a track layout image.",
-            "ENHANCEMENT: Track cards now include a link to view the track layout image directly on the page."
         ]
     }
 ]

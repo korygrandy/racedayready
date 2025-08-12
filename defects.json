@@ -1,8 +1,8 @@
 [
     {
-        "id": "feature-track-photo-on-event",
-        "title": "Event Cards Do Not Display Associated Track Photo (Enhanced: Aug 12, 2025) - v2.4.7",
-        "resolution": "The `/get-events` endpoint in `app.py` was updated to fetch and include track photo URLs with the event data. The `renderEvents` function in `schedule.js` was then modified to display this image on the event card, similar to how vehicle photos are displayed."
+        "id": "feature-app-config-settings",
+        "title": "Application Lacks Global Configuration Options (Enhanced: Aug 12, 2025) - v2.4.8",
+        "resolution": "Added new UI elements to `index.html` and `elements.js` for Maintenance Mode and Default Theme. Created new backend functions and endpoints in `app.py` to manage these settings in Firestore. The main page route now checks for maintenance mode, and `profile.js` uses the new default theme setting."
     },
     {
         "id": "defect-my-tracks-label",

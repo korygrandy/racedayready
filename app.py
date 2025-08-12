@@ -128,6 +128,38 @@ def get_lap_time_settings():
         return default_settings
 
 
+# --- Function to get maintenance settings from Firestore ---
+def get_maintenance_settings():
+    default_settings = {'enabled': False}
+    try:
+        settings_ref = db.collection('config').document('maintenance')
+        settings_doc = settings_ref.get()
+        if settings_doc.exists:
+            return settings_doc.to_dict()
+        else:
+            settings_ref.set(default_settings)
+            return default_settings
+    except Exception as e:
+        print(f"❌ Error getting maintenance settings: {e}")
+        return default_settings
+
+
+# --- Function to get default theme setting ---
+def get_default_theme_setting():
+    default_setting = 'dark'
+    try:
+        settings_ref = db.collection('admin_settings').document('app_defaults')
+        settings_doc = settings_ref.get()
+        if settings_doc.exists:
+            return settings_doc.to_dict().get('default_theme', default_setting)
+        else:
+            settings_ref.set({'default_theme': default_setting})
+            return default_setting
+    except Exception as e:
+        print(f"❌ Error getting default theme: {e}")
+        return default_setting
+
+
 # Initialize the Flask application
 app = Flask(__name__)
 
@@ -141,6 +173,7 @@ def index():
     """
     app_version = get_app_version()
     last_updated_date = datetime.datetime.now().strftime("%B %d, %Y")
+    maintenance_settings = get_maintenance_settings()
 
     # Load changelog and defects from JSON files
     with open('changelog.json', 'r') as f:
@@ -149,7 +182,8 @@ def index():
         defects_data = json.load(f)
 
     return render_template('index.html', app_version=app_version, last_updated=last_updated_date,
-                           changelog=changelog_data, defects=defects_data)
+                           changelog=changelog_data, defects=defects_data,
+                           maintenance_mode_on=maintenance_settings.get('enabled', False))
 
 
 # --- Route to get the admin PIN ---
@@ -221,7 +255,7 @@ def create_profile():
         helmet_color = data.get('helmetColor', '#ffffff')
         pin = data.get('pin')
         pin_enabled = data.get('pinEnabled', False)
-        theme = data.get('theme', 'dark')
+        theme = data.get('theme', get_default_theme_setting())
 
         if not username:
             return jsonify({'success': False, 'message': 'Username is required.'}), 400
@@ -462,6 +496,8 @@ def get_admin_settings():
     garage_limit = get_limit('admin_settings', 'garages', 10)
     vehicle_limit = get_limit('admin_settings', 'vehicles', 25)
     lap_time_settings = get_lap_time_settings()
+    maintenance_settings = get_maintenance_settings()
+    default_theme = get_default_theme_setting()
     return jsonify({
         'success': True,
         'profile_limit': profile_limit,
@@ -469,6 +505,8 @@ def get_admin_settings():
         'garage_limit': garage_limit,
         'vehicle_limit': vehicle_limit,
         'lap_time_settings': lap_time_settings,
+        'maintenance_settings': maintenance_settings,
+        'default_theme': default_theme,
     }), 200
 
 
@@ -569,6 +607,35 @@ def update_lap_time_settings():
         return jsonify({'success': True, 'message': 'Lap time settings updated.'}), 200
     except Exception as e:
         print(f"❌ Error updating lap time settings: {e}")
+        return jsonify({'success': False, 'message': f'An error occurred: {e}'}), 500
+
+
+@app.route('/update-maintenance-mode', methods=['POST'])
+def update_maintenance_mode():
+    try:
+        data = request.get_json()
+        enabled = data.get('enabled')
+        if not isinstance(enabled, bool):
+            return jsonify({'success': False, 'message': 'Enabled must be a boolean.'}), 400
+
+        db.collection('config').document('maintenance').set({'enabled': enabled})
+        status = "enabled" if enabled else "disabled"
+        return jsonify({'success': True, 'message': f'Maintenance mode {status}.'}), 200
+    except Exception as e:
+        return jsonify({'success': False, 'message': f'An error occurred: {e}'}), 500
+
+
+@app.route('/update-default-theme', methods=['POST'])
+def update_default_theme():
+    try:
+        data = request.get_json()
+        theme = data.get('theme')
+        if theme not in ['light', 'dark']:
+            return jsonify({'success': False, 'message': 'Invalid theme value.'}), 400
+
+        db.collection('admin_settings').document('app_defaults').set({'default_theme': theme}, merge=True)
+        return jsonify({'success': True, 'message': f'Default theme set to {theme}.'}), 200
+    except Exception as e:
         return jsonify({'success': False, 'message': f'An error occurred: {e}'}), 500
 
 

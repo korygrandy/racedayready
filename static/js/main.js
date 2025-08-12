@@ -15,6 +15,7 @@ import { initTrack } from './track.js';
 export const App = {
     currentUser: null,
     isDevModeEnabled: false,
+    defaultTheme: 'dark',
     setView: null,
     updateProfile: updateProfile,
     loadAdminSettings: null,
@@ -144,6 +145,9 @@ const initEventListeners = () => {
     });
 
     elements.devModeBtn.addEventListener('click', () => {
+        if(document.getElementById('main-view').querySelector('h1').textContent.includes('Maintenance')) {
+            showMessage("Enter PIN to manage maintenance mode.", true);
+        }
         console.log("[INFO] 'Developer Mode' button clicked. Showing PIN modal.");
         elements.devPinEntryModal.classList.remove('hidden');
         elements.devPinEntryInput.focus();
@@ -152,7 +156,7 @@ const initEventListeners = () => {
     elements.backToAppBtn.addEventListener('click', () => {
         console.log("[INFO] 'Back to App' button clicked.");
         App.isDevModeEnabled = false;
-        setView('main');
+        window.location.reload();
     });
 
     elements.profileHeaderBtn.addEventListener('click', () => {

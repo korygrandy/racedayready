@@ -183,6 +183,9 @@ export const manageFeatureRequestsLink = document.getElementById('manage-feature
 export const enableLapTimeDeletionCheckbox = document.getElementById('enable-lap-time-deletion-checkbox');
 export const updateLapTimeSettingsBtn = document.getElementById('update-lap-time-settings-btn');
 export const goToWinnersCircleLink = document.getElementById('go-to-winners-circle-link');
+export const maintenanceModeCheckbox = document.getElementById('maintenance-mode-checkbox');
+export const defaultThemeSelect = document.getElementById('default-theme-select');
+export const updateAppSettingsBtn = document.getElementById('update-app-settings-btn');
 
 // Lap Time Elements
 export const lapTimeView = document.getElementById('lap-time-view');

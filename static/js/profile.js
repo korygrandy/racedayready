@@ -62,6 +62,7 @@ const showProfileModal = () => {
     hideSelectProfileModal();
     elements.profileForm.reset();
     elements.pinInput.disabled = true;
+    elements.themeSelect.value = App.defaultTheme;
     elements.profileModal.classList.remove('hidden');
 };
 
@@ -181,7 +182,6 @@ const selectProfile = (profile) => {
     hideSelectProfileModal();
     hidePinEntryModal();
 
-    // Run both the UI update and the debug logging
     updateRacedayCountdown();
     logRacedayEvents(profile);
 
