@@ -324,7 +324,7 @@ def delete_profile(profile_id):
         profile_ref = db.collection('driver_profiles').document(profile_id)
 
         # Delete subcollections
-        for collection in ['garages', 'vehicles', 'events', 'checklists']:
+        for collection in ['garages', 'vehicles', 'events', 'checklists', 'tracks']:
             docs = profile_ref.collection(collection).stream()
             for doc in docs:
                 doc.reference.delete()
@@ -816,6 +816,7 @@ def add_event(profile_id):
             'end_time': data.get('endTime'),
             'vehicles': data.get('vehicles', []),
             'checklists': data.get('checklists', []),
+            'trackId': data.get('trackId'),
             'is_raceday': data.get('isRaceday', False),
             'created_at': datetime.datetime.now(datetime.timezone.utc)
         }
@@ -837,6 +838,9 @@ def get_events(profile_id):
         vehicles_ref = db.collection('driver_profiles').document(profile_id).collection('vehicles').stream()
         vehicle_map = {doc.id: doc.to_dict() for doc in vehicles_ref}
 
+        tracks_ref = db.collection('tracks').stream()
+        track_map = {doc.id: doc.to_dict() for doc in tracks_ref}
+
         events_ref = db.collection('driver_profiles').document(profile_id).collection('events').order_by(
             'start_time').stream()
         events = []
@@ -844,7 +848,12 @@ def get_events(profile_id):
             event = doc.to_dict()
             event['id'] = doc.id
 
-            # Populate vehicle details
+            track_id = event.get('trackId')
+            if track_id in track_map:
+                event['trackName'] = track_map[track_id].get('name', 'Unknown Track')
+                event['trackPhoto'] = track_map[track_id].get('photo')
+                event['trackPhotoURL'] = track_map[track_id].get('photoURL')
+
             event_vehicles = []
             for vehicle_id in event.get('vehicles', []):
                 if vehicle_id in vehicle_map:
@@ -864,8 +873,6 @@ def get_all_events():
     Retrieves all events from all profiles for the global lap time feature.
     """
     try:
-        # FIX: Remove order_by from the query to avoid needing a composite index.
-        # Sorting will be handled in Python.
         events_ref = db.collection_group('events').stream()
         events = []
         for doc in events_ref:
@@ -873,8 +880,6 @@ def get_all_events():
             event['id'] = doc.id
             events.append(event)
 
-        # FIX: Sort the results in Python before sending them to the client.
-        # The key lambda handles cases where 'start_time' might be missing.
         events.sort(key=lambda x: x.get('start_time', ''), reverse=True)
 
         print(f"✅ Found and sorted {len(events)} total events for Winner's Circle.")
@@ -894,6 +899,7 @@ def update_event(profile_id, event_id):
             'end_time': data.get('endTime'),
             'vehicles': data.get('vehicles', []),
             'checklists': data.get('checklists', []),
+            'trackId': data.get('trackId'),
             'is_raceday': data.get('isRaceday', False)
         }
         if not updates['name'] or not updates['start_time']:
@@ -922,24 +928,29 @@ def delete_event(profile_id, event_id):
 def get_next_raceday(profile_id):
     try:
         now = datetime.datetime.now(datetime.timezone.utc)
-        now_iso_z = now.strftime('%Y-%m-%dT%H:%M:%S.%f')[:-3] + 'Z'
 
         events_ref = db.collection('driver_profiles').document(profile_id).collection('events') \
-            .where('is_raceday', '==', True) \
-            .where('start_time', '>=', now_iso_z) \
-            .order_by('start_time') \
-            .limit(1) \
-            .stream()
+            .where('is_raceday', '==', True).stream()
 
-        next_event = next(events_ref, None)
+        future_events = []
+        for doc in events_ref:
+            event = doc.to_dict()
+            start_time_str = event.get('start_time')
+            if start_time_str:
+                event_time = datetime.datetime.fromisoformat(start_time_str.replace('Z', '+00:00'))
+                if event_time > now:
+                    future_events.append(event)
 
-        if next_event:
-            return jsonify({'success': True, 'event': next_event.to_dict()}), 200
-        else:
+        if not future_events:
             return jsonify({'success': True, 'event': None}), 200
+
+        future_events.sort(key=lambda x: x['start_time'])
+        next_event = future_events[0]
+
+        return jsonify({'success': True, 'event': next_event}), 200
     except Exception as e:
         print(f"❌ Error getting next raceday for profile {profile_id}: {e}")
-        return jsonify({'success': True, 'event': None}), 200
+        return jsonify({'success': False, 'event': None}), 500
 
 
 # --- Checklist Routes ---
@@ -1086,6 +1097,100 @@ def delete_lap_time(lap_id):
         return jsonify({'success': True, 'message': 'Lap time deleted successfully!'}), 200
     except Exception as e:
         print(f"❌ Error deleting lap time: {e}")
+        return jsonify({'success': False, 'message': f'An error occurred: {e}'}), 500
+
+
+# --- Track Management Routes ---
+@app.route('/add-track', methods=['POST'])
+def add_track():
+    try:
+        data = request.get_json()
+        track_data = {
+            'name': data.get('name'),
+            'location': data.get('location'),
+            'type': data.get('type'),
+            'photo': data.get('photo'),
+            'photoURL': data.get('photoURL'),
+            'layout_photo': data.get('layout_photo'),
+            'layout_photoURL': data.get('layout_photoURL'),
+            'google_url': data.get('google_url'),
+            'profileId': data.get('profileId'),  # Creator's ID for ownership
+            'created_at': datetime.datetime.now(datetime.timezone.utc)
+        }
+        if not all([track_data['name'], track_data['location'], track_data['type'], track_data['profileId']]):
+            return jsonify({'success': False, 'message': 'Missing required track data.'}), 400
+
+        doc_ref = db.collection('tracks').document()
+        doc_ref.set(track_data)
+        return jsonify({'success': True, 'message': 'Track added successfully!', 'trackId': doc_ref.id}), 201
+    except Exception as e:
+        return jsonify({'success': False, 'message': f'An error occurred: {e}'}), 500
+
+
+@app.route('/get-all-tracks', methods=['GET'])
+def get_all_tracks():
+    try:
+        all_events_ref = db.collection_group('events').stream()
+        events_by_track = {}
+        for doc in all_events_ref:
+            event = doc.to_dict()
+            track_id = event.get('trackId')
+            if track_id:
+                if track_id not in events_by_track:
+                    events_by_track[track_id] = []
+                events_by_track[track_id].append(event.get('name'))
+
+        tracks_ref = db.collection('tracks').stream()
+        tracks = []
+        for doc in tracks_ref:
+            track = doc.to_dict()
+            track['id'] = doc.id
+            track['events'] = events_by_track.get(doc.id, [])
+            tracks.append(track)
+
+        tracks.sort(key=lambda x: x.get('name', ''))
+        return jsonify({'success': True, 'tracks': tracks}), 200
+    except Exception as e:
+        return jsonify({'success': False, 'error': str(e)}), 500
+
+
+@app.route('/update-track/<track_id>', methods=['PUT'])
+def update_track(track_id):
+    try:
+        data = request.get_json()
+        requesting_user_id = data.pop('profileId', None)
+
+        track_ref = db.collection('tracks').document(track_id)
+        track_doc = track_ref.get()
+        if not track_doc.exists:
+            return jsonify({'success': False, 'message': 'Track not found.'}), 404
+
+        if track_doc.to_dict().get('profileId') != requesting_user_id:
+            return jsonify({'success': False, 'message': 'You can only edit tracks you created.'}), 403
+
+        track_ref.update(data)
+        return jsonify({'success': True, 'message': 'Track updated successfully!'}), 200
+    except Exception as e:
+        return jsonify({'success': False, 'message': f'An error occurred: {e}'}), 500
+
+
+@app.route('/delete-track/<track_id>', methods=['DELETE'])
+def delete_track(track_id):
+    try:
+        data = request.get_json()
+        requesting_user_id = data.get('profileId')
+
+        track_ref = db.collection('tracks').document(track_id)
+        track_doc = track_ref.get()
+        if not track_doc.exists:
+            return jsonify({'success': False, 'message': 'Track not found.'}), 404
+
+        if track_doc.to_dict().get('profileId') != requesting_user_id:
+            return jsonify({'success': False, 'message': 'You can only delete tracks you created.'}), 403
+
+        track_ref.delete()
+        return jsonify({'success': True, 'message': 'Track deleted successfully!'}), 200
+    except Exception as e:
         return jsonify({'success': False, 'message': f'An error occurred: {e}'}), 500
 
 

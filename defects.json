@@ -1,22 +1,22 @@
 [
     {
-        "id": "defect-lap-time-delete-initial-state",
-        "title": "Lap Time Deletion State Incorrect on Initial Load (Fixed: Aug 12, 2025) - v2.3.8",
-        "resolution": "The admin setting for lap time deletion was only checked after a manual event selection. The `loadAllEvents` function in `laptimes.js` was updated to automatically load the first event's data, which correctly initializes the deletion UI state."
+        "id": "feature-track-photo-on-event",
+        "title": "Event Cards Do Not Display Associated Track Photo (Enhanced: Aug 12, 2025) - v2.4.7",
+        "resolution": "The `/get-events` endpoint in `app.py` was updated to fetch and include track photo URLs with the event data. The `renderEvents` function in `schedule.js` was then modified to display this image on the event card, similar to how vehicle photos are displayed."
     },
     {
-        "id": "feature-admin-lap-time-deletion",
-        "title": "Admin Deletion of Lap Times is Restricted (Enhanced: Aug 11, 2025) - v2.3.7",
-        "resolution": "Updated the UI logic in `laptimes.js` to show the delete button for all entries when the admin deletion setting is active, regardless of ownership. Added a convenience link in `index.html` and `admin.js` for navigation."
+        "id": "defect-my-tracks-label",
+        "title": "'My Tracks' Label is Confusing for a Global Feature (Fixed: Aug 12, 2025) - v2.4.6",
+        "resolution": "The heading for the track list in `index.html` was changed from 'My Tracks' to 'All Tracks' to better reflect that the list is a global resource shared by all users. The underlying logic for ownership (editing/deleting) remains correct."
     },
     {
-        "id": "defect-missing-export",
-        "title": "Application Fails to Load Due to Missing Module Export (Fixed: Aug 11, 2025) - v2.3.6",
-        "resolution": "The `initLapTimes` function in `laptimes.js` was not being exported, causing a SyntaxError in `main.js` that halted script execution. The `export` keyword was added to the function definition to resolve the error."
+        "id": "feature-global-and-associated-tracks",
+        "title": "Tracks are User-Specific and Not Linkable to Events (Enhanced: Aug 12, 2025) - v2.4.5",
+        "resolution": "Migrated tracks to a top-level global collection in Firestore. Updated all backend endpoints in `app.py` to handle global fetching and ownership checks for edits/deletes. Added a track selection dropdown to the event modals in `index.html` and updated `schedule.js` and `track.js` to manage the new association logic."
     },
     {
-        "id": "feature-lap-time-deletion-toggle",
-        "title": "Admin Cannot Control Lap Time Deletion (Enhanced: Aug 11, 2025) - v2.3.5",
-        "resolution": "Added a new admin setting for lap time deletion, including a UI toggle in `index.html` and `admin.js`, and backend logic in `app.py` to save the setting and enforce it on the new `/delete-lap-time` endpoint. The UI in `laptimes.js` now conditionally shows the delete button based on this setting."
+        "id": "defect-edit-track-modal-scroll",
+        "title": "Edit Track Modal is Not Scrollable (Fixed: Aug 12, 2025) - v2.4.5",
+        "resolution": "The HTML structure for the 'Edit Track' modal in `index.html` was refactored to create a scrollable container for the form content, making it usable on smaller screens."
     }
 ]

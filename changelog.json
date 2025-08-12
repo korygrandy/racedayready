@@ -1,41 +1,35 @@
 [
     {
-        "version": "2.3.8",
+        "version": "2.4.7",
         "date": "August 12, 2025",
         "notes": [
-            "FIX: The admin setting for lap time deletion is now correctly checked on initial load of the Winner's Circle.",
-            "ENHANCEMENT: The lap times for the first available event are now loaded automatically."
+            "FEATURE: The photo of a track is now displayed on its associated event card in the 'Upcoming Events' list."
         ]
     },
     {
-        "version": "2.3.7",
-        "date": "August 11, 2025",
+        "version": "2.4.6",
+        "date": "August 12, 2025",
         "notes": [
-            "FEATURE: Admins can now delete any lap time when deletion is enabled, regardless of ownership.",
-            "FEATURE: Added a 'Manage Lap Times' link in Developer Mode for easier administration."
+            "ENHANCEMENT: Renamed the 'My Tracks' section to 'All Tracks' to clarify that tracks are a global, shared resource."
         ]
     },
     {
-        "version": "2.3.6",
-        "date": "August 11, 2025",
+        "version": "2.4.5",
+        "date": "August 12, 2025",
         "notes": [
-            "FIX: Resolved a critical SyntaxError on load by correctly exporting the 'initLapTimes' function from its module."
+            "FEATURE: Tracks are now a global resource, visible to all users.",
+            "FEATURE: Added the ability to associate a track with an event from the event creation/editing modals.",
+            "ENHANCEMENT: The 'Edit Track' modal is now scrollable to accommodate all fields on smaller screens.",
+            "SECURITY: Only the user who created a track can edit or delete it."
         ]
     },
     {
-        "version": "2.3.5",
-        "date": "August 11, 2025",
+        "version": "2.4.4",
+        "date": "August 12, 2025",
         "notes": [
-            "FEATURE: Added a new admin setting in Developer Mode to enable or disable the deletion of lap times.",
-            "SECURITY: The backend now checks if lap time deletion is enabled before processing a delete request."
-        ]
-    },
-    {
-        "version": "2.3.4",
-        "date": "August 11, 2025",
-        "notes": [
-            "FIX: Resolved a 500 Internal Server Error when fetching all events for the Winner's Circle.",
-            "ENHANCEMENT: Moved event sorting from the database query to the Python backend to avoid the need for a composite index in Firestore."
+            "FEATURE: Implemented full edit functionality for the Track Management feature.",
+            "FEATURE: Added the ability to upload or link a track layout image.",
+            "ENHANCEMENT: Track cards now include a link to view the track layout image directly on the page."
         ]
     }
 ]
