@@ -6,11 +6,23 @@ import { showEditVehicleModal } from './vehicle.js';
 let currentEvents = [];
 let eventToEdit = null;
 
+/**
+ * Fetches the next race day and updates the countdown display in the header.
+ */
 export const updateRacedayCountdown = () => {
     if (!App.currentUser) {
         elements.racedayCountdownContainer.classList.add('hidden');
         return;
     }
+
+    elements.racedayCountdownContainer.classList.remove('hidden');
+
+    const showNoRacedayState = () => {
+        elements.racedayCountdownLabel.textContent = "No Raceday Scheduled";
+        elements.racedayCountdownCircle.classList.add('hidden');
+        elements.noRacedayIcon.classList.remove('hidden'); // Shows '+ Add Race'
+        elements.racedayCountdownLabel.classList.remove('hidden'); // Shows the text
+    };
 
     fetch(`/get-next-raceday/${App.currentUser.id}`)
         .then(res => res.json())
@@ -19,23 +31,27 @@ export const updateRacedayCountdown = () => {
                 const now = new Date();
                 const eventDate = new Date(data.event.start_time);
                 const diffTime = eventDate - now;
-                const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
 
-                elements.racedayCountdownDays.textContent = diffDays;
-                elements.racedayCountdownCircle.classList.remove('hidden');
-                elements.racedayCountdownLabel.classList.remove('hidden');
-                elements.noRacedayIcon.classList.add('hidden');
-                elements.racedayCountdownContainer.classList.remove('hidden');
+                if (diffTime > 0) {
+                    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+                    elements.racedayCountdownDays.textContent = diffDays;
+                    elements.racedayCountdownLabel.textContent = "Days Until Raceday:";
+                    elements.racedayCountdownCircle.classList.remove('hidden');
+                    elements.noRacedayIcon.classList.add('hidden');
+                    elements.racedayCountdownLabel.classList.remove('hidden');
+                } else {
+                    showNoRacedayState();
+                }
             } else {
-                elements.racedayCountdownCircle.classList.add('hidden');
-                elements.racedayCountdownLabel.textContent = "No Raceday Scheduled";
-                elements.racedayCountdownLabel.classList.remove('hidden');
-                elements.noRacedayIcon.classList.remove('hidden');
-                elements.racedayCountdownContainer.classList.remove('hidden');
+                showNoRacedayState();
             }
         })
-        .catch(error => console.error('[ERROR] Error fetching next raceday:', error));
+        .catch(error => {
+            console.error('[ERROR] Error fetching next raceday:', error);
+            showNoRacedayState();
+        });
 };
+
 
 const populateVehicleMultiSelect = async (selectElement, selectedVehicleIds = []) => {
     try {
@@ -87,8 +103,15 @@ const showEditEventModal = (event) => {
     eventToEdit = event;
     console.log("[INFO] Showing edit event modal for:", event);
     elements.editEventNameInput.value = event.name;
-    elements.editEventStartInput.value = event.start_time;
-    elements.editEventEndInput.value = event.end_time;
+
+    // Convert UTC ISO string from DB back to local format for the input field
+    if (event.start_time) {
+        elements.editEventStartInput.value = event.start_time.slice(0, 16);
+    }
+    if (event.end_time) {
+        elements.editEventEndInput.value = event.end_time.slice(0, 16);
+    }
+
     elements.editIsRacedayCheckbox.checked = event.is_raceday;
     populateVehicleMultiSelect(elements.editEventVehiclesSelect, event.vehicles.map(v => v.id));
     populateChecklistMultiSelect(elements.editEventChecklistsSelect, event.checklists);
@@ -105,7 +128,7 @@ const renderEvents = () => {
     currentEvents.forEach(event => {
         const eventCard = document.createElement('div');
         eventCard.className = 'bg-card-darker p-4 rounded-lg';
-        eventCard.dataset.eventId = event.id; // Add event ID for delegation
+        eventCard.dataset.eventId = event.id;
 
         const startTime = new Date(event.start_time).toLocaleString();
         const endTime = event.end_time ? new Date(event.end_time).toLocaleString() : 'N/A';
@@ -173,12 +196,28 @@ const loadEvents = () => {
 export const initSchedule = () => {
     elements.addEventForm.addEventListener('submit', (e) => {
         e.preventDefault();
+        const startTimeStr = elements.eventStartInput.value;
+        const endTimeStr = elements.eventEndInput.value;
+
+        // --- Date Validation ---
+        if (endTimeStr) {
+            const startDate = new Date(startTimeStr);
+            const endDate = new Date(endTimeStr);
+            if (endDate < startDate) {
+                console.warn("[VALIDATION] End time cannot be earlier than start time.");
+                showMessage("End time cannot be earlier than start time.", false);
+                return; // Stop the submission
+            }
+        }
+        // --- End Validation ---
+
         const selectedVehicles = Array.from(elements.eventVehiclesSelect.selectedOptions).map(opt => opt.value);
         const selectedChecklists = Array.from(elements.eventChecklistsSelect.selectedOptions).map(opt => opt.value);
+
         const eventData = {
             name: elements.eventNameInput.value,
-            startTime: elements.eventStartInput.value,
-            endTime: elements.eventEndInput.value,
+            startTime: new Date(startTimeStr).toISOString(),
+            endTime: endTimeStr ? new Date(endTimeStr).toISOString() : null,
             vehicles: selectedVehicles,
             checklists: selectedChecklists,
             isRaceday: elements.isRacedayCheckbox.checked,
@@ -206,12 +245,28 @@ export const initSchedule = () => {
 
     elements.editEventForm.addEventListener('submit', (e) => {
         e.preventDefault();
+        const startTimeStr = elements.editEventStartInput.value;
+        const endTimeStr = elements.editEventEndInput.value;
+
+        // --- Date Validation ---
+        if (endTimeStr) {
+            const startDate = new Date(startTimeStr);
+            const endDate = new Date(endTimeStr);
+            if (endDate < startDate) {
+                console.warn("[VALIDATION] End time cannot be earlier than start time.");
+                showMessage("End time cannot be earlier than start time.", false);
+                return; // Stop the submission
+            }
+        }
+        // --- End Validation ---
+
         const selectedVehicles = Array.from(elements.editEventVehiclesSelect.selectedOptions).map(opt => opt.value);
         const selectedChecklists = Array.from(elements.editEventChecklistsSelect.selectedOptions).map(opt => opt.value);
+
         const eventData = {
             name: elements.editEventNameInput.value,
-            startTime: elements.editEventStartInput.value,
-            endTime: elements.editEventEndInput.value,
+            startTime: new Date(startTimeStr).toISOString(),
+            endTime: endTimeStr ? new Date(endTimeStr).toISOString() : null,
             vehicles: selectedVehicles,
             checklists: selectedChecklists,
             isRaceday: elements.editIsRacedayCheckbox.checked,

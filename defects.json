@@ -1,49 +1,22 @@
 [
     {
-        "version": "2.2.0",
-        "date": "August 11, 2025",
-        "notes": [
-            "FIX: Resolved a TypeError on application load by adding a defensive null check in `vehicle.js`, improving script stability."
-        ]
+        "id": "defect-lap-time-delete-initial-state",
+        "title": "Lap Time Deletion State Incorrect on Initial Load (Fixed: Aug 12, 2025) - v2.3.8",
+        "resolution": "The admin setting for lap time deletion was only checked after a manual event selection. The `loadAllEvents` function in `laptimes.js` was updated to automatically load the first event's data, which correctly initializes the deletion UI state."
     },
     {
-        "version": "2.1.9",
-        "date": "August 11, 2025",
-        "notes": [
-            "FEATURE: Implemented real-time filtering for vehicle Year, Make, and Model dropdowns to improve search usability.",
-            "FIX: The '+ Add Race' link in the header now correctly navigates to the Race Schedule view.",
-            "FIX: Corrected a missing utility function that prevented vehicle search filters from working."
-        ]
+        "id": "feature-admin-lap-time-deletion",
+        "title": "Admin Deletion of Lap Times is Restricted (Enhanced: Aug 11, 2025) - v2.3.7",
+        "resolution": "Updated the UI logic in `laptimes.js` to show the delete button for all entries when the admin deletion setting is active, regardless of ownership. Added a convenience link in `index.html` and `admin.js` for navigation."
     },
     {
-        "version": "2.1.7",
-        "date": "August 11, 2025",
-        "notes": [
-            "FIX: Resolved critical JavaScript TypeError that prevented event listeners from initializing correctly.",
-            "FIX: Restored functionality to the 'Winner's Circle' and 'Upcoming Features' cards.",
-            "FEATURE: Added a 'Manage Garages' button to the Vehicle Management screen for more intuitive access."
-        ]
+        "id": "defect-missing-export",
+        "title": "Application Fails to Load Due to Missing Module Export (Fixed: Aug 11, 2025) - v2.3.6",
+        "resolution": "The `initLapTimes` function in `laptimes.js` was not being exported, causing a SyntaxError in `main.js` that halted script execution. The `export` keyword was added to the function definition to resolve the error."
     },
     {
-        "version": "2.1.6",
-        "date": "August 11, 2025",
-        "notes": [
-            "Fixed a critical defect caused by a typo in an HTML element ID that prevented the application from loading correctly."
-        ]
-    },
-    {
-        "version": "2.1.5",
-        "date": "August 11, 2025",
-        "notes": [
-            "Added a new 'Winner's Circle' feature to record and display lap times for raceday events.",
-            "Redesigned the SVG helmet icon to include a visor for a more distinct and polished look."
-        ]
-    },
-    {
-        "version": "2.1.4",
-        "date": "August 11, 2025",
-        "notes": [
-            "Replaced all 'Edit' and 'Delete' text buttons with icons for a cleaner and more consistent user interface across the application."
-        ]
+        "id": "feature-lap-time-deletion-toggle",
+        "title": "Admin Cannot Control Lap Time Deletion (Enhanced: Aug 11, 2025) - v2.3.5",
+        "resolution": "Added a new admin setting for lap time deletion, including a UI toggle in `index.html` and `admin.js`, and backend logic in `app.py` to save the setting and enforce it on the new `/delete-lap-time` endpoint. The UI in `laptimes.js` now conditionally shows the delete button based on this setting."
     }
 ]

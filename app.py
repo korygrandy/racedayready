@@ -104,6 +104,30 @@ def get_feature_request_settings():
         return default_settings
 
 
+# --- Function to get lap time settings from Firestore ---
+def get_lap_time_settings():
+    """
+    Retrieves lap time settings from admin_settings in Firestore.
+    Defaults to deletion disabled.
+    """
+    default_settings = {'deletion_enabled': False}
+    try:
+        settings_ref = db.collection('admin_settings').document('lap_times')
+        settings_doc = settings_ref.get()
+        if settings_doc.exists:
+            settings = settings_doc.to_dict()
+            settings['deletion_enabled'] = settings.get('deletion_enabled', default_settings['deletion_enabled'])
+            print(f"✅ Loaded lap time settings from Firestore: {settings}")
+            return settings
+        else:
+            print(f"⚠️ Lap time settings not found. Defaulting to {default_settings}.")
+            settings_ref.set(default_settings)
+            return default_settings
+    except Exception as e:
+        print(f"❌ Error getting lap time settings: {e}. Defaulting to {default_settings}.")
+        return default_settings
+
+
 # Initialize the Flask application
 app = Flask(__name__)
 
@@ -437,12 +461,14 @@ def get_admin_settings():
     feature_request_settings = get_feature_request_settings()
     garage_limit = get_limit('admin_settings', 'garages', 10)
     vehicle_limit = get_limit('admin_settings', 'vehicles', 25)
+    lap_time_settings = get_lap_time_settings()
     return jsonify({
         'success': True,
         'profile_limit': profile_limit,
         'feature_request_settings': feature_request_settings,
         'garage_limit': garage_limit,
         'vehicle_limit': vehicle_limit,
+        'lap_time_settings': lap_time_settings,
     }), 200
 
 
@@ -518,6 +544,31 @@ def update_feature_request_settings():
         return jsonify({'success': True, 'message': 'Feature request settings updated.'}), 200
     except Exception as e:
         print(f"❌ Error updating feature request settings: {e}")
+        return jsonify({'success': False, 'message': f'An error occurred: {e}'}), 500
+
+
+@app.route('/update-lap-time-settings', methods=['POST'])
+def update_lap_time_settings():
+    """
+    Updates the lap time settings in Firestore.
+    """
+    try:
+        data = request.get_json()
+        deletion_enabled = data.get('deletion_enabled')
+        updates = {}
+        if deletion_enabled is not None:
+            if not isinstance(deletion_enabled, bool):
+                return jsonify({'success': False, 'message': 'Deletion enabled must be a boolean.'}), 400
+            updates['deletion_enabled'] = deletion_enabled
+
+        if not updates:
+            return jsonify({'success': False, 'message': 'No settings to update.'}), 400
+
+        db.collection('admin_settings').document('lap_times').update(updates)
+        print(f"✅ Lap time settings updated: {updates}")
+        return jsonify({'success': True, 'message': 'Lap time settings updated.'}), 200
+    except Exception as e:
+        print(f"❌ Error updating lap time settings: {e}")
         return jsonify({'success': False, 'message': f'An error occurred: {e}'}), 500
 
 
@@ -807,6 +858,32 @@ def get_events(profile_id):
         return jsonify({'success': False, 'error': str(e)}), 500
 
 
+@app.route('/get-all-events', methods=['GET'])
+def get_all_events():
+    """
+    Retrieves all events from all profiles for the global lap time feature.
+    """
+    try:
+        # FIX: Remove order_by from the query to avoid needing a composite index.
+        # Sorting will be handled in Python.
+        events_ref = db.collection_group('events').stream()
+        events = []
+        for doc in events_ref:
+            event = doc.to_dict()
+            event['id'] = doc.id
+            events.append(event)
+
+        # FIX: Sort the results in Python before sending them to the client.
+        # The key lambda handles cases where 'start_time' might be missing.
+        events.sort(key=lambda x: x.get('start_time', ''), reverse=True)
+
+        print(f"✅ Found and sorted {len(events)} total events for Winner's Circle.")
+        return jsonify({'success': True, 'events': events}), 200
+    except Exception as e:
+        print(f"❌ Error getting all events: {e}")
+        return jsonify({'success': False, 'error': str(e)}), 500
+
+
 @app.route('/update-event/<profile_id>/<event_id>', methods=['PUT'])
 def update_event(profile_id, event_id):
     try:
@@ -845,9 +922,11 @@ def delete_event(profile_id, event_id):
 def get_next_raceday(profile_id):
     try:
         now = datetime.datetime.now(datetime.timezone.utc)
+        now_iso_z = now.strftime('%Y-%m-%dT%H:%M:%S.%f')[:-3] + 'Z'
+
         events_ref = db.collection('driver_profiles').document(profile_id).collection('events') \
             .where('is_raceday', '==', True) \
-            .where('start_time', '>=', now.isoformat()) \
+            .where('start_time', '>=', now_iso_z) \
             .order_by('start_time') \
             .limit(1) \
             .stream()
@@ -945,7 +1024,7 @@ def add_lap_time():
             'username': username,
             'timestamp': datetime.datetime.now(datetime.timezone.utc)
         })
-        return jsonify({'success': True, 'message': 'Lap time recorded!'}), 201
+        return jsonify({'success': True, 'message': 'Lap time recorded!', 'lapId': doc_ref.id}), 201
     except Exception as e:
         return jsonify({'success': False, 'message': str(e)}), 500
 
@@ -953,13 +1032,61 @@ def add_lap_time():
 @app.route('/get-lap-times/<event_id>', methods=['GET'])
 def get_lap_times(event_id):
     try:
+        lap_time_settings = get_lap_time_settings()
         times_ref = db.collection('lap_times').where('eventId', '==', event_id).stream()
-        lap_times = [doc.to_dict() for doc in times_ref]
-        # Sort by lap time, ascending
+        lap_times = []
+        for doc in times_ref:
+            time = doc.to_dict()
+            time['id'] = doc.id
+            lap_times.append(time)
+
         lap_times.sort(key=lambda x: x['lapTime'])
-        return jsonify({'success': True, 'lap_times': lap_times}), 200
+        return jsonify({
+            'success': True,
+            'lap_times': lap_times,
+            'deletion_enabled': lap_time_settings['deletion_enabled']
+        }), 200
     except Exception as e:
         return jsonify({'success': False, 'error': str(e)}), 500
+
+
+@app.route('/update-lap-time/<lap_id>', methods=['PUT'])
+def update_lap_time(lap_id):
+    try:
+        data = request.get_json()
+        new_lap_time = data.get('lapTime')
+        requesting_user = data.get('username')
+
+        lap_ref = db.collection('lap_times').document(lap_id)
+        lap_doc = lap_ref.get()
+
+        if not lap_doc.exists:
+            return jsonify({'success': False, 'message': 'Lap time not found.'}), 404
+
+        if lap_doc.to_dict().get('username') != requesting_user:
+            return jsonify({'success': False, 'message': 'You can only edit your own lap times.'}), 403
+
+        lap_ref.update({'lapTime': new_lap_time})
+        print(f"✅ Lap time updated: {lap_id}")
+        return jsonify({'success': True, 'message': 'Lap time updated successfully!'}), 200
+    except Exception as e:
+        print(f"❌ Error updating lap time: {e}")
+        return jsonify({'success': False, 'message': f'An error occurred: {e}'}), 500
+
+
+@app.route('/delete-lap-time/<lap_id>', methods=['DELETE'])
+def delete_lap_time(lap_id):
+    try:
+        settings = get_lap_time_settings()
+        if not settings['deletion_enabled']:
+            return jsonify({'success': False, 'message': 'Deletion is not enabled.'}), 403
+
+        db.collection('lap_times').document(lap_id).delete()
+        print(f"✅ Lap time deleted: {lap_id}")
+        return jsonify({'success': True, 'message': 'Lap time deleted successfully!'}), 200
+    except Exception as e:
+        print(f"❌ Error deleting lap time: {e}")
+        return jsonify({'success': False, 'message': f'An error occurred: {e}'}), 500
 
 
 if __name__ == '__main__':
