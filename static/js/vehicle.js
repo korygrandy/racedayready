@@ -1,7 +1,7 @@
 import * as elements from './elements.js';
 import { showMessage, showConfirmationModal, createVehicleIcon } from './ui.js';
 import { App } from './main.js';
-import { populateYearDropdown, populateMakeDropdown, populateModelDropdown } from './utils.js';
+import { populateYearDropdown, populateMakeDropdown, populateModelDropdown, filterDropdown } from './utils.js';
 
 let currentVehicles = [];
 let vehicleToEdit = null;
@@ -131,19 +131,6 @@ const loadVehicles = () => {
         .catch(error => console.error('[ERROR] Error loading vehicles:', error));
 };
 
-const filterDropdown = (input, select) => {
-    const filter = input.value.toUpperCase();
-    const options = select.getElementsByTagName('option');
-    for (let i = 0; i < options.length; i++) {
-        const txtValue = options[i].textContent || options[i].innerText;
-        if (txtValue.toUpperCase().indexOf(filter) > -1) {
-            options[i].style.display = "";
-        } else {
-            options[i].style.display = "none";
-        }
-    }
-};
-
 export const initVehicle = () => {
     populateYearDropdown(elements.vehicleYearSelect);
     populateYearDropdown(elements.editVehicleYearSelect);
@@ -259,6 +246,15 @@ export const initVehicle = () => {
         console.log("[INFO] Navigating to Garage Management from warning link.");
         App.setView('garageManagement');
     });
+
+    // FIX: Added null check to prevent crash on load
+    if (elements.manageGaragesLinkBtn) {
+        elements.manageGaragesLinkBtn.addEventListener('click', () => {
+            App.setView('garageManagement');
+        });
+    } else {
+        console.warn("[WARN] Element 'manage-garages-link-btn' not found. Listener not attached.");
+    }
 
     elements.vehicleList.addEventListener('click', (e) => {
         const button = e.target.closest('button');

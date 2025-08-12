@@ -1,12 +1,49 @@
 [
     {
-        "id": "defect-entry-countdown-refresh",
-        "title": "Raceday Countdown Does Not Refresh After Event Creation (Fixed: Aug 11, 2025) - v2.0.8",
-        "resolution": "The `updateRacedayCountdown()` function was not being called after a new event was successfully created. This has been added to the 'Add Event' form's success handler in `schedule.js`. Additionally, a UI flicker was resolved by hiding the countdown elements by default in the HTML."
+        "version": "2.2.0",
+        "date": "August 11, 2025",
+        "notes": [
+            "FIX: Resolved a TypeError on application load by adding a defensive null check in `vehicle.js`, improving script stability."
+        ]
     },
     {
-        "id": "defect-entry-edit-event-save",
-        "title": "Edit Event Modal Save Button Inoperative (Fixed: Aug 10, 2025) - v1.9.6",
-        "resolution": "The 'Edit Event' modal was missing the multi-select dropdown for checklists, which caused the JavaScript to fail. The missing HTML element has been added, and the associated event listeners in `schedule.js` now function correctly."
+        "version": "2.1.9",
+        "date": "August 11, 2025",
+        "notes": [
+            "FEATURE: Implemented real-time filtering for vehicle Year, Make, and Model dropdowns to improve search usability.",
+            "FIX: The '+ Add Race' link in the header now correctly navigates to the Race Schedule view.",
+            "FIX: Corrected a missing utility function that prevented vehicle search filters from working."
+        ]
+    },
+    {
+        "version": "2.1.7",
+        "date": "August 11, 2025",
+        "notes": [
+            "FIX: Resolved critical JavaScript TypeError that prevented event listeners from initializing correctly.",
+            "FIX: Restored functionality to the 'Winner's Circle' and 'Upcoming Features' cards.",
+            "FEATURE: Added a 'Manage Garages' button to the Vehicle Management screen for more intuitive access."
+        ]
+    },
+    {
+        "version": "2.1.6",
+        "date": "August 11, 2025",
+        "notes": [
+            "Fixed a critical defect caused by a typo in an HTML element ID that prevented the application from loading correctly."
+        ]
+    },
+    {
+        "version": "2.1.5",
+        "date": "August 11, 2025",
+        "notes": [
+            "Added a new 'Winner's Circle' feature to record and display lap times for raceday events.",
+            "Redesigned the SVG helmet icon to include a visor for a more distinct and polished look."
+        ]
+    },
+    {
+        "version": "2.1.4",
+        "date": "August 11, 2025",
+        "notes": [
+            "Replaced all 'Edit' and 'Delete' text buttons with icons for a cleaner and more consistent user interface across the application."
+        ]
     }
 ]

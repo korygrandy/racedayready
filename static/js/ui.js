@@ -11,7 +11,7 @@ export const showMessage = (message, isSuccess) => {
 
     setTimeout(() => {
         messageBox.classList.add('opacity-0', 'translate-y-10');
-    }, 3000);
+    }, 6000);
 };
 
 /**
@@ -26,11 +26,16 @@ export const createHelmetIcon = (color, sizeClasses = 'w-8 h-8') => {
     svg.setAttribute('viewBox', '0 0 50 50');
     svg.setAttribute('class', sizeClasses);
 
-    const path = document.createElementNS(svgNS, "path");
-    path.setAttribute('fill', color);
-    path.setAttribute('d', 'M25,5 C10,5 5,20 5,30 C5,45 15,45 25,45 C35,45 45,45 45,30 C45,20 40,5 25,5 Z');
+    const helmetPath = document.createElementNS(svgNS, "path");
+    helmetPath.setAttribute('fill', color);
+    helmetPath.setAttribute('d', 'M25,5 C10,5 5,20 5,30 C5,45 15,45 25,45 C35,45 45,45 45,30 C45,20 40,5 25,5 Z');
 
-    svg.appendChild(path);
+    const visorPath = document.createElementNS(svgNS, "path");
+    visorPath.setAttribute('fill', '#374151'); // A dark gray color for the visor
+    visorPath.setAttribute('d', 'M5 23 H45 V30 H5 Z'); // A simple rectangle for the visor
+
+    svg.appendChild(helmetPath);
+    svg.appendChild(visorPath);
     return svg;
 };
 

@@ -1,6 +1,24 @@
 import { showMessage } from './ui.js';
 
 /**
+ * Filters the options in a select dropdown based on user input.
+ * @param {HTMLInputElement} input - The text input element for searching.
+ * @param {HTMLSelectElement} select - The select dropdown to filter.
+ */
+export const filterDropdown = (input, select) => {
+    const filter = input.value.toUpperCase();
+    const options = select.getElementsByTagName('option');
+    for (let i = 0; i < options.length; i++) {
+        const txtValue = options[i].textContent || options[i].innerText;
+        if (options[i].value === "" || txtValue.toUpperCase().indexOf(filter) > -1) {
+            options[i].style.display = "";
+        } else {
+            options[i].style.display = "none";
+        }
+    }
+};
+
+/**
  * Populates a select dropdown with years from the current year down to 1980.
  * @param {HTMLSelectElement} selectElement - The <select> element to populate.
  */

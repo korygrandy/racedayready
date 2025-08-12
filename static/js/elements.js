@@ -16,6 +16,7 @@ export const featureCard1 = document.getElementById('feature-card-1');
 export const featureCard2 = document.getElementById('feature-card-2');
 export const featureCard6 = document.getElementById('feature-card-6');
 export const featureCard7 = document.getElementById('feature-card-7');
+export const featureCard8 = document.getElementById('feature-card-8'); // Winner's Circle
 export const upcomingFeaturesView = document.getElementById('upcoming-features-view');
 export const backToFeaturesFromUpcomingBtn = document.getElementById('back-to-features-from-upcoming-btn');
 export const featureRequestForm = document.getElementById('feature-request-form');
@@ -45,7 +46,7 @@ export const editEventNameInput = document.getElementById('edit-event-name-input
 export const editEventStartInput = document.getElementById('edit-event-start-input');
 export const editEventEndInput = document.getElementById('edit-event-end-input');
 export const editEventVehiclesSelect = document.getElementById('edit-event-vehicles-select');
-export const editEventChecklistsSelect = document.getElementById('edit-event-checklists-select'); // NEW
+export const editEventChecklistsSelect = document.getElementById('edit-event-checklists-select');
 export const editIsRacedayCheckbox = document.getElementById('edit-is-raceday-checkbox');
 export const cancelEditEventBtn = document.getElementById('cancel-edit-event-btn');
 export const saveEventBtn = document.getElementById('save-event-btn');
@@ -54,8 +55,9 @@ export const saveEventBtn = document.getElementById('save-event-btn');
 export const racedayCountdownContainer = document.getElementById('raceday-countdown-container');
 export const racedayCountdownCircle = document.getElementById('raceday-countdown-circle');
 export const racedayCountdownDays = document.getElementById('raceday-countdown-days');
-export const noRacedayIcon = document.getElementById('no-raceday-container'); // UPDATED ID
+export const noRacedayIcon = document.getElementById('no-raceday-icon');
 export const racedayCountdownLabel = document.getElementById('raceday-countdown-label');
+export const addRacedayLink = document.getElementById('add-raceday-link');
 
 // Checklist Management Elements
 export const checklistManagementView = document.getElementById('checklist-management-view');
@@ -108,6 +110,7 @@ export const addVehicleBtn = document.getElementById('add-vehicle-btn');
 export const vehicleList = document.getElementById('vehicle-list');
 export const backToFeaturesFromVehicleBtn = document.getElementById('back-to-features-from-vehicle-btn');
 export const vehicleSortBtn = document.getElementById('vehicle-sort-btn');
+export const manageGaragesLinkBtn = document.getElementById('manage-garages-link-btn');
 
 // Edit Vehicle Modal Elements
 export const editVehicleModal = document.getElementById('edit-vehicle-modal');
@@ -174,3 +177,13 @@ export const featureRequestLimitInput = document.getElementById('feature-request
 export const enableDeletionCheckbox = document.getElementById('enable-deletion-checkbox');
 export const updateFeatureSettingsBtn = document.getElementById('update-feature-settings-btn');
 export const manageFeatureRequestsLink = document.getElementById('manage-feature-requests-link');
+
+// Lap Time Elements
+export const lapTimeView = document.getElementById('lap-time-view');
+export const lapTimeForm = document.getElementById('lap-time-form');
+export const lapTimeEventSelect = document.getElementById('lap-time-event-select');
+export const lapTimeInput = document.getElementById('lap-time-input');
+export const submitLapTimeBtn = document.getElementById('submit-lap-time-btn');
+export const winnerCircleHeading = document.getElementById('winner-circle-heading');
+export const lapTimeList = document.getElementById('lap-time-list');
+export const backToFeaturesFromLapsBtn = document.getElementById('back-to-features-from-laps-btn');
