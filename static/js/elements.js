@@ -93,6 +93,7 @@ export const addGarageForm = document.getElementById('add-garage-form');
 export const garageNameInput = document.getElementById('garage-name-input');
 export const addGarageBtn = document.getElementById('add-garage-btn');
 export const garageList = document.getElementById('garage-list');
+export const sharedGarageList = document.getElementById('shared-garage-list');
 export const backToFeaturesFromGarageBtn = document.getElementById('back-to-features-from-garage-btn');
 
 // Vehicle Management Elements
@@ -116,6 +117,12 @@ export const vehicleList = document.getElementById('vehicle-list');
 export const backToFeaturesFromVehicleBtn = document.getElementById('back-to-features-from-vehicle-btn');
 export const vehicleSortBtn = document.getElementById('vehicle-sort-btn');
 export const manageGaragesLinkBtn = document.getElementById('manage-garages-link-btn');
+export const manualVehicleEntryCheckbox = document.getElementById('manual-vehicle-entry-checkbox');
+export const apiVehicleInputs = document.getElementById('api-vehicle-inputs');
+export const manualVehicleInputs = document.getElementById('manual-vehicle-inputs');
+export const manualVehicleYear = document.getElementById('manual-vehicle-year');
+export const manualVehicleMake = document.getElementById('manual-vehicle-make');
+export const manualVehicleModel = document.getElementById('manual-vehicle-model');
 
 // Edit Vehicle Modal Elements
 export const editVehicleModal = document.getElementById('edit-vehicle-modal');
@@ -132,6 +139,12 @@ export const editVehiclePhotoUrlInput = document.getElementById('edit-vehicle-ph
 export const editVehiclePhotoPreview = document.getElementById('edit-vehicle-photo-preview');
 export const cancelEditVehicleBtn = document.getElementById('cancel-edit-vehicle-btn');
 export const saveVehicleBtn = document.getElementById('save-vehicle-btn');
+export const editManualVehicleEntryCheckbox = document.getElementById('edit-manual-vehicle-entry-checkbox');
+export const editApiVehicleInputs = document.getElementById('edit-api-vehicle-inputs');
+export const editManualVehicleInputs = document.getElementById('edit-manual-vehicle-inputs');
+export const editManualVehicleYear = document.getElementById('edit-manual-vehicle-year');
+export const editManualVehicleMake = document.getElementById('edit-manual-vehicle-make');
+export const editManualVehicleModel = document.getElementById('edit-manual-vehicle-model');
 
 export const profileModal = document.getElementById('profile-modal');
 export const profileForm = document.getElementById('profile-form');
@@ -189,6 +202,8 @@ export const maintenanceModeCheckbox = document.getElementById('maintenance-mode
 export const updateAppSettingsBtn = document.getElementById('update-app-settings-btn');
 export const seedDatabaseBtn = document.getElementById('seed-database-btn');
 export const clearAllDataBtn = document.getElementById('clear-all-data-btn');
+export const viewUseCasesLink = document.getElementById('view-use-cases-link');
+export const useCasesContainer = document.getElementById('use-cases-container');
 
 // Lap Time Elements
 export const lapTimeView = document.getElementById('lap-time-view');
@@ -232,3 +247,16 @@ export const editTrackLayoutPhotoUrlInput = document.getElementById('edit-track-
 export const editTrackLayoutPhotoPreview = document.getElementById('edit-track-layout-photo-preview');
 export const cancelEditTrackBtn = document.getElementById('cancel-edit-track-btn');
 export const saveTrackBtn = document.getElementById('save-track-btn');
+
+// Shared Garage Modals
+export const shareGarageModal = document.getElementById('share-garage-modal');
+export const shareGarageForm = document.getElementById('share-garage-form');
+export const garageDoorCodeInput = document.getElementById('garage-door-code-input');
+export const cancelShareGarageBtn = document.getElementById('cancel-share-garage-btn');
+export const saveShareGarageBtn = document.getElementById('save-share-garage-btn');
+
+export const unlockGarageModal = document.getElementById('unlock-garage-modal');
+export const unlockGarageForm = document.getElementById('unlock-garage-form');
+export const unlockGarageCodeInput = document.getElementById('unlock-garage-code-input');
+export const cancelUnlockGarageBtn = document.getElementById('cancel-unlock-garage-btn');
+export const submitUnlockGarageBtn = document.getElementById('submit-unlock-garage-btn');

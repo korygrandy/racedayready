@@ -673,7 +673,9 @@ def get_garages(profile_id):
             garages.append({
                 'id': garage_id,
                 'name': garage_data.get('name'),
-                'vehicles': [v for v in all_vehicles if v.get('garageId') == garage_id]
+                'vehicles': [v for v in all_vehicles if v.get('garageId') == garage_id],
+                'shared': garage_data.get('shared', False),
+                'garageDoorCode': garage_data.get('garageDoorCode', '')
             })
 
         garage_limit = get_limit('admin_settings', 'garages', 10)
@@ -1247,11 +1249,12 @@ def delete_collection(coll_ref, batch_size):
 def clear_all_data():
     try:
         print("--- ⚠️ DANGER: Deleting all user data from Firestore. ---")
-        collections_to_delete = ['driver_profiles', 'feature_requests', 'lap_times', 'tracks', 'readiness_checks']
+        collections_to_delete = ['driver_profiles', 'lap_times', 'tracks', 'readiness_checks']
         for coll_name in collections_to_delete:
             coll_ref = db.collection(coll_name)
             delete_collection(coll_ref, 50)
             print(f"✅ Successfully deleted all documents in '{coll_name}'.")
+        print("ℹ️ Skipping deletion of 'feature_requests' collection.")
         return jsonify({'success': True, 'message': 'All user data has been cleared.'}), 200
     except Exception as e:
         print(f"❌ Error clearing all data: {e}")
@@ -1313,7 +1316,8 @@ def seed_database():
                 checklist_id_map[i] = checklist_ref.id
 
             # Create Events
-            for event_data in user_data['events']:
+            event_id_map = {}
+            for event_data in user_data.get('events', []):
                 track_index = event_data.pop('trackIndex', None)
                 if track_index is not None and track_index in track_id_map:
                     event_data['trackId'] = track_id_map[track_index]
@@ -1334,18 +1338,19 @@ def seed_database():
                 event_data['created_at'] = datetime.datetime.now(datetime.timezone.utc)
                 event_ref = profile_ref.collection('events').document()
                 event_ref.set(event_data)
-                event_id = event_ref.id
+                event_id_map[event_data['name']] = event_ref.id
 
-                # Seed lap times for this event if they exist
-                if 'lap_times' in user_data:
-                    for lap_time_data in user_data['lap_times']:
-                        if lap_time_data['eventName'] == event_data['name']:
-                            db.collection('lap_times').add({
-                                'eventId': event_id,
-                                'lapTime': lap_time_data['lapTime'],
-                                'username': profile_data['username'],
-                                'timestamp': datetime.datetime.now(datetime.timezone.utc)
-                            })
+            # Seed lap times for this event if they exist
+            if 'lap_times' in user_data:
+                for lap_time_data in user_data['lap_times']:
+                    event_name = lap_time_data['eventName']
+                    if event_name in event_id_map:
+                        db.collection('lap_times').add({
+                            'eventId': event_id_map[event_name],
+                            'lapTime': lap_time_data['lapTime'],
+                            'username': profile_data['username'],
+                            'timestamp': datetime.datetime.now(datetime.timezone.utc)
+                        })
 
         print(f"✅ Seeded {len(mock_users)} users and their associated data.")
         return jsonify({'success': True, 'message': 'Database seeded successfully!'}), 200

@@ -7,7 +7,8 @@
             "Verifies management of multiple garages and vehicles.",
             "Tests the creation and association of checklist templates.",
             "Covers both `is_raceday = true` and `is_raceday = false` event scenarios.",
-            "Tests the Winner's Circle with pre-seeded lap times."
+            "Tests the Winner's Circle with pre-seeded lap times.",
+            "Shares the 'Project Cars' garage with a door code to test sharing functionality."
         ]
     },
     {
@@ -35,6 +36,7 @@
         "use_cases": [
             "Tests the default admin PIN ('3511').",
             "Verifies that events can be created for tracks that this user did not create (shared track functionality).",
+            "Tests accessing and using a shared garage by unlocking 'Project Cars' from 'SpeedRacer' with code '4321'.",
             "Provides a clean profile for testing the full lifecycle of adding garages, vehicles, events, and lap times."
         ]
     }

@@ -38,7 +38,7 @@ export const MOCK_USERS = [
         },
         garages: [
             { name: "Main Garage" },
-            { name: "Project Cars" }
+            { name: "Project Cars", shared: true, garageDoorCode: "4321" }
         ],
         vehicles: [
             { year: "2023", make: "Porsche", model: "911 GT3 RS", garageIndex: 0, photoURL: "https://storage.googleapis.com/raceday-ready-assets/gt3rs.jpg" },

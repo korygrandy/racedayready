@@ -20,6 +20,7 @@ export const App = {
         tracks: null,
         vehicles: null,
     },
+    unlockedGarages: [], // Initialize the array here
     setView: null,
     updateProfile: updateProfile,
     loadAdminSettings: null,

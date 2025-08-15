@@ -1,48 +1,48 @@
 [
     {
-        "version": "2.6.9",
+        "version": "2.7.5",
         "date": "August 15, 2025",
         "notes": [
-            "ENHANCEMENT: Expanded `mock-data.js` to include more comprehensive event and lap time data for all user profiles.",
-            "ENHANCEMENT: Updated the database seeding logic in `app.py` to correctly handle and create lap time records."
+            "FIX: Resolved a TypeError on the Garage Management page by initializing the `unlockedGarages` array in `main.js` and adding the missing 'Unlock Garage' modal to `index.html`.",
+            "ENHANCEMENT: Added a server-side check in `app.py` to prevent the creation of garages with duplicate names for the same user."
         ]
     },
     {
-        "version": "2.6.8",
+        "version": "2.7.4",
         "date": "August 15, 2025",
         "notes": [
-            "FEATURE: Added a 'Manual Entry' checkbox to the vehicle forms, allowing users to input vehicle year, make, and model as text strings.",
-            "FIX: Implemented an `onerror` attribute on vehicle image tags to display a default SVG icon if a photo URL is broken or invalid."
+            "FIX: Resolved a TypeError on the Garage Management page by adding the missing 'Unlock Garage' modal to `index.html`."
         ]
     },
     {
-        "version": "2.6.7",
+        "version": "2.7.3",
         "date": "August 15, 2025",
         "notes": [
-            "ENHANCEMENT: Expanded `mock-data.js` to include an 'AdminRacer' profile for more comprehensive testing.",
-            "ENHANCEMENT: The new mock profile includes data to test shared tracks, Raceday flags, and lap time submissions."
+            "FIX: The 'Clear All Data' function in Developer Mode no longer deletes the `feature_requests` collection, preserving valuable user feedback during data resets."
         ]
     },
     {
-        "version": "2.6.6",
+        "version": "2.7.2",
         "date": "August 15, 2025",
         "notes": [
-            "FIX: Corrected the `index.html` file to include the 'Data Management & Seeding' section in the Developer Mode UI, which was previously missing."
+            "FEATURE: Implemented a 'Shared Garages' system, allowing users to share their garages with others using a 4-digit door code.",
+            "FEATURE: Users can now view and unlock shared garages to access vehicles for event planning.",
+            "ENHANCEMENT: The event creation form now populates with vehicles from both owned and unlocked shared garages."
         ]
     },
     {
-        "version": "2.6.5",
+        "version": "2.7.1",
         "date": "August 15, 2025",
         "notes": [
-            "FIX: Resolved a TypeError on page load by moving the Data Management event listeners in `admin.js` to ensure they are only attached after the Developer Mode elements are rendered."
+            "FEATURE: Added a 'View Use Case Definitions' link to the Developer Mode that dynamically loads and displays `usecases.json`."
         ]
     },
     {
-        "version": "2.6.4",
+        "version": "2.7.0",
         "date": "August 15, 2025",
         "notes": [
-            "FIX: Resolved a JavaScript module import error by adding the missing `MOCK_VEHICLES` export to `mock-data.js`.",
-            "ENHANCEMENT: The mock vehicle data now includes `garageName` for more realistic dev mode display."
+            "FEATURE: Added a `usecases.json` file to document mock data scenarios for testing.",
+            "FIX: Corrected the user count in the 'Seed Database' description in `index.html` from 3 to 4."
         ]
     }
 ]

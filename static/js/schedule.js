@@ -55,7 +55,7 @@ export const updateRacedayCountdown = () => {
 
 const populateVehicleSelector = async (container, selectedVehicleIds = []) => {
     try {
-        const response = await fetch(`/get-vehicles/${App.currentUser.id}`);
+        const response = await fetch(`/get-vehicles-for-event-form/${App.currentUser.id}`);
         const data = await response.json();
         container.innerHTML = '';
         if (data.success && data.vehicles.length > 0) {
