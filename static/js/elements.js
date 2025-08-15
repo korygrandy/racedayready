@@ -10,6 +10,8 @@ export const featuresHelmetDisplay = document.getElementById('features-helmet-di
 export const featuresUsername = document.getElementById('features-username');
 export const profileHeaderBtn = document.getElementById('profile-header-btn');
 export const themeSwitcherBtn = document.getElementById('theme-switcher-btn');
+export const garageHeaderBtn = document.getElementById('garage-header-btn');
+export const lapTimeHeaderBtn = document.getElementById('lap-time-header-btn');
 export const raceDayPrepView = document.getElementById('race-day-prep-view');
 export const backToFeaturesBtn = document.getElementById('back-to-features-btn');
 export const featureCard1 = document.getElementById('feature-card-1');
@@ -185,6 +187,8 @@ export const updateLapTimeSettingsBtn = document.getElementById('update-lap-time
 export const goToWinnersCircleLink = document.getElementById('go-to-winners-circle-link');
 export const maintenanceModeCheckbox = document.getElementById('maintenance-mode-checkbox');
 export const updateAppSettingsBtn = document.getElementById('update-app-settings-btn');
+export const seedDatabaseBtn = document.getElementById('seed-database-btn');
+export const clearAllDataBtn = document.getElementById('clear-all-data-btn');
 
 // Lap Time Elements
 export const lapTimeView = document.getElementById('lap-time-view');

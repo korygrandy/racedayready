@@ -1,34 +1,48 @@
 [
     {
-        "version": "2.5.8",
-        "date": "August 12, 2025",
+        "version": "2.6.9",
+        "date": "August 15, 2025",
         "notes": [
-            "ENHANCEMENT: Replaced the animated racecar and CSS flag with a single animated checkered flag GIF on the main page.",
-            "OPTIMIZATION: Removed unused CSS and JavaScript related to the previous animations."
+            "ENHANCEMENT: Expanded `mock-data.js` to include more comprehensive event and lap time data for all user profiles.",
+            "ENHANCEMENT: Updated the database seeding logic in `app.py` to correctly handle and create lap time records."
         ]
     },
     {
-        "version": "2.5.7",
-        "date": "August 12, 2025",
+        "version": "2.6.8",
+        "date": "August 15, 2025",
         "notes": [
-            "ENHANCEMENT: Replaced the animated racecar SVG with an animated GIF on the main landing page.",
-            "FIX: Removed sound effect from playing on initial page load."
+            "FEATURE: Added a 'Manual Entry' checkbox to the vehicle forms, allowing users to input vehicle year, make, and model as text strings.",
+            "FIX: Implemented an `onerror` attribute on vehicle image tags to display a default SVG icon if a photo URL is broken or invalid."
         ]
     },
     {
-        "version": "2.5.6",
-        "date": "August 12, 2025",
+        "version": "2.6.7",
+        "date": "August 15, 2025",
         "notes": [
-            "FEATURE: Added an animated racecar icon that slides in on page load and races off on button click.",
-            "ENHANCEMENT: The racecar sound effect now also plays automatically when the main page loads."
+            "ENHANCEMENT: Expanded `mock-data.js` to include an 'AdminRacer' profile for more comprehensive testing.",
+            "ENHANCEMENT: The new mock profile includes data to test shared tracks, Raceday flags, and lap time submissions."
         ]
     },
     {
-        "version": "2.5.5",
-        "date": "August 12, 2025",
+        "version": "2.6.6",
+        "date": "August 15, 2025",
         "notes": [
-            "ENHANCEMENT: Replaced the synthesized racecar sound with an MP3 file for a more realistic effect.",
-            "OPTIMIZATION: Removed the unused Tone.js library."
+            "FIX: Corrected the `index.html` file to include the 'Data Management & Seeding' section in the Developer Mode UI, which was previously missing."
+        ]
+    },
+    {
+        "version": "2.6.5",
+        "date": "August 15, 2025",
+        "notes": [
+            "FIX: Resolved a TypeError on page load by moving the Data Management event listeners in `admin.js` to ensure they are only attached after the Developer Mode elements are rendered."
+        ]
+    },
+    {
+        "version": "2.6.4",
+        "date": "August 15, 2025",
+        "notes": [
+            "FIX: Resolved a JavaScript module import error by adding the missing `MOCK_VEHICLES` export to `mock-data.js`.",
+            "ENHANCEMENT: The mock vehicle data now includes `garageName` for more realistic dev mode display."
         ]
     }
 ]

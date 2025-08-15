@@ -46,11 +46,15 @@ const setView = (viewName) => {
     elements.lapTimeView.classList.add('hidden');
     elements.trackManagementView.classList.add('hidden');
     elements.profileHeaderBtn.classList.add('hidden');
+    elements.garageHeaderBtn.classList.add('hidden');
+    elements.lapTimeHeaderBtn.classList.add('hidden');
 
     const isDevMode = viewName === 'developer';
 
     if (viewName !== 'main' && App.currentUser) {
         elements.profileHeaderBtn.classList.remove('hidden');
+        elements.garageHeaderBtn.classList.remove('hidden');
+        elements.lapTimeHeaderBtn.classList.remove('hidden');
         elements.racedayCountdownContainer.classList.remove('hidden');
         updateRacedayCountdown();
     } else {
@@ -140,7 +144,9 @@ const injectFeatureCardIcons = () => {
         'feature-card-icon-6': `<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 21h16.5M4.5 3h15M5.25 3v18m13.5-18v18M9 6.75h6M9 11.25h6M9 15.75h6" /></svg>`,
         'feature-card-icon-9': `<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9 6.75V15m6-8.25v8.25m-6-4.5h6m-6 4.5h6m-6-8.25H7.5a2.25 2.25 0 00-2.25 2.25v7.5a2.25 2.25 0 002.25 2.25h7.5a2.25 2.25 0 002.25-2.25v-7.5a2.25 2.25 0 00-2.25-2.25H15M3 12h18" /></svg>`,
         'feature-card-icon-8': `<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M16.5 18.75h-9a9.75 9.75 0 011.036-4.825 9.75 9.75 0 019.714 0A9.75 9.75 0 0116.5 18.75z" /><path stroke-linecap="round" stroke-linejoin="round" d="M12 12.75a4.125 4.125 0 110-8.25 4.125 4.125 0 010 8.25zM12 12.75v6.75" /></svg>`,
-        'feature-card-icon-7': `<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6m0 0v6m0-6h6m-6 0H6" /></svg>`
+        'feature-card-icon-7': `<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6m0 0v6m0-6h6m-6 0H6" /></svg>`,
+        'garage-header-btn': `<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-8 h-8"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 21h16.5M4.5 3h15M5.25 3v18m13.5-18v18M9 6.75h6M9 11.25h6M9 15.75h6" /></svg>`,
+        'lap-time-header-btn': `<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-8 h-8"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>`
     };
     for (const id in icons) {
         const el = document.getElementById(id);
@@ -191,6 +197,16 @@ const initEventListeners = () => {
         console.log("[INFO] 'Profile Header' button clicked.");
         setView('main');
         checkProfiles();
+    });
+
+    elements.garageHeaderBtn.addEventListener('click', () => {
+        console.log("[INFO] 'Garage Header' button clicked.");
+        setView('garageManagement');
+    });
+
+    elements.lapTimeHeaderBtn.addEventListener('click', () => {
+        console.log("[INFO] 'Lap Time Header' button clicked.");
+        setView('lapTime');
     });
 
     elements.featureCard1.addEventListener('click', () => {

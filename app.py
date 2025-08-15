@@ -1229,6 +1229,131 @@ def delete_track(track_id):
         return jsonify({'success': False, 'message': f'An error occurred: {e}'}), 500
 
 
+# --- Data Seeding and Clearing Routes ---
+def delete_collection(coll_ref, batch_size):
+    docs = coll_ref.limit(batch_size).stream()
+    deleted = 0
+    for doc in docs:
+        # Recursively delete subcollections
+        for sub_coll in doc.reference.collections():
+            delete_collection(sub_coll, batch_size)
+        doc.reference.delete()
+        deleted += 1
+    if deleted >= batch_size:
+        return delete_collection(coll_ref, batch_size)
+
+
+@app.route('/clear-all-data', methods=['DELETE'])
+def clear_all_data():
+    try:
+        print("--- ⚠️ DANGER: Deleting all user data from Firestore. ---")
+        collections_to_delete = ['driver_profiles', 'feature_requests', 'lap_times', 'tracks', 'readiness_checks']
+        for coll_name in collections_to_delete:
+            coll_ref = db.collection(coll_name)
+            delete_collection(coll_ref, 50)
+            print(f"✅ Successfully deleted all documents in '{coll_name}'.")
+        return jsonify({'success': True, 'message': 'All user data has been cleared.'}), 200
+    except Exception as e:
+        print(f"❌ Error clearing all data: {e}")
+        return jsonify({'success': False, 'message': f'An error occurred: {e}'}), 500
+
+
+@app.route('/seed-database', methods=['POST'])
+def seed_database():
+    try:
+        data = request.get_json()
+        mock_users = data.get('users')
+        mock_tracks = data.get('tracks')
+
+        # 1. Seed Tracks
+        track_id_map = {}
+        for i, track_data in enumerate(mock_tracks):
+            track_data['created_at'] = datetime.datetime.now(datetime.timezone.utc)
+            # Add a placeholder profileId, as it's required by the schema
+            track_data['profileId'] = "SEED_DATA"
+            track_ref = db.collection('tracks').document()
+            track_ref.set(track_data)
+            track_id_map[i] = track_ref.id
+        print(f"✅ Seeded {len(mock_tracks)} tracks.")
+
+        # 2. Seed Users and their data
+        for user_data in mock_users:
+            # Create Profile
+            profile_data = user_data['profile']
+            profile_data['created_at'] = datetime.datetime.now(datetime.timezone.utc)
+            profile_ref = db.collection('driver_profiles').document()
+            profile_ref.set(profile_data)
+
+            # Create Garages
+            garage_id_map = {}
+            for i, garage_data in enumerate(user_data['garages']):
+                garage_data['created_at'] = datetime.datetime.now(datetime.timezone.utc)
+                garage_ref = profile_ref.collection('garages').document()
+                garage_ref.set(garage_data)
+                garage_id_map[i] = garage_ref.id
+
+            # Create Vehicles
+            vehicle_id_map = {}
+            for i, vehicle_data in enumerate(user_data['vehicles']):
+                garage_index = vehicle_data.pop('garageIndex', None)
+                if garage_index is not None and garage_index in garage_id_map:
+                    vehicle_data['garageId'] = garage_id_map[garage_index]
+                vehicle_data['created_at'] = datetime.datetime.now(datetime.timezone.utc)
+                vehicle_data['order'] = i
+                vehicle_ref = profile_ref.collection('vehicles').document()
+                vehicle_ref.set(vehicle_data)
+                vehicle_id_map[i] = vehicle_ref.id
+
+            # Create Checklists
+            checklist_id_map = {}
+            for i, checklist_data in enumerate(user_data['checklists']):
+                checklist_data['created_at'] = datetime.datetime.now(datetime.timezone.utc)
+                checklist_ref = profile_ref.collection('checklists').document()
+                checklist_ref.set(checklist_data)
+                checklist_id_map[i] = checklist_ref.id
+
+            # Create Events
+            for event_data in user_data['events']:
+                track_index = event_data.pop('trackIndex', None)
+                if track_index is not None and track_index in track_id_map:
+                    event_data['trackId'] = track_id_map[track_index]
+
+                vehicle_indices = event_data.pop('vehicleIndices', [])
+                event_data['vehicles'] = [vehicle_id_map[i] for i in vehicle_indices if i in vehicle_id_map]
+
+                checklist_indices = event_data.pop('checklistIndices', [])
+                event_data['checklists'] = [checklist_id_map[i] for i in checklist_indices if i in checklist_id_map]
+
+                # Generate dynamic start/end times relative to today
+                start_time = datetime.datetime.now(datetime.timezone.utc) + datetime.timedelta(
+                    days=10 + len(user_data['events']))
+                end_time = start_time + datetime.timedelta(hours=8)
+                event_data['start_time'] = start_time.isoformat()
+                event_data['end_time'] = end_time.isoformat()
+
+                event_data['created_at'] = datetime.datetime.now(datetime.timezone.utc)
+                event_ref = profile_ref.collection('events').document()
+                event_ref.set(event_data)
+                event_id = event_ref.id
+
+                # Seed lap times for this event if they exist
+                if 'lap_times' in user_data:
+                    for lap_time_data in user_data['lap_times']:
+                        if lap_time_data['eventName'] == event_data['name']:
+                            db.collection('lap_times').add({
+                                'eventId': event_id,
+                                'lapTime': lap_time_data['lapTime'],
+                                'username': profile_data['username'],
+                                'timestamp': datetime.datetime.now(datetime.timezone.utc)
+                            })
+
+        print(f"✅ Seeded {len(mock_users)} users and their associated data.")
+        return jsonify({'success': True, 'message': 'Database seeded successfully!'}), 200
+    except Exception as e:
+        print(f"❌ Error seeding database: {e}")
+        return jsonify({'success': False, 'message': f'An error occurred: {e}'}), 500
+
+
 if __name__ == '__main__':
     # This block allows the script to be run directly.
     # debug=True allows for auto-reloading when you save changes.

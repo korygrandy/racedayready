@@ -1,6 +1,7 @@
 import * as elements from './elements.js';
-import { showMessage } from './ui.js';
+import { showMessage, showConfirmationModal } from './ui.js';
 import { App } from './main.js';
+import { MOCK_USERS, MOCK_TRACKS } from './mock-data.js';
 
 const loadAdminSettings = () => {
     console.log("[INFO] Loading admin settings...");
@@ -15,6 +16,66 @@ const loadAdminSettings = () => {
                 elements.enableDeletionCheckbox.checked = data.feature_request_settings.deletion_enabled;
                 elements.enableLapTimeDeletionCheckbox.checked = data.lap_time_settings.deletion_enabled;
                 elements.maintenanceModeCheckbox.checked = data.maintenance_settings.enabled;
+
+                // Attach listeners here, now that we know the elements are visible
+                elements.seedDatabaseBtn.addEventListener('click', () => {
+                    showConfirmationModal(
+                        "Are you sure you want to seed the database with sample data? This may overwrite existing data with the same names.",
+                        () => {
+                            elements.seedDatabaseBtn.disabled = true;
+                            elements.seedDatabaseBtn.textContent = 'Seeding...';
+                            fetch('/seed-database', {
+                                method: 'POST',
+                                headers: { 'Content-Type': 'application/json' },
+                                body: JSON.stringify({ users: MOCK_USERS, tracks: MOCK_TRACKS }),
+                            })
+                            .then(res => res.json())
+                            .then(data => {
+                                showMessage(data.message, data.success);
+                                if (data.success) {
+                                    window.location.reload();
+                                }
+                            })
+                            .catch(error => {
+                                console.error('[ERROR] Error seeding database:', error);
+                                showMessage('Failed to seed database.', false);
+                            })
+                            .finally(() => {
+                                elements.seedDatabaseBtn.disabled = false;
+                                elements.seedDatabaseBtn.textContent = 'Seed Database';
+                            });
+                        }
+                    );
+                });
+
+                elements.clearAllDataBtn.addEventListener('click', () => {
+                    showConfirmationModal(
+                        "DANGER: Are you absolutely sure you want to clear all data? This will permanently delete all profiles, vehicles, events, and other user content. This action cannot be undone.",
+                        () => {
+                            elements.clearAllDataBtn.disabled = true;
+                            elements.clearAllDataBtn.textContent = 'Clearing...';
+                            fetch('/clear-all-data', {
+                                method: 'DELETE',
+                            })
+                            .then(res => res.json())
+                            .then(data => {
+                                showMessage(data.message, data.success);
+                                if (data.success) {
+                                    window.location.reload();
+                                }
+                            })
+                            .catch(error => {
+                                console.error('[ERROR] Error clearing all data:', error);
+                                showMessage('Failed to clear data.', false);
+                            })
+                            .finally(() => {
+                                elements.clearAllDataBtn.disabled = false;
+                                elements.clearAllDataBtn.textContent = 'Clear All Data';
+                            });
+                        }
+                    );
+                });
+
             } else {
                 showMessage("Failed to load admin settings.", false);
             }

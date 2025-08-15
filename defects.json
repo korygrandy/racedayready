@@ -1,5 +1,15 @@
 [
     {
+        "id": "admin-init-error",
+        "title": "Uncaught TypeError on Main App Load (Fixed: Aug 15, 2025) - v2.6.5",
+        "resolution": "The event listeners for the 'Seed Database' and 'Clear All Data' buttons were being attached in `initAdmin` on initial page load, before the Developer Mode view (and its buttons) were rendered. This caused a 'Cannot read properties of null' error. The fix was to move these two event listener attachments into the `loadAdminSettings` function, which is only called after the Developer Mode view is visible, ensuring the elements exist before listeners are attached."
+    },
+    {
+        "id": "ui-stylesheet-path-correction",
+        "title": "Stylesheet Path Inconsistency (Fixed: Aug 12, 2025) - v2.5.9",
+        "resolution": "The `href` attribute for the stylesheet link in `index.html` was updated to use the correct `url_for('static', filename='style.css')` syntax, ensuring it correctly points to the file at `/static/style.css`."
+    },
+    {
         "id": "feature-flag-gif-enhancement",
         "title": "Main Page Animation Updated to GIF (Enhanced: Aug 12, 2025) - v2.5.8",
         "resolution": "The CSS-animated flag and racecar SVG were removed from `index.html` and `style.css`. They were replaced with a single `<img>` tag pointing to `waving-flag.gif` to simplify the main page's visual elements."
@@ -13,10 +23,5 @@
         "id": "feature-mp3-sound-effect",
         "title": "Synthesized Sound Effect is Not Ideal (Enhanced: Aug 12, 2025) - v2.5.5",
         "resolution": "The `playRacecarSound` function in `main.js` was updated to use the native `Audio` object to play an MP3 file. The unused `Tone.js` library was removed from `index.html`."
-    },
-    {
-        "id": "feature-main-page-ux-enhancements",
-        "title": "Main Page UI/UX Enhancements (Enhanced: Aug 12, 2025) - v2.5.4",
-        "resolution": "Updated `index.html` to change the main heading and button text. Added a `div` for a new animated flag, with corresponding animation styles in `style.css`. The `playRacecarSound` function in `main.js` was completely refactored to use `Tone.js` to synthesize a Formula 1 car sound."
     }
 ]

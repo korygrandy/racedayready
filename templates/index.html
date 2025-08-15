@@ -32,22 +32,41 @@
             </div>
         </main>
         {% else %}
-        <div id="global-header" class="w-full p-4 flex justify-between items-center">
-            <div id="profile-section" class="flex items-center space-x-4">
-                <div id="profile-header-btn" class="hidden items-center space-x-4 cursor-pointer p-2 rounded-lg hover:bg-interactive-hover" title="Change Profile">
-                    <div id="features-helmet-display" class="w-12 h-12"></div>
-                    <span id="features-username" class="text-lg font-semibold"></span>
+        <div id="global-header" class="w-full p-4 flex justify-between items-center relative">
+            <!-- Left Header Content -->
+            <div class="flex items-center space-x-2">
+                <div id="profile-section" class="flex items-center space-x-4">
+                    <div id="profile-header-btn" class="hidden items-center space-x-4 cursor-pointer p-2 rounded-lg hover:bg-interactive-hover" title="Change Profile">
+                        <div id="features-helmet-display" class="w-12 h-12"></div>
+                        <span id="features-username" class="text-lg font-semibold"></span>
+                    </div>
+                </div>
+                <div id="garage-header-btn-container">
+                    <div id="garage-header-btn" class="hidden cursor-pointer p-2 rounded-lg hover:bg-interactive-hover" title="Garage Management">
+                        <!-- This span will hold the garage icon SVG -->
+                    </div>
+                </div>
+                <div id="lap-time-header-btn-container">
+                    <div id="lap-time-header-btn" class="hidden cursor-pointer p-2 rounded-lg hover:bg-interactive-hover" title="Winner's Circle">
+                        <!-- This span will hold the lap time icon SVG -->
+                    </div>
                 </div>
             </div>
-            <div id="raceday-countdown-container" class="hidden items-center">
-                <span id="raceday-countdown-label" class="text-lg font-bold mr-2 hidden">Days Until Raceday:</span>
-                <div id="raceday-countdown-circle" class="w-16 h-16 bg-orange-500 rounded-full flex items-center justify-center text-white shadow-lg hidden">
-                    <span id="raceday-countdown-days" class="text-3xl font-bold"></span>
-                </div>
-                <div id="no-raceday-icon" class="hidden">
-                     <a href="#" id="add-raceday-link" class="text-blue-500 hover:underline text-lg">+ Add Race</a>
+
+            <!-- Center Header Content -->
+            <div class="absolute left-1/2 -translate-x-1/2">
+                <div id="raceday-countdown-container" class="hidden items-center">
+                    <span id="raceday-countdown-label" class="text-lg font-bold mr-2 hidden">Days Until Raceday:</span>
+                    <div id="raceday-countdown-circle" class="w-16 h-16 bg-orange-500 rounded-full flex items-center justify-center text-white shadow-lg hidden">
+                        <span id="raceday-countdown-days" class="text-3xl font-bold"></span>
+                    </div>
+                    <div id="no-raceday-icon" class="hidden">
+                         <a href="#" id="add-raceday-link" class="text-blue-500 hover:underline text-lg">+ Add Race</a>
+                    </div>
                 </div>
             </div>
+
+            <!-- Right Header Content -->
             <div id="theme-switcher-container">
                  <button id="theme-switcher-btn" class="p-2 rounded-full hover:bg-interactive-hover" title="Toggle Theme">
                     </button>
@@ -266,23 +285,37 @@
                         </div>
                         <form id="add-vehicle-form">
                             <fieldset id="add-vehicle-fieldset">
-                                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                                    <div>
-                                        <label for="vehicle-year-search" class="block text-sm font-medium">Search Year</label>
-                                        <input type="text" id="vehicle-year-search" class="mt-1 block w-full bg-input border border-border rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500" placeholder="e.g., 2023">
-                                        <select id="vehicle-year-select" class="mt-1 block w-full bg-input border border-border rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500" required></select>
-                                    </div>
-                                    <div>
-                                        <label for="vehicle-make-search" class="block text-sm font-medium">Search Make</label>
-                                        <input type="text" id="vehicle-make-search" class="mt-1 block w-full bg-input border border-border rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500" placeholder="e.g., Ford">
-                                        <select id="vehicle-make-select" class="mt-1 block w-full bg-input border border-border rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500" required disabled></select>
-                                    </div>
-                                    <div>
-                                        <label for="vehicle-model-search" class="block text-sm font-medium">Search Model</label>
-                                        <input type="text" id="vehicle-model-search" class="mt-1 block w-full bg-input border border-border rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500" placeholder="e.g., Mustang">
-                                        <select id="vehicle-model-select" class="mt-1 block w-full bg-input border border-border rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500" required disabled></select>
+                                <div id="api-vehicle-inputs">
+                                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                                        <div>
+                                            <label for="vehicle-year-search" class="block text-sm font-medium">Search Year</label>
+                                            <input type="text" id="vehicle-year-search" class="mt-1 block w-full bg-input border border-border rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500" placeholder="e.g., 2023">
+                                            <select id="vehicle-year-select" class="mt-1 block w-full bg-input border border-border rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500" required></select>
+                                        </div>
+                                        <div>
+                                            <label for="vehicle-make-search" class="block text-sm font-medium">Search Make</label>
+                                            <input type="text" id="vehicle-make-search" class="mt-1 block w-full bg-input border border-border rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500" placeholder="e.g., Ford">
+                                            <select id="vehicle-make-select" class="mt-1 block w-full bg-input border border-border rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500" required disabled></select>
+                                        </div>
+                                        <div>
+                                            <label for="vehicle-model-search" class="block text-sm font-medium">Search Model</label>
+                                            <input type="text" id="vehicle-model-search" class="mt-1 block w-full bg-input border border-border rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500" placeholder="e.g., Mustang">
+                                            <select id="vehicle-model-select" class="mt-1 block w-full bg-input border border-border rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500" required disabled></select>
+                                        </div>
                                     </div>
                                 </div>
+
+                                <div class="relative flex items-start mt-4">
+                                    <div class="flex items-center h-5"><input id="manual-vehicle-entry-checkbox" type="checkbox" class="focus:ring-blue-500 h-4 w-4 text-blue-600 border-border rounded"></div>
+                                    <div class="ml-3 text-sm"><label for="manual-vehicle-entry-checkbox" class="font-medium">Enter Vehicle Manually</label></div>
+                                </div>
+
+                                <div id="manual-vehicle-inputs" class="hidden grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
+                                    <div><label for="manual-vehicle-year" class="block text-sm font-medium">Year</label><input type="text" id="manual-vehicle-year" class="mt-1 block w-full bg-input border border-border rounded-md shadow-sm py-2 px-3"></div>
+                                    <div><label for="manual-vehicle-make" class="block text-sm font-medium">Make</label><input type="text" id="manual-vehicle-make" class="mt-1 block w-full bg-input border border-border rounded-md shadow-sm py-2 px-3"></div>
+                                    <div><label for="manual-vehicle-model" class="block text-sm font-medium">Model</label><input type="text" id="manual-vehicle-model" class="mt-1 block w-full bg-input border border-border rounded-md shadow-sm py-2 px-3"></div>
+                                </div>
+
                                 <div class="mt-4">
                                     <label for="vehicle-garage-select" class="block text-sm font-medium">Assign to Garage</label>
                                     <select id="vehicle-garage-select" class="mt-1 block w-full bg-input border border-border rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500"></select>
@@ -295,7 +328,7 @@
                                         <div class="relative flex justify-center"><span class="px-2 bg-card text-sm text-text-secondary">OR</span></div>
                                     </div>
                                     <input type="text" id="vehicle-photo-url-input" class="mt-2 block w-full bg-input border border-border rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500" placeholder="Enter Image URL">
-                                    <img id="vehicle-photo-preview" class="hidden mt-4 rounded-lg max-h-48 w-auto"/>
+                                    <img id="vehicle-photo-preview" class="hidden mt-4 rounded-lg max-h-48 w-auto" onerror="this.onerror=null;this.src='/static/images/default-vehicle.svg';"/>
                                 </div>
                                 <button id="add-vehicle-btn" type="submit" class="mt-6 w-full bg-blue-500 text-white font-semibold py-2 px-4 rounded-lg shadow-md hover:bg-blue-600">Add Vehicle</button>
                             </fieldset>
@@ -452,6 +485,34 @@
                                     <button id="update-app-settings-btn" class="px-4 py-2 bg-blue-600 text-white font-semibold rounded-lg shadow-md hover:bg-blue-700">Update Settings</button>
                                 </div>
                             </div>
+                        </div>
+                    </div>
+
+                    <div id="data-management-section" class="mb-8">
+                        <h3 class="text-2xl font-semibold mb-3">Data Management & Seeding</h3>
+                        <div class="bg-card-darker p-4 rounded-lg shadow space-y-6">
+                            <div>
+                                <h4 class="font-bold text-lg">Seed Database</h4>
+                                <p class="mt-2 text-text-secondary">Populate the database with sample data for demonstrations. This will add 4 users, along with their associated garages, vehicles, and events.</p>
+                                <div class="mt-4">
+                                    <button id="seed-database-btn" class="px-4 py-2 bg-green-600 text-white font-semibold rounded-lg shadow-md hover:bg-green-700">Seed Database</button>
+                                </div>
+                            </div>
+                            <div class="border-t border-red-900/50 pt-6">
+                                <h4 class="font-bold text-lg text-red-400">Danger Zone</h4>
+                                <p class="mt-2 text-text-secondary">This action is irreversible and will permanently delete all user-generated content from the database.</p>
+                                <div class="mt-4">
+                                    <button id="clear-all-data-btn" class="px-4 py-2 bg-red-700 text-white font-semibold rounded-lg shadow-md hover:bg-red-800">Clear All Data</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="use-cases-section" class="mb-8">
+                        <h3 class="text-2xl font-semibold mb-3">Use Case Definitions</h3>
+                        <div class="bg-card-darker p-4 rounded-lg shadow">
+                            <a href="#" id="view-use-cases-link" class="text-blue-500 hover:underline">View Use Case Definitions &rarr;</a>
+                            <div id="use-cases-container" class="hidden mt-4 space-y-4"></div>
                         </div>
                     </div>
 
@@ -624,23 +685,37 @@
         <div class="bg-card p-8 rounded-lg shadow-2xl w-full max-w-md">
             <h2 class="text-2xl font-bold mb-4">Edit Vehicle</h2>
             <form id="edit-vehicle-form">
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    <div>
-                        <label for="edit-vehicle-year-search" class="block text-sm font-medium">Search Year</label>
-                        <input type="text" id="edit-vehicle-year-search" class="mt-1 block w-full bg-input border border-border rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500" placeholder="e.g., 2023">
-                        <select id="edit-vehicle-year-select" class="mt-1 block w-full bg-input border border-border rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500" required></select>
-                    </div>
-                    <div>
-                        <label for="edit-vehicle-make-search" class="block text-sm font-medium">Search Make</label>
-                        <input type="text" id="edit-vehicle-make-search" class="mt-1 block w-full bg-input border border-border rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500" placeholder="e.g., Ford">
-                        <select id="edit-vehicle-make-select" class="mt-1 block w-full bg-input border border-border rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500" required></select>
-                    </div>
-                    <div>
-                        <label for="edit-vehicle-model-search" class="block text-sm font-medium">Search Model</label>
-                        <input type="text" id="edit-vehicle-model-search" class="mt-1 block w-full bg-input border border-border rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500" placeholder="e.g., Mustang">
-                        <select id="edit-vehicle-model-select" class="mt-1 block w-full bg-input border border-border rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500" required></select>
+                <div id="edit-api-vehicle-inputs">
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div>
+                            <label for="edit-vehicle-year-search" class="block text-sm font-medium">Search Year</label>
+                            <input type="text" id="edit-vehicle-year-search" class="mt-1 block w-full bg-input border border-border rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500" placeholder="e.g., 2023">
+                            <select id="edit-vehicle-year-select" class="mt-1 block w-full bg-input border border-border rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500" required></select>
+                        </div>
+                        <div>
+                            <label for="edit-vehicle-make-search" class="block text-sm font-medium">Search Make</label>
+                            <input type="text" id="edit-vehicle-make-search" class="mt-1 block w-full bg-input border border-border rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500" placeholder="e.g., Ford">
+                            <select id="edit-vehicle-make-select" class="mt-1 block w-full bg-input border border-border rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500" required></select>
+                        </div>
+                        <div>
+                            <label for="edit-vehicle-model-search" class="block text-sm font-medium">Search Model</label>
+                            <input type="text" id="edit-vehicle-model-search" class="mt-1 block w-full bg-input border border-border rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500" placeholder="e.g., Mustang">
+                            <select id="edit-vehicle-model-select" class="mt-1 block w-full bg-input border border-border rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500" required></select>
+                        </div>
                     </div>
                 </div>
+
+                <div class="relative flex items-start mt-4">
+                    <div class="flex items-center h-5"><input id="edit-manual-vehicle-entry-checkbox" type="checkbox" class="focus:ring-blue-500 h-4 w-4 text-blue-600 border-border rounded"></div>
+                    <div class="ml-3 text-sm"><label for="edit-manual-vehicle-entry-checkbox" class="font-medium">Enter Vehicle Manually</label></div>
+                </div>
+
+                <div id="edit-manual-vehicle-inputs" class="hidden grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
+                    <div><label for="edit-manual-vehicle-year" class="block text-sm font-medium">Year</label><input type="text" id="edit-manual-vehicle-year" class="mt-1 block w-full bg-input border border-border rounded-md shadow-sm py-2 px-3"></div>
+                    <div><label for="edit-manual-vehicle-make" class="block text-sm font-medium">Make</label><input type="text" id="edit-manual-vehicle-make" class="mt-1 block w-full bg-input border border-border rounded-md shadow-sm py-2 px-3"></div>
+                    <div><label for="edit-manual-vehicle-model" class="block text-sm font-medium">Model</label><input type="text" id="edit-manual-vehicle-model" class="mt-1 block w-full bg-input border border-border rounded-md shadow-sm py-2 px-3"></div>
+                </div>
+
                 <div class="mt-4">
                     <label for="edit-vehicle-garage-select" class="block text-sm font-medium">Assign to Garage</label>
                     <select id="edit-vehicle-garage-select" class="mt-1 block w-full bg-input border border-border rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500"></select>
@@ -653,7 +728,7 @@
                         <div class="relative flex justify-center"><span class="px-2 bg-card text-sm text-text-secondary">OR</span></div>
                     </div>
                     <input type="text" id="edit-vehicle-photo-url-input" class="mt-2 block w-full bg-input border border-border rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500" placeholder="Enter Image URL">
-                    <img id="edit-vehicle-photo-preview" class="hidden mt-4 rounded-lg max-h-48 w-auto"/>
+                    <img id="edit-vehicle-photo-preview" class="hidden mt-4 rounded-lg max-h-48 w-auto" onerror="this.onerror=null;this.src='/static/images/default-vehicle.svg';"/>
                 </div>
                 <div class="mt-6 flex justify-end space-x-4">
                     <button id="cancel-edit-vehicle-btn" type="button" class="px-4 py-2 bg-gray-600 text-white font-semibold rounded-lg hover:bg-gray-500">Cancel</button>
