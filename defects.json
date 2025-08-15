@@ -1,22 +1,27 @@
 [
     {
-        "id": "feature-track-photo-on-event",
-        "title": "Event Cards Do Not Display Associated Track Photo (Enhanced: Aug 12, 2025) - v2.4.7",
-        "resolution": "The `/get-events` endpoint in `app.py` was updated to fetch and include track photo URLs with the event data. The `renderEvents` function in `schedule.js` was then modified to display this image on the event card, similar to how vehicle photos are displayed."
+        "id": "admin-init-error",
+        "title": "Uncaught TypeError on Main App Load (Fixed: Aug 15, 2025) - v2.6.5",
+        "resolution": "The event listeners for the 'Seed Database' and 'Clear All Data' buttons were being attached in `initAdmin` on initial page load, before the Developer Mode view (and its buttons) were rendered. This caused a 'Cannot read properties of null' error. The fix was to move these two event listener attachments into the `loadAdminSettings` function, which is only called after the Developer Mode view is visible, ensuring the elements exist before listeners are attached."
     },
     {
-        "id": "defect-my-tracks-label",
-        "title": "'My Tracks' Label is Confusing for a Global Feature (Fixed: Aug 12, 2025) - v2.4.6",
-        "resolution": "The heading for the track list in `index.html` was changed from 'My Tracks' to 'All Tracks' to better reflect that the list is a global resource shared by all users. The underlying logic for ownership (editing/deleting) remains correct."
+        "id": "ui-stylesheet-path-correction",
+        "title": "Stylesheet Path Inconsistency (Fixed: Aug 12, 2025) - v2.5.9",
+        "resolution": "The `href` attribute for the stylesheet link in `index.html` was updated to use the correct `url_for('static', filename='style.css')` syntax, ensuring it correctly points to the file at `/static/style.css`."
     },
     {
-        "id": "feature-global-and-associated-tracks",
-        "title": "Tracks are User-Specific and Not Linkable to Events (Enhanced: Aug 12, 2025) - v2.4.5",
-        "resolution": "Migrated tracks to a top-level global collection in Firestore. Updated all backend endpoints in `app.py` to handle global fetching and ownership checks for edits/deletes. Added a track selection dropdown to the event modals in `index.html` and updated `schedule.js` and `track.js` to manage the new association logic."
+        "id": "feature-flag-gif-enhancement",
+        "title": "Main Page Animation Updated to GIF (Enhanced: Aug 12, 2025) - v2.5.8",
+        "resolution": "The CSS-animated flag and racecar SVG were removed from `index.html` and `style.css`. They were replaced with a single `<img>` tag pointing to `waving-flag.gif` to simplify the main page's visual elements."
     },
     {
-        "id": "defect-edit-track-modal-scroll",
-        "title": "Edit Track Modal is Not Scrollable (Fixed: Aug 12, 2025) - v2.4.5",
-        "resolution": "The HTML structure for the 'Edit Track' modal in `index.html` was refactored to create a scrollable container for the form content, making it usable on smaller screens."
+        "id": "feature-animated-racecar",
+        "title": "Main Page is Static (Enhanced: Aug 12, 2025) - v2.5.6",
+        "resolution": "Added a racecar SVG to `index.html` and created CSS keyframe animations in `style.css` for its entrance and exit. The `main.js` file was updated to trigger these animations on page load and on the 'Get Ready!' button click, and to play the racecar sound on page load."
+    },
+    {
+        "id": "feature-mp3-sound-effect",
+        "title": "Synthesized Sound Effect is Not Ideal (Enhanced: Aug 12, 2025) - v2.5.5",
+        "resolution": "The `playRacecarSound` function in `main.js` was updated to use the native `Audio` object to play an MP3 file. The unused `Tone.js` library was removed from `index.html`."
     }
 ]

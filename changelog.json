@@ -1,35 +1,48 @@
 [
     {
-        "version": "2.4.7",
-        "date": "August 12, 2025",
+        "version": "2.6.9",
+        "date": "August 15, 2025",
         "notes": [
-            "FEATURE: The photo of a track is now displayed on its associated event card in the 'Upcoming Events' list."
+            "ENHANCEMENT: Expanded `mock-data.js` to include more comprehensive event and lap time data for all user profiles.",
+            "ENHANCEMENT: Updated the database seeding logic in `app.py` to correctly handle and create lap time records."
         ]
     },
     {
-        "version": "2.4.6",
-        "date": "August 12, 2025",
+        "version": "2.6.8",
+        "date": "August 15, 2025",
         "notes": [
-            "ENHANCEMENT: Renamed the 'My Tracks' section to 'All Tracks' to clarify that tracks are a global, shared resource."
+            "FEATURE: Added a 'Manual Entry' checkbox to the vehicle forms, allowing users to input vehicle year, make, and model as text strings.",
+            "FIX: Implemented an `onerror` attribute on vehicle image tags to display a default SVG icon if a photo URL is broken or invalid."
         ]
     },
     {
-        "version": "2.4.5",
-        "date": "August 12, 2025",
+        "version": "2.6.7",
+        "date": "August 15, 2025",
         "notes": [
-            "FEATURE: Tracks are now a global resource, visible to all users.",
-            "FEATURE: Added the ability to associate a track with an event from the event creation/editing modals.",
-            "ENHANCEMENT: The 'Edit Track' modal is now scrollable to accommodate all fields on smaller screens.",
-            "SECURITY: Only the user who created a track can edit or delete it."
+            "ENHANCEMENT: Expanded `mock-data.js` to include an 'AdminRacer' profile for more comprehensive testing.",
+            "ENHANCEMENT: The new mock profile includes data to test shared tracks, Raceday flags, and lap time submissions."
         ]
     },
     {
-        "version": "2.4.4",
-        "date": "August 12, 2025",
+        "version": "2.6.6",
+        "date": "August 15, 2025",
         "notes": [
-            "FEATURE: Implemented full edit functionality for the Track Management feature.",
-            "FEATURE: Added the ability to upload or link a track layout image.",
-            "ENHANCEMENT: Track cards now include a link to view the track layout image directly on the page."
+            "FIX: Corrected the `index.html` file to include the 'Data Management & Seeding' section in the Developer Mode UI, which was previously missing."
+        ]
+    },
+    {
+        "version": "2.6.5",
+        "date": "August 15, 2025",
+        "notes": [
+            "FIX: Resolved a TypeError on page load by moving the Data Management event listeners in `admin.js` to ensure they are only attached after the Developer Mode elements are rendered."
+        ]
+    },
+    {
+        "version": "2.6.4",
+        "date": "August 15, 2025",
+        "notes": [
+            "FIX: Resolved a JavaScript module import error by adding the missing `MOCK_VEHICLES` export to `mock-data.js`.",
+            "ENHANCEMENT: The mock vehicle data now includes `garageName` for more realistic dev mode display."
         ]
     }
 ]
