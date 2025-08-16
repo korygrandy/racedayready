@@ -1,5 +1,10 @@
 [
     {
+        "id": "admin-init-error-delegation",
+        "title": "Uncaught TypeError on Main App Load (Fixed: Aug 15, 2025) - v2.7.9",
+        "resolution": "A recurring TypeError on page load was caused by multiple event listeners in `admin.js` being attached before their corresponding elements in the Developer Mode panel were rendered. The fix was to refactor the `initAdmin` function to use a single event listener on the parent `developerView` container. This 'Event Delegation' approach ensures that all clicks within the developer panel are handled correctly, regardless of when the script runs, resolving the timing issue."
+    },
+    {
         "id": "garage-js-init-error",
         "title": "Uncaught TypeError on Garage Management Load (Fixed: Aug 15, 2025) - v2.7.5",
         "resolution": "A TypeError occurred because `garage.js` was trying to access `App.unlockedGarages` before it was initialized, and the 'unlock-garage-modal' was missing from `index.html`. The fix involved initializing `unlockedGarages` as an empty array in `main.js` and adding the required modal HTML to `index.html`."
@@ -18,10 +23,5 @@
         "id": "admin-init-error",
         "title": "Uncaught TypeError on Main App Load (Fixed: Aug 15, 2025) - v2.6.5",
         "resolution": "The event listeners for the 'Seed Database' and 'Clear All Data' buttons were being attached in `initAdmin` on initial page load, before the Developer Mode view (and its buttons) were rendered. This caused a 'Cannot read properties of null' error. The fix was to move these two event listener attachments into the `loadAdminSettings` function, which is only called after the Developer Mode view is visible, ensuring the elements exist before listeners are attached."
-    },
-    {
-        "id": "ui-stylesheet-path-correction",
-        "title": "Stylesheet Path Inconsistency (Fixed: Aug 12, 2025) - v2.5.9",
-        "resolution": "The `href` attribute for the stylesheet link in `index.html` was updated to use the correct `url_for('static', filename='style.css')` syntax, ensuring it correctly points to the file at `/static/style.css`."
     }
 ]

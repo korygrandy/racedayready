@@ -37,7 +37,8 @@
             "Tests the default admin PIN ('3511').",
             "Verifies that events can be created for tracks that this user did not create (shared track functionality).",
             "Tests accessing and using a shared garage by unlocking 'Project Cars' from 'SpeedRacer' with code '4321'.",
-            "Provides a clean profile for testing the full lifecycle of adding garages, vehicles, events, and lap times."
+            "Provides a clean profile for testing the full lifecycle of adding garages, vehicles, events, and lap times.",
+            "Tests the 'Enable Garage Deletion' admin feature."
         ]
     }
 ]

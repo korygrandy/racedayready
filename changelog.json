@@ -1,5 +1,27 @@
 [
     {
+        "version": "2.7.9",
+        "date": "August 15, 2025",
+        "notes": [
+            "FIX: Refactored `admin.js` to use event delegation, resolving a recurring TypeError on page load and ensuring all Developer Mode buttons are functional."
+        ]
+    },
+    {
+        "version": "2.7.8",
+        "date": "August 15, 2025",
+        "notes": [
+            "FIX: Resolved a TypeError on page load by moving the 'View Use Cases' event listener in `admin.js` to ensure it's only attached after the Developer Mode elements are rendered."
+        ]
+    },
+    {
+        "version": "2.7.6",
+        "date": "August 15, 2025",
+        "notes": [
+            "FIX: Resolved multiple JavaScript errors related to event listeners being attached to elements before they were rendered.",
+            "FEATURE: Added an admin setting to enable or disable the deletion of garages."
+        ]
+    },
+    {
         "version": "2.7.5",
         "date": "August 15, 2025",
         "notes": [
@@ -19,30 +41,6 @@
         "date": "August 15, 2025",
         "notes": [
             "FIX: The 'Clear All Data' function in Developer Mode no longer deletes the `feature_requests` collection, preserving valuable user feedback during data resets."
-        ]
-    },
-    {
-        "version": "2.7.2",
-        "date": "August 15, 2025",
-        "notes": [
-            "FEATURE: Implemented a 'Shared Garages' system, allowing users to share their garages with others using a 4-digit door code.",
-            "FEATURE: Users can now view and unlock shared garages to access vehicles for event planning.",
-            "ENHANCEMENT: The event creation form now populates with vehicles from both owned and unlocked shared garages."
-        ]
-    },
-    {
-        "version": "2.7.1",
-        "date": "August 15, 2025",
-        "notes": [
-            "FEATURE: Added a 'View Use Case Definitions' link to the Developer Mode that dynamically loads and displays `usecases.json`."
-        ]
-    },
-    {
-        "version": "2.7.0",
-        "date": "August 15, 2025",
-        "notes": [
-            "FEATURE: Added a `usecases.json` file to document mock data scenarios for testing.",
-            "FIX: Corrected the user count in the 'Seed Database' description in `index.html` from 3 to 4."
         ]
     }
 ]

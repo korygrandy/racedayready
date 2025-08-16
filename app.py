@@ -481,6 +481,7 @@ def get_admin_settings():
     vehicle_limit = get_limit('admin_settings', 'vehicles', 25)
     lap_time_settings = get_lap_time_settings()
     maintenance_settings = get_maintenance_settings()
+    garage_settings = get_garage_settings()
     return jsonify({
         'success': True,
         'profile_limit': profile_limit,
@@ -489,6 +490,7 @@ def get_admin_settings():
         'vehicle_limit': vehicle_limit,
         'lap_time_settings': lap_time_settings,
         'maintenance_settings': maintenance_settings,
+        'garage_settings': garage_settings,
     }), 200
 
 
@@ -589,6 +591,31 @@ def update_lap_time_settings():
         return jsonify({'success': True, 'message': 'Lap time settings updated.'}), 200
     except Exception as e:
         print(f"❌ Error updating lap time settings: {e}")
+        return jsonify({'success': False, 'message': f'An error occurred: {e}'}), 500
+
+
+@app.route('/update-garage-settings', methods=['POST'])
+def update_garage_settings():
+    """
+    Updates the garage settings in Firestore.
+    """
+    try:
+        data = request.get_json()
+        deletion_enabled = data.get('deletion_enabled')
+        updates = {}
+        if deletion_enabled is not None:
+            if not isinstance(deletion_enabled, bool):
+                return jsonify({'success': False, 'message': 'Deletion enabled must be a boolean.'}), 400
+            updates['deletion_enabled'] = deletion_enabled
+
+        if not updates:
+            return jsonify({'success': False, 'message': 'No settings to update.'}), 400
+
+        db.collection('admin_settings').document('garages').update(updates)
+        print(f"✅ Garage settings updated: {updates}")
+        return jsonify({'success': True, 'message': 'Garage settings updated.'}), 200
+    except Exception as e:
+        print(f"❌ Error updating garage settings: {e}")
         return jsonify({'success': False, 'message': f'An error occurred: {e}'}), 500
 
 
