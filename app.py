@@ -128,6 +128,30 @@ def get_lap_time_settings():
         return default_settings
 
 
+# --- Function to get garage settings from Firestore ---
+def get_garage_settings():
+    """
+    Retrieves garage settings from admin_settings in Firestore.
+    Defaults to deletion disabled.
+    """
+    default_settings = {'deletion_enabled': False}
+    try:
+        settings_ref = db.collection('admin_settings').document('garages')
+        settings_doc = settings_ref.get()
+        if settings_doc.exists:
+            settings = settings_doc.to_dict()
+            settings['deletion_enabled'] = settings.get('deletion_enabled', default_settings['deletion_enabled'])
+            print(f"✅ Loaded garage settings from Firestore: {settings}")
+            return settings
+        else:
+            print(f"⚠️ Garage settings not found. Defaulting to {default_settings}.")
+            settings_ref.set(default_settings)
+            return default_settings
+    except Exception as e:
+        print(f"❌ Error getting garage settings: {e}. Defaulting to {default_settings}.")
+        return default_settings
+
+
 # --- Function to get maintenance settings from Firestore ---
 def get_maintenance_settings():
     default_settings = {'enabled': False}
