@@ -1,4 +1,5 @@
 import * as elements from './elements.js';
+import { initElements } from './elements.js';
 import { showMessage } from './ui.js';
 import { initTheme } from './theme.js';
 import { initProfiles, checkProfiles, updateProfile, checkProfileStatus } from './profile.js';
@@ -157,11 +158,48 @@ const injectFeatureCardIcons = () => {
     }
 };
 
+const initEventListeners = () => {
+    elements.readyButton.addEventListener('click', () => {
+        playRacecarSound();
+        checkProfiles();
+    });
+
+    elements.devModeBtn.addEventListener('click', () => {
+        elements.devPinEntryModal.classList.remove('hidden');
+        elements.devPinEntryInput.focus();
+    });
+
+    elements.backToAppBtn.addEventListener('click', () => {
+        window.location.reload();
+    });
+
+    elements.profileHeaderBtn.addEventListener('click', () => {
+        setView('main');
+        checkProfiles();
+    });
+
+    elements.garageHeaderBtn.addEventListener('click', () => setView('garageManagement'));
+    elements.lapTimeHeaderBtn.addEventListener('click', () => setView('lapTime'));
+    elements.featureCard1.addEventListener('click', () => setView('raceDayPrep'));
+    elements.raceScheduleCard.addEventListener('click', () => setView('raceSchedule'));
+    elements.checklistTemplatesCard.addEventListener('click', () => setView('checklistManagement'));
+    elements.featureCard2.addEventListener('click', () => setView('vehicleManagement'));
+    elements.featureCard6.addEventListener('click', () => setView('garageManagement'));
+    elements.featureCard7.addEventListener('click', () => setView('upcomingFeatures'));
+    elements.featureCard8.addEventListener('click', () => setView('lapTime'));
+    elements.featureCard9.addEventListener('click', () => setView('trackManagement'));
+
+    document.querySelectorAll('.inactive-card').forEach(card => {
+        card.addEventListener('click', () => showMessage('This feature is coming soon!', true));
+    });
+};
+
 // --- Initial Load ---
 document.addEventListener('DOMContentLoaded', () => {
     console.log("[INFO] DOM fully loaded and parsed. Initializing application.");
     initElements(); // This must be called first!
     injectFeatureCardIcons();
+    initEventListeners();
     initDevPinModal();
     initTheme();
     initProfiles();

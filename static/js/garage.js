@@ -269,39 +269,35 @@ export const initGarage = () => {
         });
     });
 
-    if (elements.shareGarageForm) {
-        elements.shareGarageForm.addEventListener('submit', (e) => {
-            e.preventDefault();
-            const code = elements.garageDoorCodeInput.value.trim();
-            const updates = {
-                shared: true,
-                garageDoorCode: code
-            };
-            updateGarage(garageToShare.id, updates);
-            elements.shareGarageModal.classList.add('hidden');
-        });
-    }
+    elements.shareGarageForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const code = elements.garageDoorCodeInput.value.trim();
+        const updates = {
+            shared: true,
+            garageDoorCode: code
+        };
+        updateGarage(garageToShare.id, updates);
+        elements.shareGarageModal.classList.add('hidden');
+    });
 
-    if (elements.unlockGarageForm) {
-        elements.unlockGarageForm.addEventListener('submit', (e) => {
-            e.preventDefault();
-            const code = elements.unlockGarageCodeInput.value.trim();
-            fetch(`/verify-garage-code/${garageToUnlock.ownerId}/${garageToUnlock.id}`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ code })
-            })
-            .then(res => res.json())
-            .then(data => {
-                showMessage(data.message, data.success);
-                if (data.success) {
-                    App.unlockedGarages.push(garageToUnlock.id);
-                    elements.unlockGarageModal.classList.add('hidden');
-                    loadGarages();
-                }
-            });
+    elements.unlockGarageForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const code = elements.unlockGarageCodeInput.value.trim();
+        fetch(`/verify-garage-code/${garageToUnlock.ownerId}/${garageToUnlock.id}`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ code })
+        })
+        .then(res => res.json())
+        .then(data => {
+            showMessage(data.message, data.success);
+            if (data.success) {
+                App.unlockedGarages.push(garageToUnlock.id);
+                elements.unlockGarageModal.classList.add('hidden');
+                loadGarages();
+            }
         });
-    }
+    });
 
     elements.cancelShareGarageBtn.addEventListener('click', () => elements.shareGarageModal.classList.add('hidden'));
     elements.cancelUnlockGarageBtn.addEventListener('click', () => elements.unlockGarageModal.classList.add('hidden'));
