@@ -1,0 +1,152 @@
+<div id="developer-view" class="w-full max-w-4xl mx-auto hidden text-left p-4">
+    <h2 id="developer-view-heading" class="text-3xl font-bold mb-6 border-b border-border pb-2">Developer Mode</h2>
+
+    <div id="admin-section" class="mb-8">
+        <h3 class="text-2xl font-semibold mb-3">Administration</h3>
+        <div class="bg-card-darker p-4 rounded-lg shadow space-y-6">
+            <div>
+                <h4 class="font-bold text-lg">User Profile Limit</h4>
+                <p class="mt-2 text-text-secondary">Set the maximum number of user profiles (1-20).</p>
+                <div class="mt-4 flex items-center space-x-4">
+                    <input type="number" id="profile-limit-input" min="1" max="20" class="w-24 bg-input border border-border rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                    <button id="update-profile-limit-btn" class="px-4 py-2 bg-blue-600 text-white font-semibold rounded-lg shadow-md hover:bg-blue-700">Update</button>
+                </div>
+            </div>
+            <div>
+                <h4 class="font-bold text-lg">Garage & Vehicle Limits</h4>
+                <div class="mt-4 space-y-4">
+                    <div class="flex items-center space-x-4">
+                        <input type="number" id="garage-limit-input" min="1" max="10" class="w-24 bg-input border border-border rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                        <label for="garage-limit-input">Garage limit per profile (1-10).</label>
+                    </div>
+                    <div class="flex items-center space-x-4">
+                        <input type="number" id="vehicle-limit-input" min="1" max="25" class="w-24 bg-input border border-border rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                        <label for="vehicle-limit-input">Vehicle limit per profile (1-25).</label>
+                    </div>
+                    <button id="update-garage-vehicle-limits-btn" class="px-4 py-2 bg-blue-600 text-white font-semibold rounded-lg shadow-md hover:bg-blue-700">Update Limits</button>
+                </div>
+            </div>
+            <div>
+                <h4 class="font-bold text-lg">Feature Request Settings</h4>
+                <div class="mt-4 space-y-4">
+                    <div class="flex items-center space-x-4">
+                        <input type="number" id="feature-request-limit-input" min="1" max="50" class="w-24 bg-input border border-border rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                        <label for="feature-request-limit-input">Set the maximum number of requests (1-50).</label>
+                    </div>
+                    <div class="relative flex items-start">
+                        <div class="flex items-center h-5">
+                            <input id="enable-deletion-checkbox" type="checkbox" class="focus:ring-blue-500 h-4 w-4 text-blue-600 border-border rounded">
+                        </div>
+                        <div class="ml-3 text-sm">
+                            <label for="enable-deletion-checkbox" class="font-medium">Enable deletion of feature requests.</label>
+                        </div>
+                    </div>
+                    <div class="flex items-center space-x-4">
+                        <button id="update-feature-settings-btn" class="px-4 py-2 bg-blue-600 text-white font-semibold rounded-lg shadow-md hover:bg-blue-700">Update Settings</button>
+                        <button id="manage-feature-requests-link" class="text-sm text-blue-500 hover:underline">Manage Requests &rarr;</button>
+                    </div>
+                </div>
+            </div>
+            <div>
+                <h4 class="font-bold text-lg">Winner's Circle Settings</h4>
+                <div class="mt-4 space-y-4">
+                    <div class="relative flex items-start">
+                        <div class="flex items-center h-5">
+                            <input id="enable-lap-time-deletion-checkbox" type="checkbox" class="focus:ring-blue-500 h-4 w-4 text-blue-600 border-border rounded">
+                        </div>
+                        <div class="ml-3 text-sm">
+                            <label for="enable-lap-time-deletion-checkbox" class="font-medium">Enable deletion of lap times.</label>
+                        </div>
+                    </div>
+                    <div class="flex items-center space-x-4">
+                        <button id="update-lap-time-settings-btn" class="px-4 py-2 bg-blue-600 text-white font-semibold rounded-lg shadow-md hover:bg-blue-700">Update Settings</button>
+                        <a href="#" id="go-to-winners-circle-link" class="text-sm text-blue-500 hover:underline">Manage Lap Times &rarr;</a>
+                    </div>
+                </div>
+            </div>
+            <div>
+                <h4 class="font-bold text-lg">Application Settings</h4>
+                <div class="mt-4 space-y-4">
+                    <div class="relative flex items-start">
+                        <div class="flex items-center h-5">
+                            <input id="maintenance-mode-checkbox" type="checkbox" class="focus:ring-blue-500 h-4 w-4 text-blue-600 border-border rounded">
+                        </div>
+                        <div class="ml-3 text-sm">
+                            <label for="maintenance-mode-checkbox" class="font-medium">Enable Maintenance Mode</label>
+                        </div>
+                    </div>
+                    <button id="update-app-settings-btn" class="px-4 py-2 bg-blue-600 text-white font-semibold rounded-lg shadow-md hover:bg-blue-700">Update Settings</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="data-management-section" class="mb-8">
+        <h3 class="text-2xl font-semibold mb-3">Data Management & Seeding</h3>
+        <div class="bg-card-darker p-4 rounded-lg shadow space-y-6">
+            <div>
+                <h4 class="font-bold text-lg">Seed Database</h4>
+                <p class="mt-2 text-text-secondary">Populate the database with sample data for demonstrations. This will add 4 users, along with their associated garages, vehicles, and events.</p>
+                <div class="mt-4">
+                    <button id="seed-database-btn" class="px-4 py-2 bg-green-600 text-white font-semibold rounded-lg shadow-md hover:bg-green-700">Seed Database</button>
+                </div>
+            </div>
+            <div class="border-t border-red-900/50 pt-6">
+                <h4 class="font-bold text-lg text-red-400">Danger Zone</h4>
+                <p class="mt-2 text-text-secondary">This action is irreversible and will permanently delete all user-generated content from the database.</p>
+                <div class="mt-4">
+                    <button id="clear-all-data-btn" class="px-4 py-2 bg-red-700 text-white font-semibold rounded-lg shadow-md hover:bg-red-800">Clear All Data</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="use-cases-section" class="mb-8">
+        <h3 class="text-2xl font-semibold mb-3">Use Case Definitions</h3>
+        <div class="bg-card-darker p-4 rounded-lg shadow">
+            <a href="#" id="view-use-cases-link" class="text-blue-500 hover:underline">View Use Case Definitions &rarr;</a>
+            <div id="use-cases-container" class="hidden mt-4 space-y-4"></div>
+        </div>
+    </div>
+
+    <div id="readme-section" class="mb-8">
+        <h3 id="readme-heading" class="text-2xl font-semibold mb-3">Developer Readme</h3>
+        <div class="bg-card-darker p-4 rounded-lg shadow">
+            <h4 id="readme-subheading" class="font-bold text-lg">How to Run the Application</h4>
+            <p class="mt-2 text-text-secondary">To run this Flask application locally, ensure you have Python and the required packages (`Flask`, `firebase-admin`) installed. Navigate to the project's root directory in your terminal and execute the following command:</p>
+            <pre id="readme-code-block" class="bg-input p-2 rounded mt-2 text-text-secondary"><code>py app.py</code></pre>
+        </div>
+    </div>
+
+    <div id="changelog-section" class="mb-8">
+        <h3 id="changelog-heading" class="text-2xl font-semibold mb-3">Changelog</h3>
+        <div class="space-y-4">
+            {% for entry in changelog %}
+            <div class="bg-card-darker p-4 rounded-lg shadow">
+                <h4 class="font-bold text-lg">Version {{ entry.version }} ({{ entry.date }})</h4>
+                <ul class="list-disc list-inside mt-2 text-text-secondary space-y-1">
+                    {% for note in entry.notes %}
+                    <li>{{ note }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <div id="defect-resolutions-section" class="mb-8">
+        <h3 id="defect-resolutions-heading" class="text-2xl font-semibold mb-3">Defect Resolutions</h3>
+        <div class="space-y-4">
+            {% for defect in defects %}
+            <div id="{{ defect.id }}" class="bg-card-darker p-4 rounded-lg shadow">
+                <h4 class="font-bold text-lg">{{ defect.title }}</h4>
+                <p class="mt-2 text-text-secondary">
+                    <strong>Resolution:</strong> {{ defect.resolution }}
+                </p>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+     <button id="back-to-app-btn" class="mt-8 px-6 py-2 bg-blue-600 text-white font-semibold rounded-lg shadow-md hover:bg-blue-700">Back to App</button>
+</div>

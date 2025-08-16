@@ -1,0 +1,27 @@
+<div id="lap-time-view" class="w-full max-w-4xl mx-auto hidden text-center py-16">
+    <h1 class="text-4xl md:text-5xl font-bold mb-8">Winner's Circle</h1>
+    <div class="bg-card p-8 rounded-lg shadow-lg text-left">
+        <h2 class="text-2xl font-bold mb-4">Record a Lap Time</h2>
+        <form id="lap-time-form">
+            <div class="space-y-4">
+                <div>
+                    <label for="lap-time-event-select" class="block text-sm font-medium">Select Raceday Event</label>
+                    <select id="lap-time-event-select" class="mt-1 block w-full bg-input border border-border rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500" required></select>
+                </div>
+                <div>
+                    <label for="lap-time-input" class="block text-sm font-medium">Lap Time (MM:SS.ms)</label>
+                    <input type="text" id="lap-time-input" class="mt-1 block w-full bg-input border border-border rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500" placeholder="e.g., 01:45.123" required>
+                </div>
+            </div>
+            <button id="submit-lap-time-btn" type="submit" class="mt-6 w-full bg-blue-500 text-white font-semibold py-2 px-4 rounded-lg shadow-md hover:bg-blue-600">Submit Time</button>
+        </form>
+    </div>
+    <div class="mt-8 bg-card p-8 rounded-lg shadow-lg text-left">
+        <h2 id="winner-circle-heading" class="text-2xl font-bold mb-4">Winner's Circle</h2>
+        <div id="lap-time-list" class="space-y-2">
+        </div>
+    </div>
+    <button id="back-to-features-from-laps-btn" class="mt-8 px-6 py-2 bg-gray-600 text-white font-semibold rounded-lg shadow-md hover:bg-gray-500">
+        Back to Features
+    </button>
+</div>

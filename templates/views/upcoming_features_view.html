@@ -1,0 +1,33 @@
+<div id="upcoming-features-view" class="w-full max-w-4xl mx-auto hidden text-center py-16">
+    <h1 class="text-4xl md:text-5xl font-bold mb-8">Upcoming Features & Requests</h1>
+
+    <div id="critical-features-section" class="mb-8 bg-yellow-900/30 border border-yellow-700 p-6 rounded-lg shadow-lg text-left">
+        <h2 class="text-2xl font-bold text-yellow-300 mb-4">Critical Upcoming Features</h2>
+        <p class="text-yellow-400 mb-4">Based on our goals, here are the top three features we should prioritize:</p>
+        <ol class="list-decimal list-inside space-y-3">
+            <li><strong>Advanced Race Day Checklists:</strong> Create dynamic, template-based checklists for pre-race, mid-day, and post-race activities to ensure nothing is missed.</li>
+            <li><strong>Tire Management Module:</strong> A dedicated section to track tire sets, heat cycles, pressures, and performance notes to optimize usage and on-track results.</li>
+            <li><strong>Basic Telemetry Integration:</strong> Allow users to upload data from popular lap timers (e.g., AiM, VBOX) to view key metrics and link them to session notes.</li>
+        </ol>
+    </div>
+
+    <div class="bg-card p-8 rounded-lg shadow-lg text-left">
+        <h2 class="text-2xl font-bold mb-4">Submit a Feature Request</h2>
+        <p class="text-text-secondary mb-6">Have an idea for a new feature? Let us know!</p>
+        <form id="feature-request-form">
+            <textarea id="feature-request-textarea" rows="4" maxlength="500" class="w-full bg-input border border-border rounded-md p-2" placeholder="Describe your feature idea..."></textarea>
+            <div class="text-right text-sm text-text-secondary mt-1"><span id="char-counter">0 / 500</span></div>
+            <button id="submit-feature-request-btn" type="submit" class="mt-4 w-full bg-blue-500 text-white font-semibold py-2 px-4 rounded-lg shadow-md hover:bg-blue-600">Submit Request</button>
+        </form>
+    </div>
+
+    <div id="existing-requests-section" class="mt-8 bg-card p-8 rounded-lg shadow-lg text-left">
+        <h2 class="text-2xl font-bold mb-4">Existing Requests</h2>
+        <div id="feature-request-list" class="space-y-4">
+        </div>
+    </div>
+
+     <button id="back-to-features-from-upcoming-btn" class="mt-8 px-6 py-2 bg-gray-600 text-white font-semibold rounded-lg shadow-md hover:bg-gray-500">
+        Back to Features
+    </button>
+</div>

@@ -1,0 +1,21 @@
+<div id="checklist-management-view" class="w-full max-w-4xl mx-auto hidden text-center py-16">
+    <h1 class="text-4xl md:text-5xl font-bold mb-8">Checklist Templates</h1>
+    <div class="bg-card p-8 rounded-lg shadow-lg text-left">
+        <h2 class="text-2xl font-bold mb-4">Add New Checklist Template</h2>
+        <form id="add-checklist-form">
+            <div>
+                <label for="checklist-name-input" class="block text-sm font-medium">Template Name</label>
+                <input type="text" id="checklist-name-input" maxlength="50" class="mt-1 block w-full bg-input border border-border rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500" required>
+            </div>
+            <button id="add-checklist-btn" type="submit" class="mt-4 w-full bg-blue-500 text-white font-semibold py-2 px-4 rounded-lg shadow-md hover:bg-blue-600">Create Template</button>
+        </form>
+    </div>
+    <div class="mt-8 bg-card p-8 rounded-lg shadow-lg text-left">
+        <h2 class="text-2xl font-bold mb-4">My Checklist Templates</h2>
+        <div id="checklist-list" class="space-y-4">
+        </div>
+    </div>
+    <button id="back-to-prep-from-checklists-btn" class="mt-8 px-6 py-2 bg-gray-600 text-white font-semibold rounded-lg shadow-md hover:bg-gray-500">
+        Back to Prep & Logistics
+    </button>
+</div>

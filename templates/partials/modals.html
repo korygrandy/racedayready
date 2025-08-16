@@ -1,0 +1,340 @@
+<!-- This file contains all modals for the application -->
+
+<!-- Profile Modals -->
+<div id="profile-modal" class="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center hidden z-40">
+    <div class="bg-card p-8 rounded-lg shadow-2xl w-full max-w-md">
+        <h2 class="text-2xl font-bold mb-4">Create Driver Profile</h2>
+        <p class="text-text-secondary mb-6">Enter a username and choose a helmet color. The PIN is optional.</p>
+        <form id="profile-form">
+            <div class="space-y-4">
+                <div>
+                    <label for="username-input" class="block text-sm font-medium">Username</label>
+                    <input type="text" id="username-input" maxlength="12" class="mt-1 block w-full bg-input border border-border rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500" required>
+                </div>
+                <div>
+                    <label for="helmet-color-input" class="block text-sm font-medium">Helmet Color</label>
+                    <input type="color" id="helmet-color-input" value="#ffffff" class="mt-1 block w-full h-10">
+                </div>
+                <div>
+                    <label for="theme-select" class="block text-sm font-medium">Theme</label>
+                    <select id="theme-select" class="mt-1 block w-full bg-input border border-border rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                        <option value="dark">Dark</option>
+                        <option value="light">Light</option>
+                    </select>
+                </div>
+                <div class="relative flex items-start">
+                    <div class="flex items-center h-5"><input id="enable-pin-checkbox" type="checkbox" class="focus:ring-blue-500 h-4 w-4 text-blue-600 border-border rounded"></div>
+                    <div class="ml-3 text-sm"><label for="enable-pin-checkbox" class="font-medium">Enable 4-Digit PIN</label></div>
+                </div>
+                <div>
+                    <label for="pin-input" class="block text-sm font-medium">4-Digit PIN</label>
+                    <input type="password" id="pin-input" maxlength="4" pattern="[0-9]{4}" autocomplete="new-password" class="mt-1 block w-full bg-input border border-border rounded-md shadow-sm py-2 px-3 disabled:opacity-50" disabled>
+                </div>
+            </div>
+            <div class="mt-6 flex justify-end space-x-4">
+                <button id="cancel-create-btn" type="button" class="px-4 py-2 bg-gray-600 text-white font-semibold rounded-lg hover:bg-gray-500">Cancel</button>
+                <button id="save-profile-btn" type="submit" class="px-4 py-2 bg-blue-500 text-white font-semibold rounded-lg shadow-md hover:bg-blue-600">Save Profile</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div id="select-profile-modal" class="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center hidden z-40">
+    <div class="bg-card p-8 rounded-lg shadow-2xl w-full max-w-md">
+        <h2 class="text-2xl font-bold mb-4">Select Driver Profile</h2>
+        <div id="profile-list" class="space-y-2 mb-6"></div>
+        <button id="add-new-profile-btn" class="w-full bg-green-600 text-white font-semibold py-2 px-4 rounded-lg shadow-md hover:bg-green-700">Add New Profile</button>
+    </div>
+</div>
+
+<!-- Confirmation & PIN Modals -->
+<div id="confirmation-modal" class="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center hidden z-50">
+    <div class="bg-card p-8 rounded-lg shadow-2xl w-full max-w-md">
+        <h2 id="confirmation-modal-title" class="text-2xl font-bold mb-4">Confirm Action</h2>
+        <p class="text-text-secondary mb-6" id="confirmation-modal-text"></p>
+        <div class="flex justify-end space-x-4">
+            <button id="confirmation-modal-cancel-btn" class="px-4 py-2 bg-gray-600 text-white font-semibold rounded-lg hover:bg-gray-500">Cancel</button>
+            <button id="confirmation-modal-confirm-btn" class="px-4 py-2 bg-red-600 text-white font-semibold rounded-lg hover:bg-red-700">Yes, Confirm</button>
+        </div>
+    </div>
+</div>
+
+<div id="pin-entry-modal" class="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center hidden z-40">
+    <div class="bg-card p-8 rounded-lg shadow-2xl w-full max-w-md">
+        <h2 class="text-2xl font-bold mb-4">Enter PIN</h2>
+        <p class="text-text-secondary mb-6" id="pin-entry-text"></p>
+        <form id="pin-entry-form">
+            <input type="password" id="pin-entry-input" maxlength="4" autocomplete="off" class="block w-full text-center text-2xl tracking-[1em] bg-input border border-border rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+            <div class="mt-6 flex justify-end space-x-4">
+                <button id="cancel-pin-entry-btn" type="button" class="px-4 py-2 bg-gray-600 text-white font-semibold rounded-lg hover:bg-gray-500">Cancel</button>
+                <button id="submit-pin-btn" type="submit" class="px-4 py-2 bg-blue-500 text-white font-semibold rounded-lg shadow-md hover:bg-blue-600">Submit</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div id="dev-pin-entry-modal" class="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center hidden z-40">
+    <div class="bg-card p-8 rounded-lg shadow-2xl w-full max-w-md">
+        <h2 class="text-2xl font-bold mb-4">Developer Access</h2>
+        <p class="text-text-secondary mb-6">Please enter the PIN to access Developer Mode.</p>
+        <form id="dev-pin-entry-form">
+            <input type="password" id="dev-pin-entry-input" maxlength="4" autocomplete="new-password" class="block w-full text-center text-2xl tracking-[1em] bg-input border border-border rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+            <div class="mt-6 flex justify-end space-x-4">
+                <button id="cancel-dev-pin-btn" type="button" class="px-4 py-2 bg-gray-600 text-white font-semibold rounded-lg hover:bg-gray-500">Cancel</button>
+                <button id="submit-dev-pin-btn" type="submit" class="px-4 py-2 bg-blue-500 text-white font-semibold rounded-lg shadow-md hover:bg-blue-600">Submit</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div id="pin-settings-modal" class="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center hidden z-40">
+    <div class="bg-card p-8 rounded-lg shadow-2xl w-full max-w-md">
+        <h2 class="text-2xl font-bold mb-4" id="pin-settings-heading"></h2>
+        <form id="pin-settings-form">
+            <div class="space-y-4">
+                <div class="relative flex items-start">
+                    <div class="flex items-center h-5"><input id="edit-enable-pin-checkbox" type="checkbox" class="focus:ring-blue-500 h-4 w-4 text-blue-600 border-border rounded"></div>
+                    <div class="ml-3 text-sm"><label for="edit-enable-pin-checkbox" class="font-medium">Enable 4-Digit PIN</label></div>
+                </div>
+                <div>
+                    <label for="edit-pin-input" class="block text-sm font-medium">New 4-Digit PIN</label>
+                    <input type="password" id="edit-pin-input" maxlength="4" pattern="[0-9]{4}" autocomplete="new-password" class="mt-1 block w-full bg-input border border-border rounded-md shadow-sm py-2 px-3 disabled:opacity-50" disabled>
+                </div>
+            </div>
+            <div class="mt-6 flex justify-end space-x-4">
+                <button id="cancel-pin-settings-btn" type="button" class="px-4 py-2 bg-gray-600 text-white font-semibold rounded-lg hover:bg-gray-500">Cancel</button>
+                <button id="save-pin-settings-btn" type="submit" class="px-4 py-2 bg-blue-500 text-white font-semibold rounded-lg shadow-md hover:bg-blue-600">Save Settings</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Garage Modals -->
+<div id="share-garage-modal" class="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center hidden z-40">
+    <div class="bg-card p-8 rounded-lg shadow-2xl w-full max-w-md">
+        <h2 class="text-2xl font-bold mb-4">Share Garage</h2>
+        <form id="share-garage-form">
+            <div class="space-y-4">
+                <div class="relative flex items-start">
+                    <div class="flex items-center h-5"><input id="enable-sharing-checkbox" type="checkbox" class="focus:ring-blue-500 h-4 w-4 text-blue-600 border-border rounded"></div>
+                    <div class="ml-3 text-sm"><label for="enable-sharing-checkbox" class="font-medium">Enable Sharing for this Garage</label></div>
+                </div>
+                <div>
+                    <label for="garage-door-code-input" class="block text-sm font-medium">4-Digit Garage Door Code</label>
+                    <input type="password" id="garage-door-code-input" maxlength="4" pattern="[0-9]{4}" class="mt-1 block w-full bg-input border border-border rounded-md shadow-sm py-2 px-3 disabled:opacity-50" required>
+                </div>
+            </div>
+            <div class="mt-6 flex justify-end space-x-4">
+                <button id="cancel-share-garage-btn" type="button" class="px-4 py-2 bg-gray-600 text-white font-semibold rounded-lg hover:bg-gray-500">Cancel</button>
+                <button id="save-share-garage-btn" type="submit" class="px-4 py-2 bg-blue-500 text-white font-semibold rounded-lg shadow-md hover:bg-blue-600">Save Settings</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div id="unlock-garage-modal" class="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center hidden z-40">
+    <div class="bg-card p-8 rounded-lg shadow-2xl w-full max-w-md">
+        <h2 class="text-2xl font-bold mb-4">Unlock Shared Garage</h2>
+        <p class="text-text-secondary mb-6">Enter the 4-digit Garage Door Code to access this garage.</p>
+        <form id="unlock-garage-form">
+            <input type="password" id="unlock-garage-code-input" maxlength="4" class="block w-full text-center text-2xl tracking-[1em] bg-input border border-border rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+            <div class="mt-6 flex justify-end space-x-4">
+                <button id="cancel-unlock-garage-btn" type="button" class="px-4 py-2 bg-gray-600 text-white font-semibold rounded-lg hover:bg-gray-500">Cancel</button>
+                <button id="submit-unlock-garage-btn" type="submit" class="px-4 py-2 bg-blue-500 text-white font-semibold rounded-lg shadow-md hover:bg-blue-600">Unlock</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Edit Modals -->
+<div id="edit-vehicle-modal" class="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center hidden z-40">
+    <div class="bg-card p-8 rounded-lg shadow-2xl w-full max-w-md">
+        <h2 class="text-2xl font-bold mb-4">Edit Vehicle</h2>
+        <form id="edit-vehicle-form">
+            <div id="edit-api-vehicle-inputs">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div>
+                        <label for="edit-vehicle-year-search" class="block text-sm font-medium">Search Year</label>
+                        <input type="text" id="edit-vehicle-year-search" class="mt-1 block w-full bg-input border border-border rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500" placeholder="e.g., 2023">
+                        <select id="edit-vehicle-year-select" class="mt-1 block w-full bg-input border border-border rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500" required></select>
+                    </div>
+                    <div>
+                        <label for="edit-vehicle-make-search" class="block text-sm font-medium">Search Make</label>
+                        <input type="text" id="edit-vehicle-make-search" class="mt-1 block w-full bg-input border border-border rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500" placeholder="e.g., Ford">
+                        <select id="edit-vehicle-make-select" class="mt-1 block w-full bg-input border border-border rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500" required></select>
+                    </div>
+                    <div>
+                        <label for="edit-vehicle-model-search" class="block text-sm font-medium">Search Model</label>
+                        <input type="text" id="edit-vehicle-model-search" class="mt-1 block w-full bg-input border border-border rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500" placeholder="e.g., Mustang">
+                        <select id="edit-vehicle-model-select" class="mt-1 block w-full bg-input border border-border rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500" required></select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="relative flex items-start mt-4">
+                <div class="flex items-center h-5"><input id="edit-manual-vehicle-entry-checkbox" type="checkbox" class="focus:ring-blue-500 h-4 w-4 text-blue-600 border-border rounded"></div>
+                <div class="ml-3 text-sm"><label for="edit-manual-vehicle-entry-checkbox" class="font-medium">Enter Vehicle Manually</label></div>
+            </div>
+
+            <div id="edit-manual-vehicle-inputs" class="hidden grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
+                <div><label for="edit-manual-vehicle-year" class="block text-sm font-medium">Year</label><input type="text" id="edit-manual-vehicle-year" class="mt-1 block w-full bg-input border border-border rounded-md shadow-sm py-2 px-3"></div>
+                <div><label for="edit-manual-vehicle-make" class="block text-sm font-medium">Make</label><input type="text" id="edit-manual-vehicle-make" class="mt-1 block w-full bg-input border border-border rounded-md shadow-sm py-2 px-3"></div>
+                <div><label for="edit-manual-vehicle-model" class="block text-sm font-medium">Model</label><input type="text" id="edit-manual-vehicle-model" class="mt-1 block w-full bg-input border border-border rounded-md shadow-sm py-2 px-3"></div>
+            </div>
+
+            <div class="mt-4">
+                <label for="edit-vehicle-garage-select" class="block text-sm font-medium">Assign to Garage</label>
+                <select id="edit-vehicle-garage-select" class="mt-1 block w-full bg-input border border-border rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500"></select>
+            </div>
+            <div class="mt-4">
+                <label for="edit-vehicle-photo-input" class="block text-sm font-medium">Vehicle Photo</label>
+                <input type="file" id="edit-vehicle-photo-input" accept="image/*" class="mt-1 block w-full text-sm text-text-secondary file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"/>
+                <div class="relative mt-2">
+                    <div class="absolute inset-0 flex items-center" aria-hidden="true"><div class="w-full border-t border-border"></div></div>
+                    <div class="relative flex justify-center"><span class="px-2 bg-card text-sm text-text-secondary">OR</span></div>
+                </div>
+                <input type="text" id="edit-vehicle-photo-url-input" class="mt-2 block w-full bg-input border border-border rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500" placeholder="Enter Image URL">
+                <img id="edit-vehicle-photo-preview" class="hidden mt-4 rounded-lg max-h-48 w-auto" onerror="this.onerror=null;this.src='/static/images/default-vehicle.svg';"/>
+            </div>
+            <div class="mt-6 flex justify-end space-x-4">
+                <button id="cancel-edit-vehicle-btn" type="button" class="px-4 py-2 bg-gray-600 text-white font-semibold rounded-lg hover:bg-gray-500">Cancel</button>
+                <button id="save-vehicle-btn" type="submit" class="px-4 py-2 bg-blue-500 text-white font-semibold rounded-lg shadow-md hover:bg-blue-600">Save Changes</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div id="edit-event-modal" class="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center hidden z-40">
+    <div class="bg-card p-8 rounded-lg shadow-2xl w-full max-w-md">
+        <h2 class="text-2xl font-bold mb-4">Edit Event</h2>
+        <form id="edit-event-form">
+            <div class="space-y-4">
+                <div>
+                    <label for="edit-event-name-input" class="block text-sm font-medium">Event Name</label>
+                    <input type="text" id="edit-event-name-input" maxlength="50" class="mt-1 block w-full bg-input border border-border rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500" required>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label for="edit-event-start-input" class="block text-sm font-medium">Start Time</label>
+                        <input type="datetime-local" id="edit-event-start-input" class="mt-1 block w-full bg-input border border-border rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500" required>
+                    </div>
+                    <div>
+                        <label for="edit-event-end-input" class="block text-sm font-medium">End Time</label>
+                        <input type="datetime-local" id="edit-event-end-input" class="mt-1 block w-full bg-input border border-border rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                    </div>
+                </div>
+                <div>
+                    <label for="edit-event-track-select" class="block text-sm font-medium">Track</label>
+                    <select id="edit-event-track-select" class="mt-1 block w-full bg-input border border-border rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500"></select>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium">Vehicles</label>
+                    <div id="edit-event-vehicles-container" class="mt-1 grid grid-cols-3 md:grid-cols-5 gap-2 bg-input border border-border rounded-md p-2 h-32 overflow-y-auto"></div>
+                </div>
+                <div>
+                    <label for="edit-event-checklists-select" class="block text-sm font-medium">Checklists</label>
+                    <select id="edit-event-checklists-select" multiple class="mt-1 block w-full bg-input border border-border rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 h-32"></select>
+                </div>
+                <div class="relative flex items-start">
+                    <div class="flex items-center h-5">
+                        <input id="edit-is-raceday-checkbox" type="checkbox" class="focus:ring-blue-500 h-4 w-4 text-blue-600 border-border rounded">
+                    </div>
+                    <div class="ml-3 text-sm">
+                        <label for="edit-is-raceday-checkbox" class="font-medium">This is a Raceday Event</label>
+                    </div>
+                </div>
+            </div>
+            <div class="mt-6 flex justify-end space-x-4">
+                <button id="cancel-edit-event-btn" type="button" class="px-4 py-2 bg-gray-600 text-white font-semibold rounded-lg hover:bg-gray-500">Cancel</button>
+                <button id="save-event-btn" type="submit" class="px-4 py-2 bg-blue-500 text-white font-semibold rounded-lg shadow-md hover:bg-blue-600">Save Changes</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div id="edit-checklist-modal" class="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center hidden z-40">
+    <div class="bg-card p-8 rounded-lg shadow-2xl w-full max-w-2xl">
+        <h2 class="text-2xl font-bold mb-4" id="edit-checklist-title">Edit Checklist</h2>
+        <form id="edit-checklist-form">
+            <div class="space-y-4">
+                <div>
+                    <label for="edit-checklist-name-input" class="block text-sm font-medium">Template Name</label>
+                    <input type="text" id="edit-checklist-name-input" maxlength="50" class="mt-1 block w-full bg-input border border-border rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500" required>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div>
+                        <h3 class="font-semibold mb-2">Pre-Race Tasks</h3>
+                        <div id="edit-pre-race-tasks" class="space-y-2"></div>
+                        <input type="text" id="add-pre-race-task-input" class="mt-2 w-full bg-input border border-border rounded-md shadow-sm py-1 px-2" placeholder="Add a new task...">
+                    </div>
+                    <div>
+                        <h3 class="font-semibold mb-2">Mid-Day Tasks</h3>
+                        <div id="edit-mid-day-tasks" class="space-y-2"></div>
+                        <input type="text" id="add-mid-day-task-input" class="mt-2 w-full bg-input border border-border rounded-md shadow-sm py-1 px-2" placeholder="Add a new task...">
+                    </div>
+                    <div>
+                        <h3 class="font-semibold mb-2">Post-Race Tasks</h3>
+                        <div id="edit-post-race-tasks" class="space-y-2"></div>
+                        <input type="text" id="add-post-race-task-input" class="mt-2 w-full bg-input border border-border rounded-md shadow-sm py-1 px-2" placeholder="Add a new task...">
+                    </div>
+                </div>
+            </div>
+            <div class="mt-6 flex justify-end space-x-4">
+                <button id="cancel-edit-checklist-btn" type="button" class="px-4 py-2 bg-gray-600 text-white font-semibold rounded-lg hover:bg-gray-500">Cancel</button>
+                <button id="save-checklist-btn" type="submit" class="px-4 py-2 bg-blue-500 text-white font-semibold rounded-lg shadow-md hover:bg-blue-600">Save Changes</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div id="edit-track-modal" class="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center hidden z-40 p-4">
+    <div class="bg-card p-8 rounded-lg shadow-2xl w-full max-w-md">
+        <div class="max-h-full overflow-y-auto">
+            <h2 class="text-2xl font-bold mb-4">Edit Track</h2>
+            <form id="edit-track-form">
+                <div class="space-y-4">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label for="edit-track-name-input" class="block text-sm font-medium">Track Name</label>
+                            <input type="text" id="edit-track-name-input" class="mt-1 block w-full bg-input border border-border rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500" required>
+                        </div>
+                        <div>
+                            <label for="edit-track-location-input" class="block text-sm font-medium">Location</label>
+                            <input type="text" id="edit-track-location-input" class="mt-1 block w-full bg-input border border-border rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500" required>
+                        </div>
+                    </div>
+                    <div>
+                        <label for="edit-track-type-select" class="block text-sm font-medium">Track Type</label>
+                        <select id="edit-track-type-select" class="mt-1 block w-full bg-input border border-border rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                            <option>Circuit</option>
+                            <option>Oval</option>
+                            <option>Drag Strip</option>
+                            <option>Rally Stage</option>
+                            <option>Other</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label for="edit-track-google-url-input" class="block text-sm font-medium">Google Maps URL</label>
+                        <input type="url" id="edit-track-google-url-input" class="mt-1 block w-full bg-input border border-border rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500" placeholder="https://maps.app.goo.gl/...">
+                    </div>
+                    <div>
+                        <label for="edit-track-photo-input" class="block text-sm font-medium">Track Photo</label>
+                        <input type="file" id="edit-track-photo-input" accept="image/*" class="mt-1 block w-full text-sm text-text-secondary file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"/>
+                        <input type="text" id="edit-track-photo-url-input" class="mt-2 block w-full bg-input border border-border rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500" placeholder="Enter Image URL">
+                        <img id="edit-track-photo-preview" class="hidden mt-4 rounded-lg max-h-48 w-auto"/>
+                    </div>
+                    <div>
+                        <label for="edit-track-layout-photo-input" class="block text-sm font-medium">Track Layout Photo</label>
+                        <input type="file" id="edit-track-layout-photo-input" accept="image/*" class="mt-1 block w-full text-sm text-text-secondary file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"/>
+                        <input type="text" id="edit-track-layout-photo-url-input" class="mt-2 block w-full bg-input border border-border rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500" placeholder="Enter Image URL">
+                        <img id="edit-track-layout-photo-preview" class="hidden mt-4 rounded-lg max-h-48 w-auto"/>
+                    </div>
+                </div>
+                <div class="mt-6 flex justify-end space-x-4">
+                    <button id="cancel-edit-track-btn" type="button" class="px-4 py-2 bg-gray-600 text-white font-semibold rounded-lg hover:bg-gray-500">Cancel</button>
+                    <button id="save-track-btn" type="submit" class="px-4 py-2 bg-blue-500 text-white font-semibold rounded-lg shadow-md hover:bg-blue-600">Save Changes</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

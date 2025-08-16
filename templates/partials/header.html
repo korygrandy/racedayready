@@ -1,0 +1,40 @@
+<div id="global-header" class="w-full p-4 flex justify-between items-center relative">
+    <!-- Left Header Content -->
+    <div class="flex items-center space-x-2">
+        <div id="profile-section" class="flex items-center space-x-4">
+            <div id="profile-header-btn" class="hidden items-center space-x-4 cursor-pointer p-2 rounded-lg hover:bg-interactive-hover" title="Change Profile">
+                <div id="features-helmet-display" class="w-12 h-12"></div>
+                <span id="features-username" class="text-lg font-semibold"></span>
+            </div>
+        </div>
+        <div id="garage-header-btn-container">
+            <div id="garage-header-btn" class="hidden cursor-pointer p-2 rounded-lg hover:bg-interactive-hover" title="Garage Management">
+                <!-- This span will hold the garage icon SVG -->
+            </div>
+        </div>
+        <div id="lap-time-header-btn-container">
+            <div id="lap-time-header-btn" class="hidden cursor-pointer p-2 rounded-lg hover:bg-interactive-hover" title="Winner's Circle">
+                <!-- This span will hold the lap time icon SVG -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Center Header Content -->
+    <div class="absolute left-1/2 -translate-x-1/2">
+        <div id="raceday-countdown-container" class="hidden items-center">
+            <span id="raceday-countdown-label" class="text-lg font-bold mr-2 hidden">Days Until Raceday:</span>
+            <div id="raceday-countdown-circle" class="w-16 h-16 bg-orange-500 rounded-full flex items-center justify-center text-white shadow-lg hidden">
+                <span id="raceday-countdown-days" class="text-3xl font-bold"></span>
+            </div>
+            <div id="no-raceday-icon" class="hidden">
+                 <a href="#" id="add-raceday-link" class="text-blue-500 hover:underline text-lg">+ Add Race</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Right Header Content -->
+    <div id="theme-switcher-container">
+         <button id="theme-switcher-btn" class="p-2 rounded-full hover:bg-interactive-hover" title="Toggle Theme">
+            </button>
+    </div>
+</div>
