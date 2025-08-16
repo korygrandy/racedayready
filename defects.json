@@ -1,8 +1,13 @@
 [
     {
         "id": "admin-init-error-delegation",
-        "title": "Uncaught TypeError on Main App Load (Fixed: Aug 15, 2025) - v2.7.9",
+        "title": "Uncaught TypeError on Main App Load (Fixed: Aug 15, 2025) - v2.8.4",
         "resolution": "A recurring TypeError on page load was caused by multiple event listeners in `admin.js` being attached before their corresponding elements in the Developer Mode panel were rendered. The fix was to refactor the `initAdmin` function to use a single event listener on the parent `developerView` container. This 'Event Delegation' approach ensures that all clicks within the developer panel are handled correctly, regardless of when the script runs, resolving the timing issue."
+    },
+    {
+        "id": "js-init-race-condition",
+        "title": "Multiple Uncaught TypeErrors on Page Load (Fixed: Aug 15, 2025) - v2.8.2",
+        "resolution": "A recurring TypeError was caused by a race condition where multiple JavaScript modules were trying to access DOM elements before the page was fully parsed. The fix involved centralizing all `getElementById` calls into a single `initElements` function in `elements.js`, which is now the first function called after the `DOMContentLoaded` event fires in `main.js`. This ensures all scripts have access to the elements they need, resolving the cascading errors."
     },
     {
         "id": "garage-js-init-error",
@@ -18,10 +23,5 @@
         "id": "admin-ui-missing",
         "title": "Data Management UI Not Appearing in Developer Mode (Fixed: Aug 15, 2025) - v2.6.6",
         "resolution": "The `index.html` file was missing the necessary HTML for the 'Data Management & Seeding' section. The file has been updated to include the correct div and buttons, which now correctly connect to the event listeners in `admin.js`."
-    },
-    {
-        "id": "admin-init-error",
-        "title": "Uncaught TypeError on Main App Load (Fixed: Aug 15, 2025) - v2.6.5",
-        "resolution": "The event listeners for the 'Seed Database' and 'Clear All Data' buttons were being attached in `initAdmin` on initial page load, before the Developer Mode view (and its buttons) were rendered. This caused a 'Cannot read properties of null' error. The fix was to move these two event listener attachments into the `loadAdminSettings` function, which is only called after the Developer Mode view is visible, ensuring the elements exist before listeners are attached."
     }
 ]
